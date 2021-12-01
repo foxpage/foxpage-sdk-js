@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "rootDirs": [],
+    "sourceMap": false,
+    "rootDir": "../..",
+    "baseUrl": ".",
+    "paths": {},
+  },
+  "include": [
+    "src/*",
+    "src/**/*",
+    "typings/*",
+    "typings/**/*",
+    "test/*",
+    "test/**/*",
+    "stories/*",
+    "stories/**/*",
+    "../foxpage-js-sdk/src/loader/component-loader/component.ts",
+  ],
+}

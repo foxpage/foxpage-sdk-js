@@ -1,0 +1,18 @@
+{
+  "name": "@foxpage/foxpage-types",
+  "version": "0.2.20",
+  "description": "foxpage sdk types",
+  "main": "index.js",
+  "type": "module",
+  "keywords": [
+    "foxpage",
+    "foxpage-types",
+    "typescript"
+  ],
+  "author": "drxiao",
+  "license": "MIT",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  }
+}

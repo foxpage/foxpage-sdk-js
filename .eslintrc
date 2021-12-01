@@ -1,0 +1,127 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "./",
+    "ecmaVersion": 2019,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "extends": [
+    "eslint:recommended",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "plugins": [
+    "@typescript-eslint",
+    "simple-import-sort"
+  ],
+  "rules": {
+    "no-case-declarations": "off",
+    "require-atomic-updates": "off",
+    "no-empty": [
+      "error",
+      {
+        "allowEmptyCatch": true
+      }
+    ],
+    "simple-import-sort/sort": [
+      "error",
+      {
+        "groups": [
+          // Side effect imports.
+          [
+            "^\\u0000"
+          ],
+          // Node.js builtins. You could also generate this regex if you use a `.js` config.
+          // For example: `^(${require("module").builtinModules.join("|")})(/|$)`
+          [
+            "^(assert|buffer|child_process|cluster|console|constants|crypto|dgram|dns|domain|events|fs|http|https|module|net|os|path|punycode|querystring|readline|repl|stream|string_decoder|sys|timers|tls|tty|url|util|vm|zlib|freelist|v8|process|async_hooks|http2|perf_hooks)(/.*|$)",
+          ],
+          // Packages. `react` related packages come first.
+          [
+            "^react"
+          ],
+          // Packages.
+          // Things that start with a letter (or digit or underscore), or `@` followed by a letter.
+          [
+            "^@?(?!foxpage)\\w"
+          ],
+          // Packages.
+          [
+            "^@foxpage/(?!foxpage)"
+          ],
+          // Packages.
+          // foxpage packages
+          [
+            "^@foxpage/foxpage"
+          ],
+          // absolute path
+          // src file
+          [
+            "^@/"
+          ],
+          // absolute path
+          // test file
+          [
+            "^@@/"
+          ],
+          // Parent imports. Put `..` last.
+          [
+            "^\\.\\.(?!/?$)",
+            "^\\.\\./?$"
+          ],
+          // Other relative imports. Put same-folder imports and `.` last.
+          [
+            "^\\./(?=.*/)(?!/?$)",
+            "^\\.(?!/?$)",
+            "^\\./?$"
+          ],
+          // Style imports.
+          [
+            "^.+\\.(scss|css|less)$"
+          ]
+        ]
+      }
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "off",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "@typescript-eslint/no-empty-function": [
+      "off"
+    ],
+    "@typescript-eslint/camelcase": [
+      "off"
+    ],
+    "@typescript-eslint/no-empty-interface": [
+      "off"
+    ],
+    "@typescript-eslint/indent": [
+      "off"
+    ],
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/array-type": "off",
+    "@typescript-eslint/no-use-before-define": "off",
+    "@typescript-eslint/no-object-literal-type-assertion": "off",
+    "@typescript-eslint/explicit-member-accessibility": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/interface-name-prefix": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/class-name-casing": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/ban-ts-comment": "off"
+  }
+}

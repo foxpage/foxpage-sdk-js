@@ -1,0 +1,13 @@
+{
+  "id": "fun_yrtQ3sY1jJag",
+  "schemas": [
+    {
+      "name": "test",
+      "type": "javascript.function",
+      "props": {
+        "async": false,
+        "code": "function test(a, b){\n    const appId = this.appId;\n    return a + appId + b;\n}"
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "var_zl6UOTNfbkC1",
+  "schemas": [
+    {
+      "name": "test",
+      "type": "data.function.call",
+      "props": {
+        "function": "{{__functions:fun_yrtQ3sY1jJag:test}}",
+        "args": [
+          "1",
+          "2"
+        ]
+      }
+    }
+  ],
+  "relation": {
+    "__functions:fun_yrtQ3sY1jJag:test": {
+      "id": "fun_yrtQ3sY1jJag",
+      "type": "function"
+    }
+  }
+}

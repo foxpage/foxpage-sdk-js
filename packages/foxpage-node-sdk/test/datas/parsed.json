@@ -1,0 +1,34 @@
+{
+  "id": "100",
+  "schemas": [
+    {
+      "id": "1",
+      "name": "react-html",
+      "type": "component",
+      "props": {},
+      "children": [
+        {
+          "id": "2",
+          "name": "react-head",
+          "type": "component",
+          "props": {},
+          "children": []
+        },
+        {
+          "id": "3",
+          "name": "react-body",
+          "type": "component",
+          "props": {},
+          "children": [
+            {
+              "id": "4",
+              "name": "react-slot",
+              "type": "component",
+              "props": {}
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

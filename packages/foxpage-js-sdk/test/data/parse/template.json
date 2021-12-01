@@ -1,0 +1,40 @@
+{
+  "id": "tpl_xn7Ko6gfcV00",
+  "schemas": [
+    {
+      "name": "doc.html",
+      "type": "react.component",
+      "props": {
+        "lang": "{{$this.props.locale}}"
+      },
+      "children": [
+        {
+          "name": "html.head",
+          "type": "react.component"
+        },
+        {
+          "name": "html.body",
+          "type": "react.component",
+          "children": [
+            {
+              "name": "content",
+              "type": "component",
+              "directive": {
+                "tpl": "{{$this.children}}"
+              }
+            },
+            {
+              "name": "csr",
+              "type": "react.component"
+            },
+            {
+              "name": "content",
+              "type": "component"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "relation": {}
+}

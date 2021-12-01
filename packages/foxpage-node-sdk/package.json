@@ -1,0 +1,39 @@
+{
+  "name": "@foxpage/foxpage-node-sdk",
+  "version": "0.2.25",
+  "description": "foxpage node sdk",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc --project tsconfig.prod.json",
+    "build:npm": "npm run build -- --skipLibCheck",
+    "prebuild": "rimraf lib",
+    "prepublishOnly": "npm install && npm run build:npm"
+  },
+  "keywords": [
+    "foxpage",
+    "foxpage-node-sdk",
+    "node-sdk"
+  ],
+  "dependencies": {
+    "@foxpage/foxpage-core": "^0.2.22",
+    "@foxpage/foxpage-manager": "^0.2.24",
+    "@foxpage/foxpage-shared": "^0.2.20",
+    "fs-extra": "^7.0.1"
+  },
+  "devDependencies": {
+    "@foxpage/foxpage-types": "^0.2.20",
+    "@types/fs-extra": "^5.0.4",
+    "rimraf": "^2.6.3",
+    "typescript": "^3.9.0"
+  },
+  "author": "drxiao",
+  "license": "MIT",
+  "files": [
+    "lib/**"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "name": "@foxpage/foxpage-core",
+  "version": "0.2.22",
+  "description": "foxpage core ",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc --project tsconfig.prod.json",
+    "build:npm": "npm run build -- --skipLibCheck",
+    "prebuild": "rimraf lib",
+    "prepublishOnly": "npm install && npm run build:npm"
+  },
+  "dependencies": {
+    "@foxpage/foxpage-shared": "^0.2.20",
+    "lodash": "^4.17.15",
+    "semver": "^7.3.5",
+    "shortid": "^2.2.16"
+  },
+  "devDependencies": {
+    "@foxpage/foxpage-types": "^0.2.20",
+    "@types/lodash": "^4.14.145",
+    "@types/semver": "^7.3.8",
+    "rimraf": "^2.6.3",
+    "typescript": "^3.9.0"
+  },
+  "keywords": [
+    "foxpage",
+    "foxpage-core"
+  ],
+  "author": "drxiao",
+  "license": "MIT",
+  "files": [
+    "lib/**"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  }
+}

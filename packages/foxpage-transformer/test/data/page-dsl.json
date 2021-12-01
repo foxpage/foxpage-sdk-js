@@ -1,0 +1,377 @@
+{
+  "structures": [
+    {
+      "parentId": "",
+      "name": "html",
+      "props": {},
+      "extendId": "",
+      "variables": [],
+      "version": "",
+      "conditions": [],
+      "type": "foxpage.html",
+      "id": "ltjS907DHxz0",
+      "sort": 100,
+      "children": [
+        {
+          "parentId": "ltjS907DHxz0",
+          "name": "head",
+          "props": {},
+          "extendId": "",
+          "variables": [],
+          "version": "",
+          "conditions": [],
+          "type": "foxpage.head",
+          "id": "kywFqrmthOWB",
+          "sort": 100,
+          "children": [
+            {
+              "parentId": "kywFqrmthOWB",
+              "name": "TDK & Share Info",
+              "props": {
+                "useDefaultGlobalCSS": false,
+                "keywords": "hotel",
+                "shareTitle": "도심 속 럭셔리 호캉스",
+                "description": "도심 속 럭셔리 호캉스",
+                "styleCode": "body{margin:0;background:#fff;font: 12px/1.5 BlinkMacSystemFont,-apple-system,Roboto,Helvetica,Arial,sans-serif;}\n",
+                "shareDescription": "더 플라자 호텔 서울 외",
+                "title": "더 플라자 호텔 서울 외"
+              },
+              "extendId": "",
+              "variables": [],
+              "version": "",
+              "conditions": [],
+              "type": "head-pack",
+              "id": "nw6iKbi58W0k",
+              "sort": 100
+            }
+          ]
+        },
+        {
+          "parentId": "ltjS907DHxz0",
+          "name": "body",
+          "props": {},
+          "extendId": "",
+          "variables": [],
+          "version": "",
+          "conditions": [],
+          "type": "foxpage.body",
+          "id": "lrDf5opj2FIR",
+          "sort": 200,
+          "children": [
+            {
+              "parentId": "lrDf5opj2FIR",
+              "name": "mount-point",
+              "props": {},
+              "extendId": "",
+              "variables": [],
+              "version": "",
+              "conditions": [],
+              "type": "system.mount-point",
+              "id": "qmvbVM0TJPDd",
+              "sort": 100,
+              "children": [
+                {
+                  "parentId": "qmvbVM0TJPDd",
+                  "name": "header-new",
+                  "props": {
+                    "fileId": "{{template.pageId}}"
+                  },
+                  "extendId": "",
+                  "variables": [
+                    {
+                      "name": "template.pageId",
+                      "id": "bc922bae-0890-4fcb-ba4d-1ea3fee1e6cf"
+                    }
+                  ],
+                  "version": "",
+                  "conditions": [
+                    {
+                      "name": "appHide",
+                      "id": "73fc86f0-7d3c-11e9-a083-7ba6d477cc40",
+                      "status": 1
+                    }
+                  ],
+                  "type": "online-header",
+                  "id": "phN5gyXIlR5M",
+                  "sort": 200
+                },
+                {
+                  "parentId": "qmvbVM0TJPDd",
+                  "name": "share",
+                  "props": {},
+                  "extendId": "",
+                  "variables": [],
+                  "version": "",
+                  "conditions": [],
+                  "type": "share",
+                  "id": "houSiCXH0i6y8",
+                  "sort": 500
+                },
+                {
+                  "parentId": "qmvbVM0TJPDd",
+                  "name": "open-app",
+                  "props": {},
+                  "extendId": "",
+                  "variables": [],
+                  "version": "",
+                  "conditions": [
+                    {
+                      "name": "h5OpenApp",
+                      "id": "ifGyBHXynC0",
+                      "status": 1
+                    }
+                  ],
+                  "type": "sales.open-app",
+                  "id": "oeMCcgF-rvx24",
+                  "sort": 600
+                },
+                {
+                  "parentId": "qmvbVM0TJPDd",
+                  "name": "footer-new",
+                  "props": {
+                    "fileId": "{{template.pageId}}"
+                  },
+                  "extendId": "",
+                  "variables": [
+                    {
+                      "name": "template.pageId",
+                      "id": "bc922bae-0890-4fcb-ba4d-1ea3fee1e6cf"
+                    }
+                  ],
+                  "version": "",
+                  "conditions": [
+                    {
+                      "name": "appHide",
+                      "id": "73fc86f0-7d3c-11e9-a083-7ba6d477cc40",
+                      "status": 1
+                    }
+                  ],
+                  "type": "online-footer",
+                  "id": "hjjZj24MczhE2",
+                  "sort": 700
+                }
+              ]
+            },
+            {
+              "parentId": "lrDf5opj2FIR",
+              "name": "js-entry",
+              "props": {},
+              "extendId": "",
+              "variables": [],
+              "version": "",
+              "conditions": [],
+              "type": "system.js-entry",
+              "id": "pxv9uUqNAtuCv",
+              "sort": 200
+            },
+            {
+              "parentId": "lrDf5opj2FIR",
+              "name": "script-link",
+              "props": {},
+              "extendId": "",
+              "variables": [],
+              "version": "",
+              "conditions": [
+                {
+                  "name": "appShow",
+                  "id": "76114710-7d45-11e9-a083-7ba6d477cc40",
+                  "status": 1
+                }
+              ],
+              "type": "foxpage.script-link",
+              "id": "qhOOiTn0OHhCQ",
+              "sort": 300
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "name": "test",
+  "extendId": "",
+  "country": "",
+  "variables": [
+    {
+      "scopeId": "",
+      "scopeType": 1,
+      "name": "header",
+      "id": "43ae6970-daaa-11e9-8754-9d3785de2f75",
+      "type": "data.sys",
+      "props": {
+        "type": "json"
+      }
+    },
+    {
+      "scopeId": "",
+      "scopeType": 1,
+      "name": "template",
+      "id": "bc922bae-0890-4fcb-ba4d-1ea3fee1e6cf",
+      "type": "data.sys",
+      "props": {}
+    },
+    {
+      "scopeId": "",
+      "scopeType": 1,
+      "name": "urlobj",
+      "id": "e2253efe-c120-4a39-9d25-38a0bec20400",
+      "type": "data.sys",
+      "props": {
+        "defaultValue": {
+          "params": {
+            "airport": "sha"
+          }
+        }
+      }
+    },
+    {
+      "scopeId": "",
+      "scopeType": 1,
+      "name": "uaInfo",
+      "id": "4788d03c-9bdc-45b5-ba6c-4f1955cc78c6",
+      "type": "data.sys",
+      "props": {}
+    }
+  ],
+  "conditions": [
+    {
+      "scopeId": "100017092",
+      "variables": [
+        {
+          "name": "uaInfo.isOnline",
+          "id": "4788d03c-9bdc-45b5-ba6c-4f1955cc78c6"
+        }
+      ],
+      "scopeType": 2,
+      "name": "onlineHide",
+      "id": "5acea410-adf7-11e9-8df9-27774e0dd336",
+      "type": 1,
+      "props": {
+        "items": [
+          {
+            "operation": "eq",
+            "value": "0",
+            "key": "{{uaInfo.isOnline ? 1 : 0}}"
+          }
+        ]
+      }
+    },
+    {
+      "scopeId": "100017092",
+      "variables": [
+        {
+          "name": "uaInfo.isFromApp",
+          "id": "4788d03c-9bdc-45b5-ba6c-4f1955cc78c6"
+        },
+        {
+          "name": "uaInfo",
+          "id": "4788d03c-9bdc-45b5-ba6c-4f1955cc78c6"
+        }
+      ],
+      "scopeType": 2,
+      "name": "appHide",
+      "id": "73fc86f0-7d3c-11e9-a083-7ba6d477cc40",
+      "type": 1,
+      "props": {
+        "items": [
+          {
+            "operation": "eq",
+            "value": "0",
+            "key": "{{uaInfo.isFromApp}}"
+          }
+        ]
+      }
+    },
+    {
+      "scopeId": "100017092",
+      "variables": [
+        {
+          "name": "uaInfo.isFromApp",
+          "id": "4788d03c-9bdc-45b5-ba6c-4f1955cc78c6"
+        },
+        {
+          "name": "uaInfo",
+          "id": "4788d03c-9bdc-45b5-ba6c-4f1955cc78c6"
+        }
+      ],
+      "scopeType": 2,
+      "name": "appShow",
+      "id": "76114710-7d45-11e9-a083-7ba6d477cc40",
+      "type": 1,
+      "props": {
+        "items": [
+          {
+            "operation": "eq",
+            "value": "1",
+            "key": "{{uaInfo.isFromApp ? 1 : 0}}"
+          }
+        ]
+      }
+    },
+    {
+      "scopeId": "100017092",
+      "variables": [
+        {
+          "name": "uaInfo.clientType",
+          "id": "4788d03c-9bdc-45b5-ba6c-4f1955cc78c6"
+        },
+        {
+          "name": "urlobj.pathname",
+          "id": "e2253efe-c120-4a39-9d25-38a0bec20400"
+        },
+        {
+          "name": "urlobj.queryParams.openapp",
+          "id": "e2253efe-c120-4a39-9d25-38a0bec20400"
+        }
+      ],
+      "scopeType": 2,
+      "name": "h5OpenApp",
+      "id": "ifGyBHXynC0",
+      "type": 1,
+      "props": {
+        "items": [
+          {
+            "operation": "eq",
+            "value": "H5",
+            "key": "{{uaInfo.clientType}}"
+          },
+          {
+            "operation": "regex",
+            "value": "/w",
+            "key": "{{urlobj.pathname}}"
+          },
+          {
+            "operation": "in_array",
+            "value": "{{new Array(\"1\",\"2\",\"3\")}}",
+            "key": "{{urlobj.queryParams.openapp}}"
+          }
+        ]
+      }
+    },
+    {
+      "scopeId": "100017092",
+      "variables": [
+        {
+          "name": "uaInfo.isH5",
+          "id": "4788d03c-9bdc-45b5-ba6c-4f1955cc78c6"
+        }
+      ],
+      "scopeType": 2,
+      "name": "h5Hide",
+      "id": "rpg6MLBpF_N",
+      "type": 1,
+      "props": {
+        "items": [
+          {
+            "operation": "eq",
+            "value": "0",
+            "key": "{{uaInfo.isH5 ? 1 : 0}}"
+          }
+        ]
+      }
+    }
+  ],
+  "language": "",
+  "type": 2,
+  "id": "nqQVzCT_Zz-",
+  "appId": 100017092
+}

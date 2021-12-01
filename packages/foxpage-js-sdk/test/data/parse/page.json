@@ -1,0 +1,42 @@
+{
+  "id": "page_njVpAMj3GYKxr",
+  "schemas": [
+    {
+      "id": "0",
+      "name": "page",
+      "type": "component",
+      "props": {
+        "width": 1048,
+        "height": "100%",
+        "locale": "en_US"
+      },
+      "directive": {
+        "tpl": "{{__templates:tpl_xn7Ko6gfcV00:schemas}}"
+      },
+      "children": [
+        {
+          "id": "1",
+          "name": "header",
+          "type": "react.component",
+          "props": {
+            "value": "{{test}}",
+            "time": "{{__context:localTime:ISOString}}"
+          }
+        }
+      ]
+    }
+  ],
+  "relation": {
+    "__templates:tpl_xn7Ko6gfcV00:schemas": {
+      "id": "tpl_xn7Ko6gfcV00",
+      "type": "template"
+    },
+    "test": {
+      "id": "var_zl6UOTNfbkC1",
+      "type": "variable"
+    },
+    "__context:localTime:ISOString": {
+      "type": "sys-variable"
+    }
+  }
+}

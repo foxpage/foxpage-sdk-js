@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    // editor
+    "charset": "utf-8",
+    "newLine": "lf",
+    // syntax
+    "strict": true,
+    "alwaysStrict": false,
+    "noImplicitAny": true,
+    "noImplicitUseStrict": true,
+    "noFallthroughCasesInSwitch": true,
+    "experimentalDecorators": true,
+    "downlevelIteration": true,
+    "emitDecoratorMetadata": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "allowSyntheticDefaultImports": true,
+    "lib": [
+      "ESNext",
+      "ES2019",
+    ],
+    "jsx": "react",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "ES2017",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "resolveJsonModule": false,
+    "removeComments": false,
+    "sourceMap": true,
+    "allowJs": false,
+  },
+  "exclude": [
+    "node_modules",
+    "lib",
+    "dist",
+    "test/data/dsl",
+    "src/**/__mocks__",
+    "__mocks__/*",
+    "__mocks__/**/*",
+    "examples/**/__mocks__",
+    ".cache",
+    ".comp-cache",
+    "__*"
+  ],
+}

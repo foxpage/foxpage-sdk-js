@@ -1,0 +1,16 @@
+{
+  "id": "var_zl6UOTNfbkCH",
+  "schemas": [
+    {
+      "name": "getPlatform",
+      "type": "data.static",
+      "props": {
+        "type": "json",
+        "value": {
+          "platform": "android"
+        }
+      }
+    }
+  ],
+  "relation": {}
+}

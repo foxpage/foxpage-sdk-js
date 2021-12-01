@@ -1,0 +1,44 @@
+{
+  "name": "@foxpage/foxpage-plugin-styled-component",
+  "version": "0.1.1",
+  "description": "foxpage styled component plugin for collect styles",
+  "keywords": [
+    "foxpage",
+    "foxpage styled component plugin",
+    "foxpage plugin",
+    "styled component"
+  ],
+  "author": "drxiao",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/**"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.prod.json",
+    "build:npm": "npm run build -- --skipLibCheck",
+    "prebuild": "rimraf lib",
+    "prepublishOnly": "npm install && npm run build:npm"
+  },
+  "peerDependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "dependencies": {
+    "@foxpage/foxpage-core": "^0.2.22",
+    "@foxpage/foxpage-plugin": "^0.1.7",
+    "lodash": "^4.17.15",
+    "styled-components": "^5.3.3"
+  },
+  "devDependencies": {
+    "@foxpage/foxpage-types": "^0.2.20",
+    "@types/styled-components": "^5.1.15",
+    "rimraf": "^2.6.3",
+    "typescript": "^3.9.0"
+  }
+}

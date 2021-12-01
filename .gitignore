@@ -1,0 +1,43 @@
+# cache
+.DS_Store
+*~
+.cache
+.rpt2_cache
+.foxpage_component_cache
+.foxpage_dsl_cache
+.foxpage_modules
+.foxpage_dsls
+.temp_component
+.temp
+.tmp
+
+# packages
+node_modules/
+yarn.lock
+package-lock.json
+
+# editor
+.idea/
+.vscode
+
+# log
+log/
+*.log
+
+# other
+test/coverage
+coverage
+__*.*
+lib/
+es/
+dist/
+src/**/*.js
+
+*.py
+test/unit/test.js
+*.tsbuildinfo
+
+# code counter
+.VSCodeCounter/
+
+.clinic/

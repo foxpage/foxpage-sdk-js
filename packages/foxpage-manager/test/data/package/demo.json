@@ -1,0 +1,12 @@
+{
+  "name": "demo.test-two",
+  "type": "component",
+  "version": "0.1.5",
+  "resource": {
+    "node": "",
+    "browser": "",
+    "debug": "å",
+    "css": ""
+  },
+  "meta": {}
+}

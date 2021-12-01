@@ -1,0 +1,42 @@
+{
+  "id": "njVpAMj3GYKxr",
+  "content": [
+    {
+      "name": "page",
+      "type": "component",
+      "props": {
+        "width": 1048,
+        "height": "100%"
+      },
+      "is": {
+        "tpl": "{{templates.xn7Ko6gfcV00.content}}"
+      },
+      "children": [
+        {
+          "name": "header",
+          "type": "react.component"
+        },
+        {
+          "name": "header",
+          "type": "react.component",
+          "disable": true
+        },
+        {
+          "name": "footer",
+          "type": "react.component",
+          "is": {
+            "if": "{{conditions.appHide}}"
+          }
+        }
+      ]
+    }
+  ],
+  "relation": {
+    "templates.xn7Ko6gfcV00.content": {
+      "id": "xn7Ko6gfcV00"
+    },
+    "conditions.appHide": {
+      "id": "1b652910e89b"
+    }
+  }
+}

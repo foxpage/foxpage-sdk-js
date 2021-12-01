@@ -1,0 +1,34 @@
+{
+  "id": "con_1b652910e89b",
+  "schemas": [
+    {
+      "name": "appHide",
+      "type": 2,
+      "props": {},
+      "children": [
+        {
+          "type": "condition.expression",
+          "props": {
+            "key": "{{getPlatform.platform}}",
+            "operation": "ct",
+            "value": "ios"
+          }
+        },
+        {
+          "type": "condition.expression",
+          "props": {
+            "key": "{{getPlatform.platform}}",
+            "operation": "ct",
+            "value": "android"
+          }
+        }
+      ]
+    }
+  ],
+  "relation": {
+    "getPlatform.platform": {
+      "id": "var_zl6UOTNfbkCH",
+      "type": "variable"
+    }
+  }
+}

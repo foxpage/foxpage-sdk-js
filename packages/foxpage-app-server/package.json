@@ -1,0 +1,48 @@
+{
+  "name": "@foxpage/foxpage-app-server",
+  "version": "0.2.26",
+  "description": "foxpage application server project",
+  "main": "lib/service.js",
+  "private": true,
+  "scripts": {
+    "start": "yarn clear && cross-env FOXPAGE_ENV=dev nodemon",
+    "build": "tsc --project tsconfig.prod.json",
+    "clear": "rimraf .foxpage",
+    "prebuild": "rimraf lib"
+  },
+  "dependencies": {
+    "@foxpage/foxpage-middleware-koa": "^0.1.2",
+    "@foxpage/foxpage-node-sdk": "^0.2.25",
+    "@foxpage/foxpage-plugin-function-parse": "^0.1.13",
+    "@foxpage/foxpage-plugin-react-helmet": "^0.1.10",
+    "@foxpage/foxpage-plugin-react-render": "^0.1.1",
+    "@foxpage/foxpage-shared": "^0.2.20",
+    "@foxpage/foxpage-transformer": "^0.1.8",
+    "@koa/cors": "^3.1.0",
+    "cross-env": "^7.0.3",
+    "koa": "^2.7.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0",
+    "pm2": "^5.1.0",
+    "rimraf": "^2.6.3"
+  },
+  "devDependencies": {
+    "@foxpage/foxpage-types": "^0.2.20",
+    "@types/koa": "^2.0.48",
+    "@types/koa-bodyparser": "^4.2.2",
+    "@types/koa-router": "^7.0.40",
+    "@types/koa__cors": "^3.0.3",
+    "@types/node": "^12.0.0",
+    "@types/rimraf": "^3.0.1",
+    "nodemon": "^1.19.0",
+    "ts-node": "^8.1.0",
+    "tsconfig-paths": "^3.10.1",
+    "typescript": "^4.0.2"
+  },
+  "files": [
+    "lib/**",
+    "pm2.js"
+  ],
+  "author": "drxiao",
+  "license": "MIT"
+}

@@ -1,0 +1,27 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "strict": false,
+    "sourceMap": false,
+    "declaration": false,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@@/*": [
+        "./test/*"
+      ],
+    }
+  },
+  "include": [
+    "src/*",
+    "src/**/*",
+    "typings/*",
+    "typings/**/*",
+    "test/*",
+    "test/**/*"
+  ]
+}

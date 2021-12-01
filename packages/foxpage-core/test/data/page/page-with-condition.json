@@ -1,0 +1,50 @@
+{
+  "id": "pag_njVpAMj3GYKxr",
+  "schemas": [
+    {
+      "id": "0",
+      "name": "page",
+      "type": "component"
+    },
+    {
+      "id": "0",
+      "name": "page",
+      "type": "component",
+      "props": {
+        "width": 1048,
+        "height": "100%",
+        "locale": "en_US"
+      },
+      "children": [
+        {
+          "id": "1",
+          "name": "header",
+          "type": "react.component"
+        },
+        {
+          "id": "2",
+          "name": "header",
+          "type": "react.component",
+          "disable": true
+        },
+        {
+          "id": "3",
+          "name": "footer",
+          "type": "react.component",
+          "directive": {
+            "if": [
+              "{{__conditions:con_1b652910e89b}}",
+              "{{__conditions:con_1b652910e891}}"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "relation": {
+    "__conditions:con_1b652910e89b": {
+      "id": "con_1b652910e89b",
+      "type": "condition"
+    }
+  }
+}

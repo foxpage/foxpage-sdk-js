@@ -1,0 +1,28 @@
+{
+  "id": "con_1b652910e89b",
+  "schemas": [
+    {
+      "name": "appHide",
+      "type": 2,
+      "props": {},
+      "children": [
+        {
+          "type": "condition.expression",
+          "props": {
+            "key": "ios",
+            "operation": "eq",
+            "value": "ios"
+          }
+        },
+        {
+          "type": "condition.expression",
+          "props": {
+            "key": "android1",
+            "operation": "eq",
+            "value": "android"
+          }
+        }
+      ]
+    }
+  ]
+}
