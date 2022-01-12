@@ -1,9 +1,9 @@
 import { join } from 'path';
 
 import { pathExists } from 'fs-extra';
-import { clone } from 'lodash';
+import { clone, merge } from 'lodash';
 
-import { createLogger, LOGGER_LEVEL } from './logger';
+import { createLogger, LOGGER_LEVEL } from '../logger';
 
 const logger = createLogger('Config');
 
@@ -23,15 +23,15 @@ const defaultConfig = {
     host: '', //http://example.com
     path: '', // api path
   },
-  plugins: [],
+  plugins: ['@foxpage/foxpage-plugin-function-parse', '@foxpage/foxpage-plugin-urlquery-parse'],
   commonPluginDir: '',
   logger: {
-    level: LOGGER_LEVEL.INFO,
+    level: LOGGER_LEVEL.ERROR,
   },
 };
 
 export type FoxpageConfig = typeof defaultConfig;
-const configs: FoxpageConfig = clone(defaultConfig);
+let configs: FoxpageConfig = clone(defaultConfig);
 
 const config = {
   async init() {
@@ -47,7 +47,7 @@ const config = {
       if (result && result.exist) {
         const defineC = require(result.path);
         logger.debug('app provider config:', JSON.stringify(defineC));
-        Object.assign(configs, defineC);
+        configs = merge(configs, defineC);
         return;
       }
 

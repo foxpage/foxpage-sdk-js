@@ -1,11 +1,20 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
+    "rootDir": ".",
     "strict": false,
     "sourceMap": false,
     "declaration": false,
     "resolveJsonModule": true,
-    "jsx": "react"
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@@/*": [
+        "./test/*"
+      ],
+    }
   },
   "include": [
     "src/*",

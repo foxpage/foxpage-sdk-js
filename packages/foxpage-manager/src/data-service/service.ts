@@ -68,7 +68,12 @@ export class FoxpageDataService {
     contents: ResourceUpdateInfo;
     timestamp: number;
   }> {
-    return (await this.request('get', '/contents/changes', { applicationId: appId, timestamp })) as {
+    return (await this.request(
+      'get',
+      '/contents/changes',
+      { applicationId: appId, timestamp },
+      { throwError: true },
+    )) as {
       contents: ResourceUpdateInfo;
       timestamp: number;
     };

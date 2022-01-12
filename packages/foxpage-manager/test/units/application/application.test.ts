@@ -1,21 +1,27 @@
 import { FPApplication, Page } from '@foxpage/foxpage-types';
 
-import { ApplicationImpl } from './../../../src/application/application';
+import { ApplicationImpl } from '@/application/application';
 
-describe('Application manager', () => {
+describe('application/application', () => {
   it('Receive: page remove', async () => {
     const appId = '1000';
-    const app = new ApplicationImpl({ appId } as unknown as FPApplication, {});
+    const app = new ApplicationImpl({ id: appId } as unknown as FPApplication, {});
 
-    const page: Page = require('../../data/content/page.json');
+    const page: Page = require('@@/data/content/page.json');
 
     app.pageManager.addPage(page);
 
-    expect(app.pageManager.exist(page.id)).toBeTruthy();
+    expect(await app.pageManager.exist(page.id)).toBeTruthy();
 
-    await app.refresh({ page: { removes: [page.id] } });
-    const result = app.pageManager.exist(page.id);
-
-    expect(result).toBeFalsy();
+    await app.refresh({
+      appId,
+      contents: {
+        page: { removes: [page.id], updates: [] },
+      },
+      timestamp: -1,
+    });
+    const result = await app.pageManager.exist(page.id);
+    // disk not clear
+    expect(result).toBeTruthy();
   });
 });

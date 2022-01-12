@@ -1,14 +1,14 @@
 import { Manager, ManagerOption } from '@foxpage/foxpage-types';
 
-// import { getApplication, getApplicationByName, getManager, initManager } from '../../src/service';
 import { getManager, initManager } from '../../src/service';
 
 const opt = {
-  apps: [{ appId: 'appl_RxwAUtpQUXqgkzQ', options: {} }],
+  apps: [{ appId: 'appl_yqfu8BI1BRe15fs' }],
   dataService: { host: 'http://api.foxfamily.io' },
+  settings: {},
 } as ManagerOption;
 
-describe('Service', () => {
+describe('service', () => {
   let manager: Manager;
 
   beforeEach(async () => {
@@ -25,7 +25,7 @@ describe('Service', () => {
     const manager = getManager();
     expect(manager).toBeDefined();
 
-    const managerApp = manager.getApplication(opt.apps[0].appId);
+    const managerApp = manager?.getApplication(opt.apps[0].appId);
     expect(managerApp?.appId).toBe(opt.apps[0].appId);
   });
 

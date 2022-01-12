@@ -51,9 +51,9 @@ const handleMerge = (staticDSL: PageDSL, dynamicDSL: PageDSL, opt: MergeOption) 
   } as PageDSL;
 };
 
-export const merge = (staticDSL: PageDSL, dynamicDSL: PageDSL, opt?: MergeOption) => {
-  const _mergeStrategy = opt?.mergeStrategy || MergeStrategy.combine; // default mergeStrategy is combine
-  const result = handleMerge(staticDSL, dynamicDSL, opt || { mergeStrategy: _mergeStrategy });
+export const merge = (staticDSL: PageDSL, dynamicDSL: PageDSL, opt: MergeOption = {}) => {
+  const _mergeStrategy = opt.mergeStrategy || MergeStrategy.combine; // default mergeStrategy is combine
+  const result = handleMerge(staticDSL, dynamicDSL, { ...opt, mergeStrategy: _mergeStrategy });
   return result;
 };
 
@@ -62,8 +62,8 @@ export const merge = (staticDSL: PageDSL, dynamicDSL: PageDSL, opt?: MergeOption
  * @param staticDSL
  * @param dynamicDSL
  */
-export const replace = (staticDSL: PageDSL, dynamicDSL: PageDSL) => {
-  const result = handleMerge(staticDSL, dynamicDSL, { mergeStrategy: MergeStrategy.replace });
+export const replace = (staticDSL: PageDSL, dynamicDSL: PageDSL, opt: MergeOption = {}) => {
+  const result = handleMerge(staticDSL, dynamicDSL, { ...opt, mergeStrategy: MergeStrategy.replace });
   return result;
 };
 
@@ -72,8 +72,8 @@ export const replace = (staticDSL: PageDSL, dynamicDSL: PageDSL) => {
  * @param staticDSL
  * @param dynamicDSL
  */
-export const replaceAll = (staticDSL: PageDSL, dynamicDSL: PageDSL) => {
-  const result = handleMerge(staticDSL, dynamicDSL, { mergeStrategy: MergeStrategy.replaceAll });
+export const replaceAll = (staticDSL: PageDSL, dynamicDSL: PageDSL, opt: MergeOption = {}) => {
+  const result = handleMerge(staticDSL, dynamicDSL, { ...opt, mergeStrategy: MergeStrategy.replaceAll });
   return result;
 };
 
@@ -82,8 +82,8 @@ export const replaceAll = (staticDSL: PageDSL, dynamicDSL: PageDSL) => {
  * @param staticDSL
  * @param dynamicDSL
  */
-export const combine = (staticDSL: PageDSL, dynamicDSL: PageDSL) => {
-  const result = handleMerge(staticDSL, dynamicDSL, { mergeStrategy: MergeStrategy.combine });
+export const combine = (staticDSL: PageDSL, dynamicDSL: PageDSL, opt: MergeOption = {}) => {
+  const result = handleMerge(staticDSL, dynamicDSL, { ...opt, mergeStrategy: MergeStrategy.combine });
   return result;
 };
 
@@ -92,7 +92,7 @@ export const combine = (staticDSL: PageDSL, dynamicDSL: PageDSL) => {
  * @param staticDSL
  * @param dynamicDSL
  */
-export const combineAll = (staticDSL: PageDSL, dynamicDSL: PageDSL) => {
-  const result = handleMerge(staticDSL, dynamicDSL, { mergeStrategy: MergeStrategy.combineAll });
+export const combineAll = (staticDSL: PageDSL, dynamicDSL: PageDSL, opt: MergeOption = {}) => {
+  const result = handleMerge(staticDSL, dynamicDSL, { ...opt, mergeStrategy: MergeStrategy.combineAll });
   return result;
 };

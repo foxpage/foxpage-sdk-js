@@ -1,16 +1,17 @@
 import { Condition, ParsedContent, Variable } from '@foxpage/foxpage-types';
 
-import { ConditionParser } from '../../../../src/parser/condition';
-import { VariableParser } from '../../../../src/parser/variable';
+import { ConditionParser } from '@/parser/condition';
+import { VariableParser } from '@/parser/variable';
+
 import {
   ConditionParsed,
   mockRenderContextWithConAndVariable,
   mockRenderContextWithContent,
   mockRenderContextWithParsedContent,
   VariableParsed,
-} from '../../../helper';
+} from '@@/helper';
 
-describe('condition parser', () => {
+describe('parser/condition/parser', () => {
   let parser: ConditionParser;
 
   beforeEach(() => {

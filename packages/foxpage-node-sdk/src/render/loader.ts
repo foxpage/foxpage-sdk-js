@@ -9,14 +9,13 @@ import {
   FoxpageComponent,
   FPPackage,
   FPPackageDependency,
+  Logger,
   Package,
   PackageNamedVersion,
   StructureNode,
 } from '@foxpage/foxpage-types';
 
-import { createLogger } from '../common';
-
-const logger = createLogger('ComponentLoader');
+import { loggerCreate } from '../logger';
 
 /**
  * component loader
@@ -73,9 +72,12 @@ export class ComponentLoaderImpl implements ComponentLoader {
    */
   private missedVersionMap = new Map<string, string>();
 
+  private logger: Logger;
+
   constructor(appId: string, opt: ComponentLoadOption = { autoDownloadComponent: true, useStructureVersion: false }) {
     this.app = getApplication(appId);
     this.opt = opt;
+    this.logger = loggerCreate('ComponentLoader');
   }
 
   /**
@@ -138,7 +140,7 @@ export class ComponentLoaderImpl implements ComponentLoader {
     const namedVersions = this.getMissedPackages();
 
     if (namedVersions.length > 0) {
-      logger.info('fetch missed packages from server:', namedVersions);
+      this.logger.info('fetch missed packages from server:', namedVersions);
 
       // fetch from server
       const fetches = await this.app?.packageManager.fetchPackagesByNamedVersions(namedVersions);
@@ -241,7 +243,9 @@ export class ComponentLoaderImpl implements ComponentLoader {
           this.loadedMap.set(id, this.componentFormatter(item, pkg, messages));
           this.setResolveVersion(item, pkg.version);
         } else {
-          logger.debug(`component@${item.id} -> package ${key} local not exist available version, try to download`);
+          this.logger.debug(
+            `component@${item.id} -> package ${key} local not exist available version, try to download`,
+          );
 
           this.missLoadMap.set(id, item);
           this.setResolveVersion(item, '');
@@ -273,7 +277,7 @@ export class ComponentLoaderImpl implements ComponentLoader {
           this.componentFormatter(this.generateStructureNode(key, name, version), pkg, messages),
         );
       } else {
-        logger.warn(`dependency ${key} loaded failed, try to auto download.`);
+        this.logger.warn(`dependency ${key} loaded failed, try to auto download.`);
         this.missLoadDependencyMap.set(key, { name, version });
       }
     }
@@ -303,10 +307,20 @@ export class ComponentLoaderImpl implements ComponentLoader {
 
   private componentFormatter(node: StructureNode, pkg?: Package | null, messages?: Messages): FoxpageComponent {
     if (pkg) {
-      const { type, source, supportNode, deps, componentFactory, meta, downloadUrl } = pkg;
-      const { browser, debug } = source;
+      const { type, source, supportNode, deps, componentFactory, downloadUrl } = pkg;
+      const { browser, debug, css } = source;
       const browserURL = browser.host && browser.path ? browser.host + browser.path : '';
       const debugURL = debug.path && debug.host ? debug.host + debug.path : browserURL;
+      const cssURL = css?.host && css?.path ? css.host + css.path : '';
+      let meta = pkg.meta;
+      // will remove
+      if (!meta) {
+        meta = {};
+      }
+      if (cssURL) {
+        meta.assets = [{ url: cssURL, type: 'css' }];
+      }
+
       return {
         type,
         name: node.name,
@@ -314,6 +328,7 @@ export class ComponentLoaderImpl implements ComponentLoader {
         browserURL,
         debugURL,
         nodeURL: downloadUrl,
+        cssURL,
         supportSSR: supportNode,
         factory: componentFactory,
         dependencies: deps,

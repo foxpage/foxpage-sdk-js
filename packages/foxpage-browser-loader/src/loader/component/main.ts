@@ -15,8 +15,8 @@ function extname(filename: string) {
 }
 
 function findComponentDeps(meta: BrowserModule['meta'], { ignoreStyleAsset = false }: ConfigComponentOptions = {}) {
-  const deps: string[] = [];
-  const { assets } = meta;
+  const { assets, softDeps = [] } = meta;
+  const deps: string[] = [].concat(softDeps);
 
   if (assets) {
     for (let i = 0; i < assets.length; i++) {

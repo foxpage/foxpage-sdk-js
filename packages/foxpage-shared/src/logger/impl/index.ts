@@ -2,7 +2,7 @@ import { LoggerBase } from '../types';
 
 import ConsoleLogger from './console';
 
-interface LoggerClass {
+export interface LoggerClass {
   readonly enable: boolean;
   new (type?: string): LoggerBase;
 }

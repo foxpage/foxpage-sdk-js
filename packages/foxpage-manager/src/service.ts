@@ -2,7 +2,7 @@ import { Application, ManagerOption } from '@foxpage/foxpage-types';
 
 import { ManagerImpl } from './manager';
 
-let manager: ManagerImpl;
+let manager: ManagerImpl | null;
 
 /**
  * init resource manager
@@ -20,13 +20,14 @@ export const initManager = async (opt: ManagerOption): Promise<ManagerImpl> => {
   }
   try {
     if (manager) {
-      manager.prepare();
+      await manager.prepare();
       // register apps
       await manager.registerApplications(opt.apps);
     }
     return manager;
   } catch (e) {
-    throw new Error(`Init manager failed.`);
+    manager = null;
+    throw new Error(`Init manager failed: ${(e as Error).message}`);
   }
 };
 
@@ -34,7 +35,7 @@ export const initManager = async (opt: ManagerOption): Promise<ManagerImpl> => {
  * get manager
  * @returns Manager
  */
-export const getManager = (): ManagerImpl => {
+export const getManager = () => {
   return manager;
 };
 

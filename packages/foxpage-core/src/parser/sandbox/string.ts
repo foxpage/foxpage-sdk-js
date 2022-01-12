@@ -25,7 +25,7 @@ export function executeString<T = unknown>(
   const str = expression;
 
   const checkValue = (val: unknown) => {
-    // undefined 视为一个非法的值
+    // undefined is invalid data
     if (val === undefined) {
       throw new Error('value is undefined');
     }
@@ -69,7 +69,9 @@ function stringify(val: unknown): string {
   } else if (isObject(val)) {
     try {
       return JSON.stringify(val);
-    } catch (error) {}
+    } catch (error) {
+      return '';
+    }
   }
   return String(val);
 }

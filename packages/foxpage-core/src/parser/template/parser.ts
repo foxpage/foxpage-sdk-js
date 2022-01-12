@@ -49,7 +49,7 @@ export class TemplateParserImpl implements TemplateParser {
    */
   public parse(ctx: Context) {
     this.templates.forEach(tpl => {
-      const parser = this.tplParser(tpl);
+      const parser = this.tplParser(tpl, ctx);
       const { parsed, messages } = parser(tpl.schemas);
       ctx.logger?.info(`template@${tpl.id} parsed`);
       ctx.logger?.debug(`template@${tpl.id} parsed:`, JSON.stringify(parsed));
@@ -63,7 +63,7 @@ export class TemplateParserImpl implements TemplateParser {
     });
   }
 
-  private tplParser(tpl: Template) {
+  private tplParser(tpl: Template, ctx: Context) {
     const scope = this.containerMap.get(tpl.id);
     const messages: string[] = [];
 
@@ -74,13 +74,17 @@ export class TemplateParserImpl implements TemplateParser {
 
         // props parse
         if (props) {
-          const resolvedProps = executeObject(props, { $this: scope }, messages) as StructureNode['props'];
+          const resolvedProps = executeObject(
+            props,
+            { $this: scope, ...ctx.variables },
+            messages,
+          ) as StructureNode['props'];
           item.props = resolvedProps;
         }
 
         // directive parse
         if (directive && directive.tpl) {
-          const tpl = executeString(directive.tpl, { $this: scope }, messages) as StructureNode[];
+          const tpl = executeString(directive.tpl, { $this: scope, ...ctx.variables }, messages) as StructureNode[];
           // directive.tpl = undefined;
           // item.children = tpl;
           if (tpl) {

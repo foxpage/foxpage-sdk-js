@@ -1,4 +1,4 @@
-import { ContentType, createLogger, Logger } from '@foxpage/foxpage-shared';
+import { ContentType } from '@foxpage/foxpage-shared';
 import { Context, FoxpageHooks, VariableItem, VariableParseEntity, VariableType } from '@foxpage/foxpage-types';
 
 import { FunctionParser } from '../function';
@@ -31,10 +31,7 @@ export class VariableParser {
    */
   private functionParser?: FunctionParser;
 
-  public logger: Logger;
-
   constructor() {
-    this.logger = createLogger('variable parse');
     this.functionParser = new FunctionParser();
 
     // register default variable parser
@@ -59,7 +56,6 @@ export class VariableParser {
    */
   public register(parser: VariableParseEntity) {
     if (!this.get(parser.type)) {
-      // this.logger.info(`register variable@${parser.type}`);
       this.parserMap.set(parser.type, parser);
     }
   }
@@ -72,9 +68,15 @@ export class VariableParser {
     // register parser by plugin dynamic
     const { registerVariableParser } = hooks;
     if (typeof registerVariableParser === 'function') {
-      const parser = await registerVariableParser();
-      if (parser) {
-        this.register(parser);
+      const parsers = (await registerVariableParser()) as unknown as VariableParseEntity[];
+      if (parsers) {
+        if (Array.isArray(parsers)) {
+          parsers.forEach(parser => {
+            this.register(parser);
+          });
+        } else {
+          this.register(parsers);
+        }
       }
     }
   }
@@ -159,7 +161,7 @@ export class VariableParser {
           const parsed = parser.parse(content, ctx);
           return { parsed, status: true, messages };
         } catch (e) {
-          const msg = `parse variable@${content.name} failed: ${JSON.stringify(e)}`;
+          const msg = `parse variable@${content.name} failed: ${(e as Error).message}`;
           ctx.logger?.error(msg);
           messages.push(msg);
           return { parsed: null, status: false, messages: messages };
@@ -167,7 +169,7 @@ export class VariableParser {
       } else {
         const msg = `variable type ${content.type} not supported, should be "${[...this.parserMap.keys()]}"`;
         messages.push(msg);
-        this.logger.error(msg);
+        ctx.logger?.error(msg);
         return { parsed: content, status: false, messages };
       }
     };

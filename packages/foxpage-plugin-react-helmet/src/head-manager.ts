@@ -4,7 +4,7 @@ import { flatten } from 'lodash';
 
 import { structure as structureUtils } from '@foxpage/foxpage-core';
 import { isNotNill } from '@foxpage/foxpage-shared';
-import { Context, FoxpageComponentMeta } from '@foxpage/foxpage-types';
+import { Context } from '@foxpage/foxpage-types';
 
 import { HeadConsumer } from './components/HeadConsumer';
 import { findStructure } from './utils';
@@ -59,12 +59,12 @@ export class HeadManager {
     this.helmetDataSource.push(data);
   }
 
-  public outputToDSL(ctx: Context) {
+  public outputToDSL(ctx: Context, dsl: Context['page']['schemas']) {
     if (this.hasOutput) {
       return;
     }
 
-    const headNode = findStructure(ctx.page.schemas, ctx, 'isHead');
+    const headNode = findStructure(dsl, ctx, 'isHead');
     if (!headNode) {
       return;
     }
@@ -121,7 +121,7 @@ function findComponentAssets(componentMap: Context['componentMap'] = new Map()) 
  * @param assets
  * @param ctx
  */
-export function getResourceLinks(assets: FoxpageComponentMeta[]) {
+export function getResourceLinks(assets: { type: 'css' | 'js'; url: string }[]) {
   const urls = {
     js: new Set<string>(),
     css: new Set<string>(),

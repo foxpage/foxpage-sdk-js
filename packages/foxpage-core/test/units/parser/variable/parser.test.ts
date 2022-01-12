@@ -1,27 +1,22 @@
 import { contentProxy } from '@foxpage/foxpage-shared';
-import { Context, FoxpageHooks, FPFunction, Variable } from '@foxpage/foxpage-types';
+import { Context, FPFunction, Variable } from '@foxpage/foxpage-types';
 
-import { FunctionParser, VariableParser, VariableType } from '../../../../src/parser';
+import { FunctionParser, VariableParser, VariableType } from '@/parser';
 
-import { mockRenderContextWithContent, mockRenderContextWithParsedContent } from './../../../helper/render-context';
+import { mockRenderContextWithContent, mockRenderContextWithParsedContent } from '@@/helper/render-context';
 
 const createHookParser = () => {
-  const parser = new VariableParser({
-    hooks: {
-      registerVariableParser: () => {
-        return {
-          type: 'data.function.call',
-          parse() {
-            return 1;
-          },
-        };
-      },
-    } as FoxpageHooks,
+  const parser = new VariableParser();
+  parser.register({
+    type: 'data.function.call',
+    parse() {
+      return 1;
+    },
   });
   return parser;
 };
 
-describe('Parser variable', () => {
+describe('parser/variable/parser', () => {
   let variable: Variable;
   let parser: VariableParser;
 
@@ -93,23 +88,13 @@ describe('Parser variable', () => {
     const opt = {
       parsed: {
         parsed: {},
+        parseStatus: false,
       },
     };
     const ctx: Context = mockRenderContextWithContent([variableCont], opt);
-    const parser = new VariableParser({
-      hooks: {
-        registerVariableParser: () => {
-          return {
-            type: 'data.function.call',
-            parse() {
-              throw new Error('parse error');
-            },
-          };
-        },
-      } as FoxpageHooks,
-    });
+    const parser = new VariableParser();
     await parser.parse(ctx, {});
     expect(opt.parsed).toBeDefined();
-    expect(opt.parsed.parsed).toBe(null);
+    expect(opt.parsed.parseStatus).toBeFalsy();
   });
 });

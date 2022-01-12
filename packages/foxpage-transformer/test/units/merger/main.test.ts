@@ -2,6 +2,7 @@ import { PageDSL } from '../../../src';
 import { combine, combineAll, merge, replace, replaceAll } from '../../../src/merger';
 
 import { generateDSL, generateDynamicDSL } from './helper/generateDSL';
+import { DYNAMIC_MOUNT_NODE } from './helper/generateStructure';
 
 describe('merger/main', () => {
   let staticDSL: PageDSL;
@@ -19,7 +20,7 @@ describe('merger/main', () => {
     dynamicDSL = generateDynamicDSL();
   });
   it('dsl merge', async () => {
-    const result = merge(staticDSL, dynamicDSL, {});
+    const result = merge(staticDSL, dynamicDSL, { mountNode: DYNAMIC_MOUNT_NODE });
     const str = JSON.stringify(result);
     expect(str).toMatch('A-B-1');
     expect(str).toMatch('A-B-C');
@@ -32,7 +33,7 @@ describe('merger/main', () => {
   });
 
   it('dsl replace', () => {
-    const result = replace(staticDSL, dynamicDSL);
+    const result = replace(staticDSL, dynamicDSL, { mountNode: DYNAMIC_MOUNT_NODE });
     const str = JSON.stringify(result);
     expect(str).not.toMatch('A-B-1');
     expect(str).not.toMatch('A-B-C');
@@ -45,7 +46,7 @@ describe('merger/main', () => {
   });
 
   it('dsl replaceAll', () => {
-    const result = replaceAll(staticDSL, dynamicDSL);
+    const result = replaceAll(staticDSL, dynamicDSL, { mountNode: DYNAMIC_MOUNT_NODE });
     const str = JSON.stringify(result);
     expect(str).not.toMatch('A-B-1');
     expect(str).not.toMatch('A-B-C');
@@ -60,7 +61,7 @@ describe('merger/main', () => {
   });
 
   it('dsl combine', () => {
-    const result = combine(staticDSL, dynamicDSL);
+    const result = combine(staticDSL, dynamicDSL, { mountNode: DYNAMIC_MOUNT_NODE });
     const str = JSON.stringify(result);
     expect(str).toMatch('A');
     expect(str).toMatch('A-1');
@@ -77,7 +78,7 @@ describe('merger/main', () => {
   });
 
   it('dsl combine', () => {
-    const result = combineAll(staticDSL, dynamicDSL);
+    const result = combineAll(staticDSL, dynamicDSL, { mountNode: DYNAMIC_MOUNT_NODE });
     const str = JSON.stringify(result);
     expect(str).toMatch('A');
     expect(str).toMatch('A-1');

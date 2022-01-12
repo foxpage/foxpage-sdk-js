@@ -118,7 +118,7 @@ export interface ManagerOption {
 
 export interface Manager {
   hooks: FoxpageHooks | undefined;
-  prepare(): void;
+  prepare(): Promise<void>;
   registerApplications(appMates: ManagerOption['apps']): void;
   unRegisterApplications(appIds: string[]);
   removeApplications(appIds: string[]): void;

@@ -1,4 +1,5 @@
-import * as _request from '../../../src/data-service/request';
+import * as _request from '@/data-service/request';
+
 import { JestMockedFunctionRecord } from '../../helpers';
 
 export type MockedRequestType = JestMockedFunctionRecord<typeof _request>;

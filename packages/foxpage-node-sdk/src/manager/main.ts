@@ -7,7 +7,7 @@ import { pm2 } from '../pm2';
 /**
  * init foxpage node source manager
  */
-export const initSourceManager = async () => {
+export async function initSourceManager() {
   await initManager({
     apps: config.get('apps'),
     dataService: config.get('dataService'),
@@ -23,8 +23,6 @@ export const initSourceManager = async () => {
       isMaster: pm2.isMaster,
       procId: pm2.id,
     },
-    loggerConfig: {
-      level: config.get('logger').level,
-    },
+    loggerConfig: config.get('logger'),
   } as ManagerOption);
-};
+}

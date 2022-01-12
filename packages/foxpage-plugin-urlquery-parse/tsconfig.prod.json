@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "sourceMap": false,
+    "declaration": true,
+    "removeComments": false,
+  },
+  "include": [
+    "src/*",
+    "src/**/*",
+  ],
+  "exclude": [
+    "**/__mocks__/**",
+    "test/*",
+    "test/**"
+  ]
+}

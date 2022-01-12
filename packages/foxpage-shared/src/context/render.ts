@@ -32,6 +32,9 @@ export abstract class ContextInstance implements Context {
 
   private innerPage?: Page;
 
+  url = '';
+  host = '';
+
   /**
    * parsed resources
    *

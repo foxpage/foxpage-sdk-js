@@ -33,7 +33,7 @@ export const renderToHtmlByPageId = async (pageId: string, appId: string, opt: F
   }
 
   // render task
-  const html = await renderTask(parsedPage, context);
+  const html = (await renderTask(parsedPage, context)) || null;
   return html;
 };
 
@@ -52,7 +52,7 @@ export async function renderToHtmlByPage(
 
   // init renderContext task
   const ctx = await contextTask(app, opt);
-  await updateContextWithPage(ctx, { app, page });
+  await updateContextWithPage(ctx, { app, page: pageInstance });
 
   // parse page
   const { page: parsedPage, ctx: context } = await parseTask(pageInstance, ctx);
@@ -61,6 +61,6 @@ export async function renderToHtmlByPage(
   }
 
   // render task
-  const html = await renderTask(parsedPage, context);
+  const html = (await renderTask(parsedPage, context)) || null;
   return html;
 }

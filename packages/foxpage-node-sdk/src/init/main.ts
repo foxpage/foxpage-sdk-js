@@ -1,13 +1,14 @@
 import { formatMessages, timeout } from '@foxpage/foxpage-shared';
 
-import { config, createLogger } from '../common';
+import { config } from '../common';
+import { initLogger, loggerCreate } from '../logger';
 import { initSourceManager } from '../manager';
 import { initResourceParser } from '../parser';
 import { initPm2 } from '../pm2';
 
 import { success } from './lifecycle';
 
-const logger = createLogger('SDKIgnition');
+const logger = loggerCreate('SDKIgnition');
 
 /**
  * SDK ignition
@@ -24,10 +25,10 @@ async function SDKIgnition() {
     try {
       await fn();
     } catch (error) {
-      logger.warn(`call "${fn.name}" fail:`, error);
+      logger.error(`call "${fn.name}" fail:`, error);
 
       if (retry) {
-        logger.warn(`retry call "${fn.name}"`);
+        logger.info(`retry call "${fn.name}"`);
         await tryRun(fn, level, { retry: false });
       } else if (level === 'error') {
         errors.push(error as Error);
@@ -46,6 +47,9 @@ async function SDKIgnition() {
 
   // init parser
   await tryRun(initResourceParser);
+
+  // init logger
+  await tryRun(initLogger);
 
   // check errors
   if (errors.length > 0) {

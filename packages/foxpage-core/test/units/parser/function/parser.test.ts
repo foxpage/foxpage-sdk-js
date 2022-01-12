@@ -1,9 +1,10 @@
 import { FPFunction, ParsedContent } from '@foxpage/foxpage-types';
 
-import { FunctionParser } from '../../../../src/parser/function';
-import { mockRenderContextWithContent } from '../../../helper';
+import { FunctionParser } from '@/parser/function';
 
-describe('function parser', () => {
+import { mockRenderContextWithContent } from '@@/helper';
+
+describe('parser/function/parser', () => {
   let parser: FunctionParser;
 
   beforeEach(() => {

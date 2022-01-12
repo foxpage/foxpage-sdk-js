@@ -222,6 +222,7 @@ export abstract class ManagerBaseImpl<T> extends FPEventEmitterInstance<ManagerE
    */
   protected removeOne(key: string) {
     this.hotResources.delete(key);
+    this.diskResources?.delete(key);
   }
 
   /**

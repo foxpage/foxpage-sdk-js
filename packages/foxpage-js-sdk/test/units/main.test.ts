@@ -21,6 +21,6 @@ describe('main', () => {
     const str = JSON.stringify(parsed.page);
     expect(str).toBeDefined();
     expect(str).toMatch('html.body');
-    expect(str).toMatch('110002');
+    expect(str).toMatch('100200');
   });
 });

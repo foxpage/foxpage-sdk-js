@@ -8,10 +8,12 @@ import {
   Package,
   RenderAppInfo,
   RenderOption,
+  StructureNode,
   Tag,
 } from '@foxpage/foxpage-types';
 
-import { createLogger, frameworkResources } from '../common';
+import { frameworkResources } from '../common';
+import { loggerCreate } from '../logger';
 
 /**
  * render context in node
@@ -24,7 +26,11 @@ import { createLogger, frameworkResources } from '../common';
 export class RenderContextInstance extends ContextInstance {
   tags: Tag[] = [];
   packages: Package[] = [];
-  componentMap: Map<string, FoxpageComponent> = new Map<string, FoxpageComponent>();
+  componentMap = new Map<string, FoxpageComponent>();
+  structureMap = new Map<
+    string,
+    Pick<StructureNode, 'id' | 'name' | 'version' | 'props'> & { childrenIds: string[] }
+  >();
 
   logger: Logger;
 
@@ -33,6 +39,7 @@ export class RenderContextInstance extends ContextInstance {
   frameworkResource: FrameworkResource;
 
   plugins: string[];
+
   private getHooks: () => FoxpageHooks | undefined;
 
   constructor(app: RenderAppInfo) {
@@ -41,14 +48,14 @@ export class RenderContextInstance extends ContextInstance {
     this.options = {
       renderMethod: 'hydrate',
     };
-    this.plugins = app.pluginManager.getPlugins();
+    this.plugins = app.pluginManager?.getPlugins() || [];
     // init get hook proxy
-    this.getHooks = () => app.pluginManager.getHooks();
+    this.getHooks = () => app.pluginManager?.getHooks();
 
-    this.logger = createLogger('render process');
+    this.logger = loggerCreate('render process');
   }
 
   get hooks() {
-    return this.getHooks();
+    return (this.getHooks() || []) as FoxpageHooks;
   }
 }

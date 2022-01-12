@@ -24,6 +24,7 @@ export function createStructureComponent(structure: StructureNode) {
     browserURL: '',
     debugURL: '',
     nodeURL: '',
+    cssURL: '',
     supportSSR: true,
     meta: {},
   };

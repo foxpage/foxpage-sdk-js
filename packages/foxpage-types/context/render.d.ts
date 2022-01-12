@@ -1,9 +1,11 @@
+import * as url from 'url';
 import { FoxpageComponent } from '../component';
 import { Package, Tag, Page, Template, Variable, Condition, FPFunction, RelationInfo } from '../manager'
 import { Logger } from '../logger';
 import { BrowserInitialStateOption, BrowserResource } from '../browser';
 import { FoxpageHooks } from '../hook';
 import { RequestMode } from '../request';
+import { StructureNode } from '../structure';
 
 type ContentType = Template | Variable | Condition | FPFunction;
 
@@ -45,8 +47,9 @@ export interface ContextOrigin {
  * @interface Context
  */
 export interface Context {
-  // will deprecated
-  URL?: URL
+  URL?: url.URL;
+  url: string;
+  host: string;
 
   // app base
   readonly appId: string;
@@ -66,6 +69,8 @@ export interface Context {
  */
   dependencies?: Map<string, FoxpageComponent>;
 
+  structureMap?: Map<string, Pick<StructureNode, 'id' | 'name' | 'version' | 'type' | 'props'> & { childrenIds: string[] }>;
+
   // getters
   templates: Record<string, Template>;
   variables: Record<'__templates' | '__conditions' | '__functions' | string, unknown>;
@@ -75,9 +80,13 @@ export interface Context {
   plugins?: string[];
   hooks?: FoxpageHooks;
 
-  // parse info
-  // readonly resource: ContextResource;
-  // // origin source: immutable
+  runtime?: {
+    isServer?: boolean;
+    isBrowser?: boolean;
+    clientType?: 'server' | 'browser';
+  };
+
+  // origin source: immutable
   readonly origin: ContextOrigin;
 
   frameworkResource?: FrameworkResource;

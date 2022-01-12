@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-plugin",
-  "version": "0.1.7",
+  "version": "0.2.2",
   "description": "foxpage plugin loader",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

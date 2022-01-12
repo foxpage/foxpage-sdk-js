@@ -5,7 +5,7 @@ import { pm2 } from './pm2';
 /**
  * init pm2
  */
-export const initPm2 = () => {
+export function initPm2(): null | undefined {
   if (!pm2.isPm2) {
     return null;
   }
@@ -22,4 +22,4 @@ export const initPm2 = () => {
       });
     });
   }
-};
+}

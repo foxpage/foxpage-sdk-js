@@ -112,14 +112,22 @@ export const transformToNewDSL = (pageDSL: PageDSL, schemaMap?: SchemaRecord): P
 export const transformDSL = (
   page: Page,
   dynamicConfig?: PageDSL,
-  opt: { mergeStrategy: MergeOption['mergeStrategy'] } = { mergeStrategy: MergeStrategy.replace },
+  opt: MergeOption = {
+    mergeStrategy: MergeStrategy.replace,
+    mountNode: '',
+  },
 ) => {
   if (dynamicConfig) {
     const { pageDSL: staticDSL, schemaMap } = transformToOldDSL(page);
 
-    const merged = merge(staticDSL, dynamicConfig, {
+    const merged = doMerge(staticDSL, dynamicConfig, {
       mergeStrategy: opt.mergeStrategy,
+      mountNode: opt.mountNode,
     });
+
+    if (!merged) {
+      return merged;
+    }
 
     const result = transformToNewDSL(merged, schemaMap);
     result.relation = page.relation;
@@ -128,4 +136,52 @@ export const transformDSL = (
   }
 
   return page;
+};
+
+const doMerge = (staticDSL: PageDSL, dynamicDSL: PageDSL, opt: MergeOption) => {
+  try {
+    const merged = merge(staticDSL, dynamicDSL, {
+      mergeStrategy: opt.mergeStrategy,
+      mountNode: opt.mountNode,
+    });
+
+    return filterDynamicMountNode(merged, opt.mountNode || '');
+  } catch (_e) {
+    return null;
+  }
+};
+
+const filterDynamicMountNode = (mergedDSL: PageDSL, mountType: string) => {
+  const { structures = [] } = mergedDSL;
+  if (structures.length > 0) {
+    const r = (list: DSLStructure[] = []) => {
+      let newList: DSLStructure[] = [];
+      for (let i = 0; i < list.length; i++) {
+        const { children, type } = list[i];
+
+        if (children && children.length > 0) {
+          const _children = r(children);
+
+          // filter DYNAMIC_MOUNT_NODE node
+          if (type === mountType) {
+            newList = newList.concat(_children);
+          } else {
+            newList.push({
+              ...list[i],
+              children: _children,
+            });
+          }
+        } else {
+          newList.push(list[i]);
+        }
+      }
+      return newList;
+    };
+
+    return {
+      ...mergedDSL,
+      structures: r(structures),
+    };
+  }
+  return mergedDSL;
 };

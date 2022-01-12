@@ -1,10 +1,8 @@
 import { random } from 'faker';
-import { isEqual } from 'lodash';
 
 import {
   buildMapFromIterator,
   createLocaleHasFormatter,
-  diff,
   format,
   formatLocale,
   indexArray,

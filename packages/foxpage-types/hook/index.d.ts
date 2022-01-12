@@ -5,6 +5,8 @@ import { FoxpageRenderHooks } from './render';
 import { FoxpageAppIgniteHooks } from './ignite';
 import { FoxpageParserRegisterHooks } from './parser';
 import { FoxpageContextHooks } from './context';
+import { StructureNode } from '../structure';
+import { Context } from '../context'
 
 export * from './build';
 export * from './dsl';

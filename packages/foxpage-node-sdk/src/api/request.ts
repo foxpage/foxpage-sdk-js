@@ -1,9 +1,6 @@
-import { createLogger } from '../common';
 import { appTask, contextTask, pageTask, parseTask, renderTask, tagTask } from '../task';
 
 import { FoxpageRequestOptions } from './interface';
-
-const logger = createLogger('middleware handler');
 
 /**
  * request handler
@@ -47,7 +44,6 @@ export const routerHandler = () => async (opt: FoxpageRequestOptions) => {
     const html = await renderTask(parsedPage, context);
     return html;
   } catch (e) {
-    logger.error('handle error:', e);
     throw new Error((e as Error).message);
   }
 };

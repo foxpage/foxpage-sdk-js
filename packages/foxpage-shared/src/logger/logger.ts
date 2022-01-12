@@ -2,7 +2,7 @@ import { format } from 'util';
 
 import { isError } from 'lodash';
 
-import { Loggers } from './impl';
+import { LoggerClass, Loggers } from './impl';
 import { LOGGER_CONFIG, LOGGER_LEVEL, LOGGER_USE_LEVEL } from './level';
 import { LoggerBase, LoggerErrorArguments, LoggerInfoArguments } from './types';
 
@@ -11,6 +11,7 @@ export type FoxpageLogger = LoggerProvider;
 export type LoggerOption = {
   level?: LOGGER_LEVEL;
   procInfo?: number | string;
+  customizeLoggers?: LoggerClass[];
 };
 
 class LoggerProvider implements LoggerProvider {
@@ -24,11 +25,11 @@ class LoggerProvider implements LoggerProvider {
     this.type = type;
     this._level = opt?.level ? opt.level : LOGGER_LEVEL.INFO;
     this.option = opt;
-    this.init();
+    this.init(opt?.customizeLoggers);
   }
 
-  public init = () => {
-    this.loggers = Loggers.map(LoggerClass => new LoggerClass());
+  public init = (customizeLoggers: LoggerClass[] = []) => {
+    this.loggers = Loggers.concat(...customizeLoggers).map(LoggerClass => new LoggerClass());
     return this;
   };
 
@@ -107,7 +108,7 @@ class LoggerProvider implements LoggerProvider {
     } catch (error) {
       this.error('format message "%s" fail', msg, error);
     }
-    const output = `[Foxpage-SDK] ${this.option?.procInfo ? '<' + this.option.procInfo + '>' : ''} [ ${level} ] <${
+    const output = `[Foxpage] ${this.option?.procInfo ? '<' + this.option.procInfo + '>' : ''} [ ${level} ] <${
       this.type
     }> ${formateMsg}`;
     return output;
