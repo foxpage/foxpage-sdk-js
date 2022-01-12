@@ -1,10 +1,10 @@
 import { random } from 'faker';
 
-import { MessageArray } from '@foxpage/foxpage-shared';
+import { MessageArray } from '@foxpage/foxpage-types';
 
-import { executeString } from '../../../src/parser/sandbox/string';
+import { executeString } from '@/parser/sandbox/string';
 
-describe('Engine executeString', () => {
+describe('parser/sandbox/string', () => {
   it('Keep origin type', () => {
     const obj = {
       foo: random.words(),
@@ -73,11 +73,6 @@ describe('Engine executeString', () => {
   it('Parse array', () => {
     const res = executeString('{{[1, 2, 3]}}', {});
     expect(res).toEqual([1, 2, 3]);
-  });
-
-  it('Parse object', () => {
-    const res = executeString('{{{ foo: "bar" }}}', {});
-    expect(res).toEqual({ foo: 'bar' });
   });
 
   it('Parse primitive value', () => {

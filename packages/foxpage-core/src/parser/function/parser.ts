@@ -33,12 +33,14 @@ export class FunctionParser {
           const resolvedProps: FPFunctionItemProps = executeObject(content.props, ctx.variables, messages);
           ctx.updateResource(ContentType.FUNCTION, item.id, {
             content: item,
-            parsed: { [content.name]: resolvedProps.code },
+            parsed: resolvedProps.code,
             parseStatus: true,
             parseMessages: messages,
           });
         } catch (e) {
-          messages.push(`parse function@${item.id} failed:`, JSON.stringify(e));
+          const msg = `parse function@${item.id} failed: ${(e as Error).message}`;
+          messages.push(msg);
+          ctx.logger?.warn(msg);
         }
         parsedFnSet.add(item.id);
       }

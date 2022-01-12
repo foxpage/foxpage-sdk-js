@@ -10,6 +10,22 @@ const reactRender = (): FoxpagePlugin<FoxpageHooks> => {
   return {
     visitor: {
       afterContextCreate: (ctx: Context) => {
+        // if (ctx.frameworkResource) {
+        //   if (!ctx.frameworkResource.libs) {
+        //     ctx.frameworkResource.libs = {};
+        //   }
+        //   ctx.frameworkResource.libs['react'] = {
+        //     url: 'https://www.unpkg.com/react@16.14.0/umd/react.production.min.js',
+        //     injectWindow: 'React',
+        //     umdModuleName: 'react',
+        //   };
+        //   ctx.frameworkResource.libs['react-dom'] = {
+        //     url: 'https://www.unpkg.com/react-dom@16.14.0/umd/react-dom.production.min.js',
+        //     injectWindow: 'ReactDOM',
+        //     umdModuleName: 'react-dom',
+        //   };
+        // }
+
         ctx.render = renderToHtml;
       },
     },

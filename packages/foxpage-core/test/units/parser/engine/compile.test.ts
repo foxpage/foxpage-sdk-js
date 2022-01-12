@@ -1,10 +1,10 @@
 import { random } from 'faker';
 
-import { MessageArray } from '@foxpage/foxpage-shared';
+import { MessageArray } from '@foxpage/foxpage-types';
 
-import { compilePropsToGetter } from '../../../src/parser/sandbox/compile';
+import { compilePropsToGetter } from '@/parser/sandbox/compile';
 
-describe('Engine compile', () => {
+describe('parser/sandbox/compile', () => {
   it('Base', () => {
     const props = {
       num: random.number(),

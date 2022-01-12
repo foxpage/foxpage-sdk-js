@@ -41,10 +41,10 @@ export class DirectiveParser {
   private parseItem = (target: keyof Directive, expression: string, ctx: Context, messages: Messages) => {
     const _messages = new Messages();
     const result = executeString(expression, ctx.variables, _messages);
-    if (result) {
-      ctx.logger?.info(`directive.${target} "${expression}" parse succeed`);
-    } else {
+    if (result === undefined) {
       ctx.logger?.warn(`directive.${target} "${expression}" parse failed`, _messages);
+    } else {
+      ctx.logger?.info(`directive.${target} "${expression}" parse succeed`);
     }
     _messages.forEach(item => {
       messages.push(item);

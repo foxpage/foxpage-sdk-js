@@ -51,7 +51,7 @@ export interface FPPackageEntrySource {
   browser: FPUrlInfo;
   node: FPUrlInfo;
   debug: FPUrlInfo;
-  css?: FPUrlInfo[];
+  css?: FPUrlInfo;
 }
 
 export interface FPPackageMeta {
@@ -59,6 +59,8 @@ export interface FPPackageMeta {
   isMountNode?: boolean;
   isHead?: boolean;
   isBody?: boolean;
+  // will remove
+  [key: string]: any
 }
 
 export type PackageURLSource = { type: 'url'; url: string };

@@ -6,7 +6,7 @@
       "type": "javascript.function",
       "props": {
         "async": false,
-        "code": "function test(a, b){\n    const appId = this.appId;\n    return a + appId + b;\n}"
+        "code": "function test(a, b){\n    return a + b;\n}"
       }
     }
   ]

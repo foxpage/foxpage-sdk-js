@@ -16,7 +16,7 @@
         "locale": "en_US"
       },
       "directive": {
-        "tpl": "{{__templates:xn7Ko6gfcV00:schemas}}"
+        "tpl": "{{__templates:tem_xn7Ko6gfcV00:schemas}}"
       },
       "children": [
         {
@@ -44,8 +44,8 @@
     }
   ],
   "relation": {
-    "__templates:xn7Ko6gfcV00:schemas": {
-      "id": "xn7Ko6gfcV00",
+    "__templates:tem_xn7Ko6gfcV00:schemas": {
+      "id": "tem_xn7Ko6gfcV00",
       "type": "template"
     }
   }

@@ -1,17 +1,17 @@
 import { ManagerOption } from '@foxpage/foxpage-types';
 
-import { createFoxpageDataService, FoxpageDataService } from '../../../src/data-service/service';
+import { createFoxpageDataService, FoxpageDataService } from '@/data-service/service';
 
 const appId = 'appl-sRTuNlueu6FNK';
 
-describe('Data service', () => {
+describe('data-service/service', () => {
   let dataService: FoxpageDataService;
 
   beforeAll(() => {
     const opt = {
       apps: [{ appId: '1000', options: {} }],
       dataService: { host: '', path: '' },
-    } as ManagerOption;
+    } as unknown as ManagerOption;
     dataService = createFoxpageDataService(opt.dataService);
   });
 

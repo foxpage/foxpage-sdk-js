@@ -48,7 +48,7 @@ export interface ContentInfo {
 }
 
 
-export type RenderAppInfo = Pick<Application, 'appId' | 'slug' | 'configs' | 'pluginManager'>;
+export type RenderAppInfo = Pick<Application, 'appId' | 'slug' | 'configs'> & { pluginManager?: Application['pluginManager'] };
 
 export interface ContentRelationInfo {
   content: ContentDetail;

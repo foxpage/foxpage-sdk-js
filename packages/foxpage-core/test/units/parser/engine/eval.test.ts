@@ -1,8 +1,8 @@
 import { random } from 'faker';
 
-import { evalWithScope } from '../../../src/parser/sandbox/main';
+import { evalWithScope } from '@/parser/sandbox/main';
 
-describe('Engine evalWithScope', () => {
+describe('parser/sandbox/main', () => {
   it('Not allow visit out scope variables', () => {
     const words = random.words();
     const val = evalWithScope({ foo: { bar: words } }, 'foo.bar');

@@ -5,16 +5,16 @@
       "name": "test",
       "type": "data.function.call",
       "props": {
-        "function": "{{__functions:fun_yrtQ3sY1jJag:test}}",
+        "function": "{{__functions:fun_yrtQ3sY1jJag}}",
         "args": [
-          "1",
-          "2"
+          "100",
+          "200"
         ]
       }
     }
   ],
   "relation": {
-    "__functions:fun_yrtQ3sY1jJag:test": {
+    "__functions:fun_yrtQ3sY1jJag": {
       "id": "fun_yrtQ3sY1jJag",
       "type": "function"
     }

@@ -36,13 +36,18 @@ export const loadComponents = async (schemas: StructureNode[], appId: string, op
 export const renderToHTML = async (dsl: ParsedDSL['schemas'], ctx: Context, opt: RenderToHTMLOptions) => {
   try {
     if (dsl && dsl.length > 0) {
-      let preparedDSL = prepareDSL(dsl);
+      const { dsl: newDSL, structureMap } = prepareDSL(dsl);
+      let preparedDSL = newDSL;
 
       ctx.page.schemas = preparedDSL;
+      ctx.structureMap = structureMap;
+
       // load components
       const [components, dependencies] = await loadComponents(preparedDSL, ctx.appId, opt);
+
       ctx.componentMap = components;
       ctx.dependencies = dependencies;
+
       ctx.logger?.info('components load completed.');
 
       let html = '';
@@ -54,7 +59,7 @@ export const renderToHTML = async (dsl: ParsedDSL['schemas'], ctx: Context, opt:
 
       // render
       if (typeof onPageRender === 'function') {
-        html = await onPageRender(preparedDSL, ctx);
+        html = await onPageRender(ctx, preparedDSL);
       } else if (typeof ctx.render === 'function') {
         html = await ctx.render(preparedDSL, ctx);
       } else {
@@ -65,24 +70,51 @@ export const renderToHTML = async (dsl: ParsedDSL['schemas'], ctx: Context, opt:
         html = await afterPageRender(ctx, html);
       }
 
-      ctx.logger?.info('render html result:', html);
+      ctx.logger?.debug('render html result:', html);
+      ctx.logger?.info('render html ' + (html ? 'succeed.' : 'empty.'));
       return html ? DOCTYPE + html : '';
     }
     return '';
   } catch (e) {
-    throw new Error(`render error: ${(e as Error).message}`);
+    throw new Error(`render error: ${(e as Error).message} `);
   }
 };
 
+/**
+ * filter no show node & generate structureMap
+ *
+ * @param {StructureNode[]} schemas
+ * @return {*}
+ */
+
 function prepareDSL(schemas: StructureNode[]) {
-  const dsl: StructureNode[] = [];
+  const structureMap: Context['structureMap'] = new Map();
 
-  schemas.forEach(item => {
-    const { show = true, children = [] } = item;
-    if (show) {
-      dsl.push({ ...item, children: children.length > 0 ? prepareDSL(children) : [] });
-    }
-  });
+  function doPrepare(dsl: StructureNode[]) {
+    const newDSL: StructureNode[] = [];
 
-  return dsl;
+    dsl.forEach(item => {
+      const { id, name, type, version, props, show, children = [] } = item;
+      if (show) {
+        const childList = children.length > 0 ? doPrepare(children) : [];
+        // push new dsl nodes
+        newDSL.push({ ...item, children: childList });
+        // set to structureMap
+        structureMap?.set(id, {
+          id,
+          name,
+          version,
+          type,
+          props,
+          childrenIds: childList.map(child => child.id),
+        });
+      }
+    });
+
+    return newDSL;
+  }
+
+  const dsl = doPrepare(schemas);
+
+  return { dsl, structureMap };
 }

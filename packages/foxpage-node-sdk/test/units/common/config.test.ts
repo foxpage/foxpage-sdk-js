@@ -1,8 +1,12 @@
-import config from '../../../src/common/config';
+import config from '@/common/config';
 
 describe('Common config', () => {
   it('Path ensureFileSync', async () => {
-    const result = await config.init();
-    expect(result).toBeDefined();
+    try {
+      const result = await config.init();
+      expect(result).toBeDefined();
+    } catch (e) {
+      expect((e as Error).message).toContain('Not provider foxpage config file');
+    }
   });
 });

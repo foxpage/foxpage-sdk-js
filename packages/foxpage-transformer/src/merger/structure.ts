@@ -8,8 +8,6 @@ import { combineProps, replaceProps } from './props';
 import { matchAllStructureById, matchAllStructureByType, matchStructureByType } from './structure-matcher';
 import { isMatch, isReplace, MergeOption, MountNodeMergeStrategy, StructureMerger } from './structure-merger';
 
-export const DYNAMIC_MOUNT_NODE = 'system.dynamic-mount-node';
-
 interface MergerOpt extends MergeOption {
   enableTopLevelMatch?: boolean;
 }
@@ -107,7 +105,7 @@ const _merge = (
   options: MergerOpt,
 ) => {
   // is dynamic mount node
-  if (staticStructure.type === DYNAMIC_MOUNT_NODE) {
+  if (staticStructure.type === options.mountNode) {
     // is dynamic mount node
     const { mergeStrategy } = matchedStructure.props || {};
     const _mountNodeMergeStrategy =
@@ -209,7 +207,7 @@ export const structureMerge = (
 
       // merge children
       if (children?.length && children.length > 0) {
-        const mergedChildren = r(children, [], { enableTopLevelMatch: true });
+        const mergedChildren = r(children, [], { ...options, enableTopLevelMatch: true });
         return {
           ...item,
           children: mergedChildren,

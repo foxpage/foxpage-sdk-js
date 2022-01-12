@@ -187,7 +187,21 @@ export class PluginLoaderImpl implements PluginLoader {
         const executor = async (...args: unknown[]) => {
           let result;
           for (const hook of hooks) {
+            // core
             result = await hook(...args);
+          }
+          return result;
+        };
+        visitors[key] = executor;
+      });
+    } else if (this.mode === Mode.DISTRIBUTION) {
+      hookKeys.forEach(key => {
+        const hooks = this.visitors[key];
+        const executor = async (...args: unknown[]) => {
+          const result = [];
+          for (const hook of hooks) {
+            // core
+            result.push(await hook(...args));
           }
           return result;
         };
@@ -196,7 +210,7 @@ export class PluginLoaderImpl implements PluginLoader {
     } else if (this.mode === Mode.COVER) {
       hookKeys.forEach(key => {
         const hooks = this.visitors[key];
-        // get the last one
+        // core: get the last one
         visitors[key] = hooks[hooks.length - 1];
       });
     }

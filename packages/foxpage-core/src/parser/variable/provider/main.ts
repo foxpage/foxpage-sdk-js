@@ -1,7 +1,6 @@
 import { SystemVariableProvider, VariableContext } from '@foxpage/foxpage-types';
 
-import * as defaults from './defaults';
-import * as extensions from './extensions';
+import * as defaults from './sys';
 
 const systemVariableProviderMap = new Map<string, SystemVariableProvider>();
 
@@ -41,10 +40,6 @@ const registerSysVariable = () => {
   for (const sysVariable of Object.values(defaults)) {
     registerSystemVariable(sysVariable.name, sysVariable.get);
   }
-
-  Object.entries(extensions).forEach(([name, provider]) => {
-    registerSystemVariable(name, context => provider(context.ctx));
-  });
 };
 
 registerSysVariable();

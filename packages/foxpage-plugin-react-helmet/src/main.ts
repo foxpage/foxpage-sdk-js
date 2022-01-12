@@ -13,6 +13,17 @@ const { appendStructure, createStructureWithFactory } = structureUtils;
  * @param ctx context
  */
 export const createHeadManager = (ctx: Context) => {
+  // if (ctx.frameworkResource) {
+  //   if (!ctx.frameworkResource.libs) {
+  //     ctx.frameworkResource.libs = {};
+  //   }
+  //   ctx.frameworkResource.libs['react-helmet'] = {
+  //     injectWindow: 'Helmet',
+  //     umdModuleName: 'react-helmet',
+  //     url: 'https://www.unpkg.com/react-helmet@6.1.0/lib/Helmet.js',
+  //   };
+  // }
+
   ctx.headManager = new HeadManager();
 };
 
@@ -40,7 +51,7 @@ export const renderWithHelmet = async (ctx: Context) => {
     handleMountPointNode(mountPoint, { html: mountPointHtml }, ctx);
 
     // handle head node render
-    handleHeadNode(ctx);
+    handleHeadNode(ctx, dsl);
   }
 
   return dsl;
@@ -69,10 +80,10 @@ function handleMountPointNode(node: StructureNode, value: { html: string }, ctx:
   appendStructure(node, structure, component, ctx);
 }
 
-function handleHeadNode(ctx: Context) {
+function handleHeadNode(ctx: Context, dsl: Context['page']['schemas']) {
   const { headManager } = ctx;
   headManager.collectComponentResources(ctx);
-  headManager.outputToDSL(ctx);
+  headManager.outputToDSL(ctx, dsl);
 }
 
 /**

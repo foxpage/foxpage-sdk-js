@@ -12,7 +12,7 @@ export interface FPFile {
 }
 
 export interface FileManager<T = FPFile> extends ManagerBase<T> {
-  addFile(file: FPFile);
+  addFile(file: FPFile): FPFile | undefined;
   removeFiles(fileIds: string[]);
   getFileByPathname(pathname: string): Promise<FPFile | null>;
   getPathnameByFileId(fileId: string): Promise<string>;

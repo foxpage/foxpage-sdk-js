@@ -45,11 +45,11 @@ export class FileManagerImpl extends ManagerBaseImpl<FPFile> implements FileMana
    * @param {string[]} fileIds file ids
    */
   public async removeFiles(fileIds: string[]) {
-    this.remove(fileIds);
     for (const item of fileIds) {
       const pathname = await this.getPathnameByFileId(item);
       this.removePathname(pathname, item);
     }
+    this.remove(fileIds);
   }
 
   /**
@@ -109,7 +109,7 @@ export class FileManagerImpl extends ManagerBaseImpl<FPFile> implements FileMana
     });
   }
 
-  protected async onFetch() {
+  protected async onFetch(): Promise<undefined> {
     return undefined;
   }
 

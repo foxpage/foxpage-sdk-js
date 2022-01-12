@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-engine-react",
-  "version": "0.2.21",
+  "version": "0.4.5",
   "description": "foxpage react render engine",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -11,6 +11,7 @@
     "prepublishOnly": "npm install && npm run build:npm"
   },
   "dependencies": {
+    "loadsh": "^0.0.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-is": "^16.13.1",
@@ -18,7 +19,7 @@
     "styled-components": "^5.0.0"
   },
   "devDependencies": {
-    "@foxpage/foxpage-types": "^0.2.20",
+    "@foxpage/foxpage-types": "^0.4.2",
     "@types/prop-types": "^15.5.8",
     "@types/react": "^16.8.19",
     "@types/react-dom": "^16.8.4",

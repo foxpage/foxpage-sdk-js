@@ -1,3 +1,4 @@
+import { Mode } from '@foxpage/foxpage-plugin';
 import { Messages } from '@foxpage/foxpage-shared';
 import {
   Application,
@@ -13,7 +14,7 @@ import { PluginManager } from './../../foxpage-types/manager/plugin/index.d';
 import { createFoxpageDataService, foxpageDataService } from './data-service/service';
 import { getApis } from './api';
 import { ApplicationImpl } from './application';
-import { createLogger } from './common';
+import { createLogger, initLogger } from './common';
 import { PluginManagerImpl } from './plugin';
 
 /**
@@ -47,23 +48,27 @@ export class ManagerImpl implements Manager {
    *
    * @type {Logger}
    */
-  public logger: Logger;
+  public logger?: Logger;
 
   public settings: ManagerOption['settings'];
 
+  public options?: ManagerOption;
+
   private pluginDir: ManagerOption['commonPluginDir'];
+
   private pluginManager: PluginManager;
 
   constructor(opt: ManagerOption) {
-    // create foxpage data service
-    createFoxpageDataService(opt.dataService);
-
-    this.settings = opt.settings;
     this.pluginDir = opt.commonPluginDir || process.cwd();
+    this.pluginManager = new PluginManagerImpl({
+      plugins: opt.plugins,
+      baseDir: this.pluginDir,
+      api: getApis(),
+      mode: Mode.DISTRIBUTION,
+    });
 
-    this.pluginManager = new PluginManagerImpl({ plugins: opt.plugins, baseDir: this.pluginDir, api: getApis() });
-
-    this.logger = createLogger('Manager', opt);
+    this.options = opt;
+    this.settings = opt.settings;
     this.messages = new Messages();
   }
 
@@ -77,8 +82,16 @@ export class ManagerImpl implements Manager {
    *
    * @memberof ManagerImpl
    */
-  public prepare() {
+  public async prepare() {
     this.pluginManager.loadPlugins();
+    // init logger: for bind logger hook
+    await initLogger(this.hooks);
+    // create foxpage data service
+    if (this.options) {
+      createFoxpageDataService(this.options.dataService);
+    }
+
+    this.logger = createLogger('Manager', this.options);
   }
 
   /**
@@ -88,11 +101,11 @@ export class ManagerImpl implements Manager {
    */
   public async registerApplications(appMates: ManagerOption['apps']) {
     const appIds = Array.from(new Set(appMates.map(item => item.appId)));
-    this.logger.info('will register apps:', appIds);
+    this.logger?.info('will register apps:', appIds);
 
     try {
       const apps = await foxpageDataService.fetchAppDetails(appIds);
-      this.logger.debug('get apps:', JSON.stringify(apps));
+      this.logger?.debug('get apps:', JSON.stringify(apps));
 
       const appMateMap = new Map<string, ManagerAppMeta>();
       appMates.forEach(item => {
@@ -106,10 +119,10 @@ export class ManagerImpl implements Manager {
       }
 
       // succeed
-      this.logger.info('init applications succeed');
+      this.logger?.info('init applications succeed');
     } catch (e) {
       const msg = (e as Error).message;
-      this.logger.error(msg);
+      this.logger?.error(msg);
       throw new Error(msg);
     }
   }
@@ -225,20 +238,20 @@ export class ManagerImpl implements Manager {
         // application prepare
         await appInstance.prepare();
 
-        this.logger.info(`application@${appId} init succeed`);
+        this.logger?.info(`application@${appId} init succeed`);
         return true;
       } catch (e) {
         appInstance.destroy();
         this.applicationMap.delete(appId);
         this.applicationSlugMap.delete(appInstance.slug);
 
-        this.logger.warn(`application@${appId} init failed`, e);
+        this.logger?.warn(`application@${appId} init failed`, e);
         return false;
       }
     } else {
       const msg = `application@${appId} init failed: exist this appId or slug`;
       this.messages.push(msg);
-      this.logger.error(msg);
+      this.logger?.error(msg);
       return false;
     }
   }
@@ -254,6 +267,12 @@ export class ManagerImpl implements Manager {
       appSettings.configs = {};
     }
     appSettings.configs['schedule.enable'] = this.initAppSourceScheduleStatus(appSettings.configs?.['schedule.enable']);
+
+    // TODO: need provider hook logic
+    if (!appSettings.hooks) {
+      appSettings.hooks = {};
+    }
+    appSettings.hooks.sourceUpdateHook = this.settings.sourceUpdateHook;
 
     return appSettings;
   }

@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-shared",
-  "version": "0.2.20",
+  "version": "0.4.2",
   "description": "foxpage common utils",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -22,7 +22,7 @@
     "shortid": "^2.2.16"
   },
   "devDependencies": {
-    "@foxpage/foxpage-types": "^0.2.20",
+    "@foxpage/foxpage-types": "^0.4.2",
     "@types/debug": "0.0.31",
     "@types/faker": "^4.1.5",
     "@types/lodash": "^4.14.153",

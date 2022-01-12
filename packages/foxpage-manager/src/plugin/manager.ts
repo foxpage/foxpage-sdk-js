@@ -25,6 +25,7 @@ export class PluginManagerImpl implements PluginManager {
       baseDir: opt.baseDir || process.cwd(),
       plugins: opt.plugins,
       api: opt.api,
+      mode: opt.mode,
     });
   }
 

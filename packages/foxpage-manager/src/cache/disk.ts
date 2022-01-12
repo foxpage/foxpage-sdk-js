@@ -1,4 +1,4 @@
-import { pathExists, readJSON } from 'fs-extra';
+import { readJSON } from 'fs-extra';
 
 import { ResourceCache } from '@foxpage/foxpage-types';
 
@@ -48,7 +48,12 @@ export class DiskCache<T> implements ResourceCache<T> {
     const filePath = resolveContentPath(this.appId, this.generateDirs(id));
     if (filePath) {
       try {
-        return await readJSON(filePath);
+        const result = await readJSON(filePath);
+        if (result && result.delete) {
+          // the deleted content will return null;
+          return null;
+        }
+        return result;
       } catch (error) {
         return null;
       }
@@ -63,7 +68,23 @@ export class DiskCache<T> implements ResourceCache<T> {
    * @return {*}  {Promise<boolean>}
    */
   async has(id: string): Promise<boolean> {
-    return this.diskCache.has(id) || (await pathExists(resolveContentPath(this.appId, this.generateDirs(id))));
+    return this.diskCache.has(id) || !!(await this.get(id));
+  }
+
+  /**
+   * update delete status for delete action
+   *
+   * @param {string} id
+   * @return {*}  {Promise<void>}
+   * @memberof DiskCache
+   */
+  async delete(id: string): Promise<void> {
+    const result = (await this.get(id)) as any;
+    if (result) {
+      // update delete status: true
+      result.delete = true;
+      await this.set(id, result);
+    }
   }
 
   private generateDirs(id: string) {
@@ -77,6 +98,4 @@ export class DiskCache<T> implements ResourceCache<T> {
   destroy(): void {
     this.diskCache.clear();
   }
-
-  delete(_id: string): void {}
 }

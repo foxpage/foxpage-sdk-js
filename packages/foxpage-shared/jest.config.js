@@ -16,6 +16,10 @@ const config = {
       tsConfig: join(__dirname, 'tsconfig.test.json')
     }
   },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@@/(.*)$': '<rootDir>/test/$1',
+  },
 };
 
 module.exports = config;

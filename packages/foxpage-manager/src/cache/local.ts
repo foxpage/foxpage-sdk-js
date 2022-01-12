@@ -1,6 +1,6 @@
 import { join } from 'path';
 
-import { outputJSON, pathExists } from 'fs-extra';
+import { outputJSON } from 'fs-extra';
 
 import { FOXPAGE_ROOT } from '../common';
 
@@ -23,9 +23,9 @@ export async function storeContent<T>(filePath: string, content?: T) {
     return;
   }
   try {
-    if (await pathExists(filePath)) {
-      return;
-    }
+    // if (await pathExists(filePath)) {
+    //   return;
+    // }
 
     await outputJSON(filePath, content, { spaces: 2 });
   } catch (_error) {}

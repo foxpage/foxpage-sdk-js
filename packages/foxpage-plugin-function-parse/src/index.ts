@@ -27,7 +27,7 @@ const functionParser = ({ api }: { api: FoxpagePluginApi }): FoxpagePlugin<Foxpa
           type: 'data.function.call',
           parse(variable, context) {
             const {
-              props: { function: code, args },
+              props: { function: code, args = [] },
             } = variable;
 
             if (code) {

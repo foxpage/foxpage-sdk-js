@@ -50,16 +50,23 @@ function createSourceUpdateSchedule(app: ApplicationImpl) {
   };
   const updateTask = async (preData?: AppScheduleDataType) => {
     const preTimestamp = preData?.timestamp || -1; // -1 will return all
-    const result: AppScheduleDataType = (await foxpageDataService.fetchChanges(app.appId, preTimestamp)) || {};
-    result.appId = app.appId;
-
-    return (
-      result || {
+    try {
+      let result: AppScheduleDataType = await foxpageDataService.fetchChanges(app.appId, preTimestamp);
+      if (!result) {
+        result = {
+          contents: {},
+          timestamp: preTimestamp,
+        };
+      }
+      result.appId = app.appId;
+      return result;
+    } catch (e) {
+      return {
         appId: app.appId,
         contents: {},
         timestamp: preTimestamp,
-      }
-    );
+      };
+    }
   };
   const schedule = new Schedule(updateTask, options);
   return schedule;
@@ -233,6 +240,9 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
     const listener = (value: AppScheduleDataType) => {
       this.logger.info('receive data:', JSON.stringify(value));
       if (value) {
+        if (typeof this.hooks?.sourceUpdateHook === 'function') {
+          this.hooks.sourceUpdateHook(value);
+        }
         this.refresh(value);
       }
     };
@@ -329,7 +339,7 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
     return async <K extends keyof Omit<RelationInfo, 'sysVariables'>>(
       key: K,
       getter: (_filtered: string[]) => Promise<RelationInfo[K]>,
-    ) => {
+    ): Promise<RelationInfo[K] | []> => {
       const relationList = relations[key] as unknown as T[];
       const list = content[key]; // dep source id array
       if (!list || list.length === 0) {
@@ -359,7 +369,7 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
     relations: RelationInfo,
     collections: T,
   ) {
-    return <K extends keyof RelationInfo>(key: K) => {
+    return <K extends keyof RelationInfo>(key: K): unknown[] | undefined => {
       const keyStr = key as keyof CollectionType;
       const relationList = relations[keyStr] as unknown as T[];
       const list = content[keyStr]; // dep source id array

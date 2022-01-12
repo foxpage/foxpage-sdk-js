@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-core",
-  "version": "0.2.22",
+  "version": "0.4.2",
   "description": "foxpage core ",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -11,13 +11,13 @@
     "prepublishOnly": "npm install && npm run build:npm"
   },
   "dependencies": {
-    "@foxpage/foxpage-shared": "^0.2.20",
+    "@foxpage/foxpage-shared": "^0.4.2",
     "lodash": "^4.17.15",
     "semver": "^7.3.5",
     "shortid": "^2.2.16"
   },
   "devDependencies": {
-    "@foxpage/foxpage-types": "^0.2.20",
+    "@foxpage/foxpage-types": "^0.4.2",
     "@types/lodash": "^4.14.145",
     "@types/semver": "^7.3.8",
     "rimraf": "^2.6.3",

@@ -58,8 +58,7 @@ describe('merger/variable', () => {
     ];
 
     const result = variablesMerge(variablesOne, variablesTwo);
-    expect(result.length).toBe(2);
+    expect(result.length).toBe(1);
     expect(JSON.stringify(result)).not.toMatch('not useful');
-    expect(JSON.stringify(result)).toMatch('ibu:fe-common:*');
   });
 });

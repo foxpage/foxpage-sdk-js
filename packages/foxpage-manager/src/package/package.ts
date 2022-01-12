@@ -70,12 +70,12 @@ export class PackageInstance implements Package {
     this.downloadUrl = this.source.node.downloadHost + this.source.node.path;
     this.dependencies = info.resource.dependencies || [];
     this.deps = this.dependencies.map(item => item.name);
+
+    this.logger = createLogger('Package');
     this.meta = info.meta;
     this.filePath = resolvePackageJSPath(this.appId, this.name, this.version);
     this.supportNode = true;
     this.messages = new Messages();
-
-    this.logger = createLogger('Package');
   }
 
   get exported() {
@@ -175,11 +175,12 @@ export class PackageInstance implements Package {
         this.logger.info('install package %s@%j succeed', this.name, this.version);
       }
     } catch (err) {
-      this.logger.error('process code failed:', err);
       const isExistError = (err as { code: 'EEXIST' }).code === 'EEXIST' || String(err).includes('exists');
       if (!isExistError) {
+        this.logger.error('process code failed:', err);
         throw err;
       }
+      this.logger.warn('process code failed:', err);
     }
   }
 

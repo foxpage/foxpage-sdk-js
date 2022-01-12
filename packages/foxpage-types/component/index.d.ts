@@ -38,6 +38,7 @@ export interface FoxpageComponent extends FoxpageStaticComponent {
   browserURL: string;
   debugURL: string;
   nodeURL: string;
+  cssURL: string;
   source?: FPPackageEntrySource;
   meta: FoxpageComponentMeta;
   supportSSR: boolean;

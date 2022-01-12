@@ -17,6 +17,8 @@ export const createContext = async (app: Application, opt: FoxpageRequestOptions
   ctx.response = opt.response;
   ctx.cookies = opt.cookies;
   ctx.URL = opt.request.URL;
+  ctx.url = ctx.URL.href || '';
+  ctx.host = ctx.URL.host || '';
 
   return ctx;
 };

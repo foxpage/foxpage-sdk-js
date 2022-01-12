@@ -1,6 +1,6 @@
-// import { fromPairs } from 'lodash';
+import { fromPairs } from 'lodash';
 
-import { pick } from '@foxpage/foxpage-shared';
+import { pick } from '@foxpage/foxpage-shared/lib/common/utils';
 import { Context } from '@foxpage/foxpage-types';
 
 type PickContext<K extends keyof Context> = Partial<Pick<Context, K>>;
@@ -14,9 +14,9 @@ export const getURLQueryVar = (ctx: PickContext<'URL'> = {}) => {
   // proxy searchParams
   const searchParamsProxy = new Proxy(URL.searchParams, {
     get(target, key, receiver) {
-      // if (key === 'toJSON') {
-      //   return () => fromPairs([...target.entries()]);
-      // }
+      if (key === 'toJSON') {
+        return () => fromPairs([...target.entries()]);
+      }
       if (typeof key === 'string') {
         return target.get(key);
       }
@@ -28,9 +28,8 @@ export const getURLQueryVar = (ctx: PickContext<'URL'> = {}) => {
       }
       return Reflect.has(t, k);
     },
-    ownKeys(_t) {
-      // return [...t.keys()];
-      return [];
+    ownKeys(t) {
+      return [...t.keys()];
     },
   });
 

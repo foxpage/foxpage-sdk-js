@@ -5,7 +5,7 @@ const config = {
   rootDir: __dirname,
   name: 'foxpage-node-sdk',
   displayName: 'foxpage-node-sdk',
-  // setupFiles: ['<rootDir>/config/jest/setup.ts'],
+  setupFiles: ['<rootDir>/test/jest/setup.ts'],
   testRegex: 'test/.*\\.(test|spec)\\.(ts|tsx)$',
   testEnvironment: 'node',
   transform: {
@@ -15,6 +15,11 @@ const config = {
     'ts-jest': {
       tsConfig: join(__dirname, 'tsconfig.test.json')
     }
+  },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@@/(.*)$': '<rootDir>/test/$1',
+    '^@foxpage/foxpage-manager': '<rootDir>/../foxpage-manager/src/index.ts',
   },
 };
 

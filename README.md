@@ -30,6 +30,7 @@ Foxpage SDK for JavaScript in the browser and Node.js.
 [![Minimum node.js version](https://img.shields.io/badge/node-%3E%3D12.14.1-brightgreen)](https://img.shields.io/badge/node-%3E%3D12.14.1-brightgreen)
 [![typescript version](https://img.shields.io/badge/typescript-%3E%3D4.0.0-brightgreen)](https://img.shields.io/badge/typescript-%3E%3D4.0.0-brightgreen)
 [![yarn](https://img.shields.io/badge/yarn-1.22.5-blue)](https://img.shields.io/badge/yarn-1.22.5-blue)
+[![coverage](https://img.shields.io/badge/coverage-63%25-green)](https://img.shields.io/badge/coverage-63%25-green)
 
 ## ⌨️ Development
 clone locally:

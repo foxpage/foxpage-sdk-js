@@ -1,0 +1,121 @@
+[
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [],
+            "id": "stru_bntlusFgCxauzb4",
+            "label": "viewport",
+            "name": "@fox-design/react-meta",
+            "props": {
+              "attrs": {
+                "name": "viewport",
+                "content": "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+              }
+            },
+            "type": "react.component"
+          },
+          {
+            "children": [],
+            "id": "stru_aodqltvK6tDIBnU",
+            "label": "style",
+            "name": "@fox-design/react-style",
+            "props": {
+              "code": "html body { font-family: BlinkMacSystemFont, -apple-system, Roboto, Helvetica, Arial, sans-serif }\nhtml[lang='zh-HK'] body, html[lang='zh-TW'] body { font-family: 'Microsoft Jhenghei', 'PingFang HK', STHeitiTC-Light, tahoma, arial, sans-serif }\nhtml[lang='ko-KR'] body { font-family: '나눔바른고딕', Nanum Barun Gothic, '나눔 고딕', 'Nanum Gothic', '맑은 고딕', 'Malgun Gothic', '돋움', dotum, tahoma, arial, sans-serif }\nhtml[lang='ja-JP'] body { font-family: Meiryo UI, Meiryo, 'MS PGothic', Helvetica, Osaka, Tahoma, Arial, sans-serif }\n.rich-text-box ol li { list-style: decimal; }\n.rich-text-box ul li { list-style: disc }\n.rich-text-box ul ul li { list-style: circle }"
+            },
+            "type": "react.component"
+          }
+        ],
+        "id": "stru_rppzktJnBYQwvDe",
+        "label": "head",
+        "name": "@fox-design/react-head",
+        "props": {},
+        "type": "react.component",
+        "enableChildren": true
+      },
+      {
+        "children": [
+          {
+            "children": [],
+            "id": "stru_khykgbCcUEDsW5q",
+            "label": "GTM",
+            "name": "@fox-design/react-script",
+            "props": {
+              "code": "(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\r\nj=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\r\n'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\r\n})(window,document,'script','dataLayer','GTM-MV95N9D');\r\nwindow.dataLayer.push({\r\n  \"event\": \"page_view\",\r\n  \"locale\": \"{{cargo:locale}}\",\r\n  \"language\": \"{{cargo:lang}}\",\r\n  \"currentcyCode\": \"{{cargo:currency}}\",\r\n  \"region\": \"{{cargo:site}}\",\r\n  \"allianceID\": \"{{request:union:aid}}\",\r\n  \"allianceSid\": \"{{request:union:sid}}\",\r\n  \"page_category\": \"{{injector:pageInfo:category}}\",\r\n  \"prd_type\": \"hotel|flight\",\r\n  \"loginStatus\": \"\",\r\n  \"page_id\": \"{{injector:pageInfo:pageId}}\",\r\n})"
+            },
+            "type": "react.component",
+            "enableChildren": false
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "id": "stru_afufclgM0-MkWg4",
+                    "label": "@fox-design/react-container",
+                    "name": "@fox-design/react-container",
+                    "type": "react.component",
+                    "props": {},
+                    "children": [
+                      {
+                        "children": [],
+                        "id": "stru_pnhjpw0B9VGdZ7Su",
+                        "label": "slot",
+                        "name": "@fox-design/react-slot",
+                        "props": {},
+                        "wrapper": "stru_afufclgM0-MkWg4",
+                        "type": "react.component",
+                        "directive": {
+                          "tpl": "{{$this.children}}"
+                        },
+                        "useStyleEditor": true,
+                        "enableChildren": true
+                      }
+                    ],
+                    "enableChildren": true
+                  }
+                ],
+                "id": "stru_aamqfegPuqxQqS4",
+                "label": "context-provider",
+                "name": "cloud-flight-seo-context-provider",
+                "props": {},
+                "type": "react.component",
+                "enableChildren": true
+              }
+            ],
+            "id": "stru_mnqaep7OGra5XAK",
+            "label": "csr-entry",
+            "name": "cloud-flight-seo-csr-entry",
+            "props": {
+              "resource": {},
+              "entryLink": {}
+            },
+            "type": "react.component"
+          },
+          {
+            "children": [],
+            "id": "stru_zdjrrvzbB90fkK0",
+            "label": "ubt",
+            "name": "cloud-flight-seo-common-ubt",
+            "props": {},
+            "type": "react.component"
+          }
+        ],
+        "id": "stru_weaybaukXgA9QBZ",
+        "label": "body",
+        "name": "@fox-design/react-body",
+        "props": {},
+        "type": "react.component",
+        "enableChildren": true
+      }
+    ],
+    "id": "stru_fhvmwpVlaToSLrW",
+    "label": "html",
+    "name": "@fox-design/react-html",
+    "props": {
+      "lang": "{{locale}}"
+    },
+    "type": "react.component"
+  }
+]

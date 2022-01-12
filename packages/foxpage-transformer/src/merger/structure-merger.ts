@@ -15,6 +15,7 @@ export enum MountNodeMergeStrategy {
 export interface MergeOption {
   mergeStrategy?: MergeStrategy;
   mountNodeMergeStrategy?: MountNodeMergeStrategy;
+  mountNode?: string;
 }
 
 export const isReplace = (value: MergeOption['mergeStrategy']) => {

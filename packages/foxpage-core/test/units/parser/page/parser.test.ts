@@ -1,12 +1,13 @@
 import { Page } from '@foxpage/foxpage-types';
 
-import { PageParserImpl } from '../../../../src/parser/page';
-import { mockRenderContext } from '../../../helper';
+import { PageParserImpl } from '@/parser/page';
 
-describe('page parser', () => {
+import { mockRenderContext } from '@@/helper';
+
+describe('parser/page/parser', () => {
   let parser: PageParserImpl;
   beforeEach(() => {
-    const page: Page = require('../../../data/page/page-with-condition.json');
+    const page: Page = require('@@/data/page/page-with-condition.json');
     parser = new PageParserImpl(page);
   });
 

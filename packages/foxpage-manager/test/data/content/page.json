@@ -32,11 +32,13 @@
     }
   ],
   "relation": {
-    "templates.xn7Ko6gfcV00.content": {
-      "id": "xn7Ko6gfcV00"
+    "__templates.xn7Ko6gfcV00.content": {
+      "id": "xn7Ko6gfcV00",
+      "type": "template"
     },
-    "conditions.appHide": {
-      "id": "1b652910e89b"
+    "__conditions.appHide": {
+      "id": "1b652910e89b",
+      "type": "condition"
     }
   }
 }
