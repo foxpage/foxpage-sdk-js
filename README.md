@@ -1,8 +1,8 @@
 # Foxpage SDK JS
-  <img src="https://img.shields.io/badge/node-%3E%3D12.14.1-brightgreen" alt="Minimum node.js version" />
-  <img src="https://img.shields.io/badge/typescript-%3E%3D4.3.0-brightgreen" alt="Ttypescript version" />
-  <img src="https://img.shields.io/badge/yarn-1.22.5-blue" alt="Yarn Version" />
-  <img src="https://img.shields.io/badge/coverage-63%25-green" alt="coverage" />
+[![Minimum node.js version](https://img.shields.io/badge/node-%3E%3D12.14.1-brightgreen)](https://img.shields.io/badge/node-%3E%3D12.14.1-brightgreen)
+[![typescript version](https://img.shields.io/badge/typescript-%3E%3D4.0.0-brightgreen)](https://img.shields.io/badge/typescript-%3E%3D4.0.0-brightgreen)
+[![yarn](https://img.shields.io/badge/yarn-1.22.5-blue)](https://img.shields.io/badge/yarn-1.22.5-blue)
+[![coverage](https://img.shields.io/badge/coverage-63%25-green)](https://img.shields.io/badge/coverage-63%25-green)
 
 <h2>Foxpage SDK for JavaScript in the browser and node.js.</h2>
 
