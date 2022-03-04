@@ -1,0 +1,418 @@
+{
+  "root": "stru_pdalyhRnuWpQ-Cv",
+  "page": {
+    "appId": "appl_yqfu8BI1BRe15fs",
+    "slug": "demo-2",
+    "pageId": "cont_r4DMZAJfBr4HYbV"
+  },
+  "modules": [
+    {
+      "name": "@fox-design/react-html",
+      "version": "0.0.4",
+      "url": "https://www.unpkg.com/@fox-design/react-html@0.0.2/dist/umd/production.min.js",
+      "deps": [],
+      "meta": {}
+    },
+    {
+      "name": "@fox-design/react-head",
+      "version": "0.0.1",
+      "url": "https://www.unpkg.com/@fox-design/react-head@0.1.0/dist/umd/production.min.js",
+      "deps": [],
+      "meta": {
+        "isHead": true
+      }
+    },
+    {
+      "name": "@fox-design/react-body",
+      "version": "0.0.4",
+      "url": "https://www.unpkg.com/@fox-design/react-body@0.0.4/dist/umd/production.min.js",
+      "deps": [],
+      "meta": {
+        "isBody": true
+      }
+    },
+    {
+      "name": "@fox-design/react-csr-entry",
+      "version": "0.2.4",
+      "url": "https://www.unpkg.com/@fox-design/react-csr-entry@0.2.4/dist/umd/production.min.js",
+      "deps": [],
+      "meta": {}
+    },
+    {
+      "name": "@fox-design/react-container",
+      "version": "0.1.1",
+      "url": "https://www.unpkg.com/@fox-design/react-container@0.1.0/dist/umd/production.min.js",
+      "deps": [],
+      "meta": {}
+    },
+    {
+      "name": "@fox-design/react-image",
+      "version": "0.1.1",
+      "url": "https://www.unpkg.com/@fox-design/react-image@0.1.1/dist/umd/production.min.js",
+      "deps": [
+        "@fox-design/react-text"
+      ],
+      "meta": {}
+    },
+    {
+      "name": "@fox-design/react-text",
+      "version": "0.1.2",
+      "url": "https://www.unpkg.com/@fox-design/react-text@0.1.2/dist/umd/production.min.js",
+      "deps": [],
+      "meta": {}
+    },
+    {
+      "name": "builtin.InnerHTML",
+      "url": "",
+      "meta": {}
+    },
+    {
+      "name": "builtin.HeadConsumer",
+      "url": "",
+      "meta": {}
+    },
+    {
+      "name": "builtin.DebugDataPlaceholder",
+      "url": "",
+      "meta": {}
+    },
+    {
+      "name": "builtin.DebugEntry",
+      "url": "",
+      "meta": {}
+    }
+  ],
+  "structures": [
+    {
+      "id": "create_builtin.DebugDataPlaceholder_eUJbWOXy-e",
+      "name": "builtin.DebugDataPlaceholder",
+      "props": {},
+      "version": "",
+      "childrenIds": []
+    },
+    {
+      "id": "stru_qgjlqr28mlG9OpQ",
+      "name": "@fox-design/react-head",
+      "props": {},
+      "childrenIds": [
+        "create_builtin.DebugDataPlaceholder_eUJbWOXy-e"
+      ],
+      "show": true
+    },
+    {
+      "id": "stru_fftfetW5zJe9DtKd",
+      "name": "@fox-design/react-image",
+      "props": {
+        "src": "https://ak-d.tripcdn.com/images/0a15u120008yx4834A845.jpg"
+      },
+      "childrenIds": [],
+      "show": true
+    },
+    {
+      "id": "stru_fwcbklkWnZNOLui",
+      "name": "@fox-design/react-container",
+      "props": {
+        "style": {
+          "display": "flex"
+        }
+      },
+      "childrenIds": [
+        "stru_fftfetW5zJe9DtKd"
+      ],
+      "show": true
+    },
+    {
+      "id": "stru_tgchpq_iVvX6pc54",
+      "name": "@fox-design/react-text",
+      "props": {
+        "text": "23232322323232 - null\nsdsa3",
+        "fontSize": 24,
+        "lineHeight": 30,
+        "backgroundColor": "rgba(255,147,147,0.38)",
+        "textColor": "#ee3b28",
+        "style": {
+          "marginTop": "",
+          "paddingTop": 20,
+          "paddingBottom": 20
+        },
+        "tagName": "div"
+      },
+      "childrenIds": [],
+      "show": true
+    },
+    {
+      "id": "stru_mweynijj49Vroai",
+      "name": "@fox-design/react-container",
+      "props": {
+        "style": {
+          "display": "block",
+          "textAlign": "center",
+          "fontWeight": "bold"
+        }
+      },
+      "childrenIds": [
+        "stru_tgchpq_iVvX6pc54"
+      ],
+      "show": true
+    },
+    {
+      "id": "stru_aqpbesNK2wVWuZ5K",
+      "name": "@fox-design/react-image",
+      "props": {
+        "src": "https://dimg04.c-ctrip.com/images/0M73x120008z4vix368E0.png"
+      },
+      "childrenIds": [],
+      "show": true
+    },
+    {
+      "id": "stru_ppmhpaoVGliGf9E",
+      "name": "@fox-design/react-container",
+      "props": {},
+      "childrenIds": [
+        "stru_aqpbesNK2wVWuZ5K"
+      ],
+      "show": true
+    },
+    {
+      "id": "stru_dheolnc4g6ANsgVY",
+      "name": "@fox-design/react-image",
+      "props": {
+        "src": "https://dimg04.c-ctrip.com/images/0M73x120008z4vix368E0.png"
+      },
+      "childrenIds": [],
+      "show": true
+    },
+    {
+      "id": "stru_vmspcchGXdgOWil",
+      "name": "@fox-design/react-container",
+      "props": {},
+      "childrenIds": [
+        "stru_dheolnc4g6ANsgVY"
+      ],
+      "show": true
+    },
+    {
+      "id": "stru_pdalyhRnuWpQ-Cv",
+      "name": "@fox-design/react-csr-entry",
+      "props": {
+        "entryLink": {
+          "url": "https://unpkg.com/@foxpage/foxpage-entry-react@0.2.4/dist/entry.js"
+        }
+      },
+      "childrenIds": [
+        "stru_fwcbklkWnZNOLui",
+        "stru_mweynijj49Vroai",
+        "stru_ppmhpaoVGliGf9E",
+        "stru_vmspcchGXdgOWil"
+      ],
+      "show": true
+    },
+    {
+      "id": "stru_fguadlvxCmPMPYK",
+      "name": "@fox-design/react-text",
+      "props": {},
+      "childrenIds": [],
+      "show": true
+    },
+    {
+      "id": "create_builtin.DebugEntry_3t7FPVMw20",
+      "name": "builtin.DebugEntry",
+      "props": {
+        "url": "/debug.js"
+      },
+      "version": "",
+      "childrenIds": []
+    },
+    {
+      "id": "stru_rorepmOVizYJSh4",
+      "name": "@fox-design/react-body",
+      "props": {},
+      "childrenIds": [
+        "stru_pdalyhRnuWpQ-Cv",
+        "stru_fguadlvxCmPMPYK",
+        "create_builtin.DebugEntry_3t7FPVMw20"
+      ],
+      "show": true
+    },
+    {
+      "id": "stru_ykiifcynAFKaqsY",
+      "name": "@fox-design/react-html",
+      "props": {},
+      "childrenIds": [
+        "stru_qgjlqr28mlG9OpQ",
+        "stru_rorepmOVizYJSh4"
+      ],
+      "show": true
+    }
+  ],
+  "resource": {
+    "requirejsLink": "",
+    "libs": {}
+  },
+  "option": {
+    "renderMethod": "hydrate"
+  },
+  "structureMap": {
+    "create_builtin.DebugDataPlaceholder_eUJbWOXy-e": {
+      "id": "create_builtin.DebugDataPlaceholder_eUJbWOXy-e",
+      "name": "builtin.DebugDataPlaceholder",
+      "props": {},
+      "version": "",
+      "childrenIds": []
+    },
+    "stru_qgjlqr28mlG9OpQ": {
+      "id": "stru_qgjlqr28mlG9OpQ",
+      "name": "@fox-design/react-head",
+      "props": {},
+      "childrenIds": [
+        "create_builtin.DebugDataPlaceholder_eUJbWOXy-e"
+      ],
+      "show": true
+    },
+    "stru_fftfetW5zJe9DtKd": {
+      "id": "stru_fftfetW5zJe9DtKd",
+      "name": "@fox-design/react-image",
+      "props": {
+        "src": "https://ak-d.tripcdn.com/images/0a15u120008yx4834A845.jpg"
+      },
+      "childrenIds": [],
+      "show": true
+    },
+    "stru_fwcbklkWnZNOLui": {
+      "id": "stru_fwcbklkWnZNOLui",
+      "name": "@fox-design/react-container",
+      "props": {
+        "style": {
+          "display": "flex"
+        }
+      },
+      "childrenIds": [
+        "stru_fftfetW5zJe9DtKd"
+      ],
+      "show": true
+    },
+    "stru_tgchpq_iVvX6pc54": {
+      "id": "stru_tgchpq_iVvX6pc54",
+      "name": "@fox-design/react-text",
+      "props": {
+        "text": "23232322323232 - null\nsdsa3",
+        "fontSize": 24,
+        "lineHeight": 30,
+        "backgroundColor": "rgba(255,147,147,0.38)",
+        "textColor": "#ee3b28",
+        "style": {
+          "marginTop": "",
+          "paddingTop": 20,
+          "paddingBottom": 20
+        },
+        "tagName": "div"
+      },
+      "childrenIds": [],
+      "show": true
+    },
+    "stru_mweynijj49Vroai": {
+      "id": "stru_mweynijj49Vroai",
+      "name": "@fox-design/react-container",
+      "props": {
+        "style": {
+          "display": "block",
+          "textAlign": "center",
+          "fontWeight": "bold"
+        }
+      },
+      "childrenIds": [
+        "stru_tgchpq_iVvX6pc54"
+      ],
+      "show": true
+    },
+    "stru_aqpbesNK2wVWuZ5K": {
+      "id": "stru_aqpbesNK2wVWuZ5K",
+      "name": "@fox-design/react-image",
+      "props": {
+        "src": "https://dimg04.c-ctrip.com/images/0M73x120008z4vix368E0.png"
+      },
+      "childrenIds": [],
+      "show": true
+    },
+    "stru_ppmhpaoVGliGf9E": {
+      "id": "stru_ppmhpaoVGliGf9E",
+      "name": "@fox-design/react-container",
+      "props": {},
+      "childrenIds": [
+        "stru_aqpbesNK2wVWuZ5K"
+      ],
+      "show": true
+    },
+    "stru_dheolnc4g6ANsgVY": {
+      "id": "stru_dheolnc4g6ANsgVY",
+      "name": "@fox-design/react-image",
+      "props": {
+        "src": "https://dimg04.c-ctrip.com/images/0M73x120008z4vix368E0.png"
+      },
+      "childrenIds": [],
+      "show": true
+    },
+    "stru_vmspcchGXdgOWil": {
+      "id": "stru_vmspcchGXdgOWil",
+      "name": "@fox-design/react-container",
+      "props": {},
+      "childrenIds": [
+        "stru_dheolnc4g6ANsgVY"
+      ],
+      "show": true
+    },
+    "stru_pdalyhRnuWpQ-Cv": {
+      "id": "stru_pdalyhRnuWpQ-Cv",
+      "name": "@fox-design/react-csr-entry",
+      "props": {
+        "entryLink": {
+          "url": "https://unpkg.com/@foxpage/foxpage-entry-react@0.2.4/dist/entry.js"
+        }
+      },
+      "childrenIds": [
+        "stru_fwcbklkWnZNOLui",
+        "stru_mweynijj49Vroai",
+        "stru_ppmhpaoVGliGf9E",
+        "stru_vmspcchGXdgOWil"
+      ],
+      "show": true
+    },
+    "stru_fguadlvxCmPMPYK": {
+      "id": "stru_fguadlvxCmPMPYK",
+      "name": "@fox-design/react-text",
+      "props": {},
+      "childrenIds": [],
+      "show": true
+    },
+    "create_builtin.DebugEntry_3t7FPVMw20": {
+      "id": "create_builtin.DebugEntry_3t7FPVMw20",
+      "name": "builtin.DebugEntry",
+      "props": {
+        "url": "/debug.js"
+      },
+      "version": "",
+      "childrenIds": []
+    },
+    "stru_rorepmOVizYJSh4": {
+      "id": "stru_rorepmOVizYJSh4",
+      "name": "@fox-design/react-body",
+      "props": {},
+      "childrenIds": [
+        "stru_pdalyhRnuWpQ-Cv",
+        "stru_fguadlvxCmPMPYK",
+        "create_builtin.DebugEntry_3t7FPVMw20"
+      ],
+      "show": true
+    },
+    "stru_ykiifcynAFKaqsY": {
+      "id": "stru_ykiifcynAFKaqsY",
+      "name": "@fox-design/react-html",
+      "props": {},
+      "childrenIds": [
+        "stru_qgjlqr28mlG9OpQ",
+        "stru_rorepmOVizYJSh4"
+      ],
+      "show": true
+    }
+  }
+}

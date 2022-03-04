@@ -1,0 +1,79 @@
+{
+  "name": "@foxpage/foxpage-debug-portal",
+  "version": "0.1.0",
+  "description": "foxpage debug portal on live",
+  "keywords": [
+    "foxpage",
+    "foxpage debug",
+    "debug"
+  ],
+  "author": "xdr肖达荣 <drxiao@trip.com>",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.dev.sh.ctripcorp.com:fox-open/foxpage-sdk-js.git"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --disableHostCheck=true --config config/webpack.dev.config.js --progress --inline --colors",
+    "build": "npm run build:es & npm run build:dist",
+    "build:dev": "cross-env NODE_ENV=development webpack --config config/webpack.config.js",
+    "build:dist": "cross-env NODE_ENV=production webpack --config config/webpack.config.js",
+    "build:es": "tsc --project tsconfig.prod.json",
+    "build:npm": "npm run build -- --skipLibCheck",
+    "prebuild": "rimraf lib & rimraf dist",
+    "prepublishOnly": "npm install && npm run build:npm",
+    "babel": "babel src/ --out-dir lib --extensions .js,.ts,.tsx",
+    "analyze": "ANALYZE=1 webpack",
+    "lint:type": "tsc --noEmit",
+    "test": "jest --passWithNoTests",
+    "test:coverage": "npm run test -- --coverage"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.7.5",
+    "@babel/core": "^7.7.5",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.8.3",
+    "@babel/plugin-proposal-optional-chaining": "^7.8.3",
+    "@babel/preset-env": "^7.7.5",
+    "@babel/preset-react": "^7.7.4",
+    "@babel/preset-typescript": "^7.7.4",
+    "@foxpage/foxpage-types": "^0.4.3",
+    "@foxpage/foxpage-plugin-debugger": "^0.1.0",
+    "@types/react": "^16.9.1",
+    "@types/react-dom": "^16.8.5",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-import": "^1.13.0",
+    "cross-env": "^5.1.1",
+    "css-loader": "^3.2.0",
+    "less": "^3.10.3",
+    "less-loader": "^5.0.0",
+    "rimraf": "^3.0.0",
+    "style-loader": "^1.0.0",
+    "styled-components": "^5.3.3",
+    "tsconfig-paths-webpack-plugin": "^3.5.2",
+    "typescript": "^4.0.2",
+    "webpack": "^4.41.0",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.11.2",
+    "webpack-merge": "^5.8.0"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^4.7.0",
+    "@foxpage/foxpage-browser-loader": "^0.2.4",
+    "@foxpage/foxpage-types": "^0.4.3",
+    "antd": "^4.1.0",
+    "core-js": "^3.6.4",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-json-view": "^1.21.3"
+  }
+}

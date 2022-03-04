@@ -95,10 +95,6 @@ See our documentation live [Docs](http://www.foxpage.io) for the Foxpage SDK.
 - [Developer docs](http://www.foxpage.io/#/developer)
 - [Advance guide](http://www.foxpage.io/#/advance)
 
-## 📡 Try live demo
-
-See for yourself what's under the hood by getting access to a [Foxpage project](http://console.foxfamily.io/page/#/) with sample data.
-
 ## 🏷️ License
 
 See the [LICENSE](./LICENSE) file for licensing information.
