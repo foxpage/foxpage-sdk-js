@@ -1,4 +1,4 @@
-import { Context, StructureNode } from '@foxpage/foxpage-types';
+import { Context, FoxpageComponentMeta, StructureNode } from '@foxpage/foxpage-types';
 
 type DSL = Context['page']['schemas'];
 
@@ -36,3 +36,36 @@ export const findStructure = (
   }
   return null;
 };
+
+/**
+ * find structure by meta info
+ *
+ * @export
+ * @param {Context} ctx
+ * @param {('isHead' | 'isBody')} tag
+ * @return {*}
+ */
+export function findStructureByMeta(dsl: StructureNode[], ctx: Context, tag: keyof FoxpageComponentMeta) {
+  return findStructure(dsl || [], item => {
+    if (item) {
+      const component = ctx.componentMap?.get(item.id);
+      if (component) {
+        // useStyledComponents: the meta of package provide
+        return !!component.meta[tag];
+      }
+    }
+    return false;
+  });
+}
+
+export function findBody(dsl: StructureNode[], ctx: Context) {
+  return findStructureByMeta(dsl, ctx, 'isBody');
+}
+
+export function findHead(dsl: StructureNode[], ctx: Context) {
+  return findStructureByMeta(dsl, ctx, 'isHead');
+}
+
+export function findMountNode(dsl: StructureNode[], ctx: Context) {
+  return findStructureByMeta(dsl, ctx, 'isMountNode');
+}

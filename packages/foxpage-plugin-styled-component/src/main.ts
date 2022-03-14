@@ -8,8 +8,7 @@ import { Context, StructureNode } from '@foxpage/foxpage-types';
 
 import { HeadConsumer } from './components/HeadConsumer';
 import { InnerHTML } from './components/InnerHTML';
-import { findStructure } from './utils';
-const { appendStructure, createStructureWithFactory } = structureUtils;
+const { appendStructure, createStructureWithFactory, findBody, findHead } = structureUtils;
 
 /**
  * create elements with styled-components
@@ -94,12 +93,4 @@ function handleHeadNode(ctx: Context, styleElements: ReactElement[]) {
   }
   const { structure, component } = createStructureWithFactory(HeadConsumer, { styleElements });
   appendStructure(headNode, structure, component, ctx);
-}
-
-function findBody(dsl: StructureNode[], ctx: Context) {
-  return findStructure(dsl, ctx, 'isBody');
-}
-
-function findHead(dsl: StructureNode[], ctx: Context) {
-  return findStructure(dsl, ctx, 'isHead');
 }

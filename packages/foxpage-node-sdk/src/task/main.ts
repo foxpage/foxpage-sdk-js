@@ -1,10 +1,10 @@
-import { parser } from '@foxpage/foxpage-core';
+import { merger, parser } from '@foxpage/foxpage-core';
 import { getApplicationBySlug, PageInstance } from '@foxpage/foxpage-manager';
 import { createContentInstance, tag, variable } from '@foxpage/foxpage-shared';
 import { Application, ContentDetail, Context, Page, ParsedDSL, RenderToHTMLOptions } from '@foxpage/foxpage-types';
 
 import { FoxpageRequestOptions } from '../api';
-import { isPreviewMode } from '../common';
+import { initMode } from '../common';
 import { createContext, updateContextWithPage } from '../context';
 import { renderToHTML } from '../render/main';
 
@@ -30,7 +30,8 @@ export const appTask = (pathname: string) => {
 export const contextTask = async (app: Application, opt: FoxpageRequestOptions) => {
   const ctx = await createContext(app, opt);
 
-  ctx.isPreviewMode = isPreviewMode(ctx);
+  // init mode: debug,preview,...
+  initMode(ctx);
 
   const { afterContextCreate } = ctx.hooks || {};
   if (typeof afterContextCreate === 'function') {
@@ -46,19 +47,24 @@ export const contextTask = async (app: Application, opt: FoxpageRequestOptions) 
  * @param app current application
  * @returns Promise<FPRouter | undefined>
  */
-export const tagTask = async (app: Application, ctx: Context) => {
+export const routerTask = async (app: Application, ctx: Context) => {
   if (!ctx.URL) {
     return null;
   }
 
   const { pathname, searchParams } = ctx.URL;
-  const _pathname = (app.slug ? pathname.replace(`/${app.slug}`, '') : pathname).substr(1);
+  const pathnameStr = (app.slug ? pathname.replace(`/${app.slug}`, '') : pathname).substr(1);
+
+  const route = app.routeManager.getRoute(pathnameStr);
+  if (route) {
+    return route;
+  }
 
   const tags = tag.generateTagByQuerystring(searchParams.toString());
 
-  const file = await app.fileManager.getFileByPathname(_pathname);
+  const file = await app.fileManager.getFileByPathname(pathnameStr);
   return await app.tagManager.matchTag(tags, {
-    pathname: _pathname,
+    pathname: pathnameStr,
     fileId: file?.id || '',
     withContentInfo: !ctx.isPreviewMode,
   });
@@ -71,7 +77,7 @@ export const tagTask = async (app: Application, ctx: Context) => {
  * @returns Promise<Application|null|undefined>
  */
 export const pageTask = async (pageId: string, app: Application, ctx: Context) => {
-  let page: Page | undefined;
+  let page: Page | null = null;
 
   const { beforeDSLFetch, afterDSLFetch } = ctx.hooks || {};
   if (typeof beforeDSLFetch === 'function') {
@@ -95,25 +101,52 @@ export const pageTask = async (pageId: string, app: Application, ctx: Context) =
       }
     }
   } else {
-    page = await app.pageManager.getPage(pageId);
+    page = (await app.pageManager.getPage(pageId)) || null;
     if (page) {
       // update ctx
       await updateContextWithPage(ctx, { app, page });
     }
   }
 
+  if (page) {
+    page = await mergeTask(page, app, ctx);
+  }
+
   if (typeof afterDSLFetch === 'function') {
-    const prePage = await afterDSLFetch(ctx, page);
-    if (prePage) {
-      page = new PageInstance(prePage);
-      await updateContextWithPage(ctx, { app, page });
-    }
+    page = await afterDSLFetch(ctx, page);
+  }
+
+  // create instance by page content
+  if (page) {
+    page = new PageInstance(page);
+    await updateContextWithPage(ctx, { app, page });
   }
 
   return page;
 };
 
 export const fetchDSLTask = pageTask;
+
+/**
+ * page merge task
+ * @param page base page
+ * @param app application
+ * @param ctx Context
+ * @returns merged page
+ */
+export const mergeTask = async (page: Page, app: Application, ctx: Context) => {
+  const { extendId } = page.extension || {};
+  if (extendId) {
+    const base = await app.pageManager.getPage(extendId);
+    if (base) {
+      const merged = merger.merge(base, page, { strategy: merger.MergeStrategy.COMBINE_BY_EXTEND });
+      return merged;
+    }
+    ctx.logger?.error(`The base page is invalid @${extendId}`);
+    return null;
+  }
+  return page;
+};
 
 /**
  * parse page task

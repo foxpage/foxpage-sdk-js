@@ -7,9 +7,8 @@ import { isNotNill } from '@foxpage/foxpage-shared';
 import { Context } from '@foxpage/foxpage-types';
 
 import { HeadConsumer } from './components/HeadConsumer';
-import { findStructure } from './utils';
 
-const { appendStructure, createStructureWithFactory } = structureUtils;
+const { appendStructure, createStructureWithFactory, findHead } = structureUtils;
 
 type HelmetComponent = ReturnType<HelmetData['noscript']['toComponent']>;
 
@@ -64,7 +63,7 @@ export class HeadManager {
       return;
     }
 
-    const headNode = findStructure(dsl, ctx, 'isHead');
+    const headNode = findHead(dsl, ctx);
     if (!headNode) {
       return;
     }

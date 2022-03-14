@@ -7,6 +7,7 @@ export * from './page';
 export * from './tag';
 export * from './template';
 export * from './variable';
+export * from './router';
 
 export * from './manager';
 export * from './service';

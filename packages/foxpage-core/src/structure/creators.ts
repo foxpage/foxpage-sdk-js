@@ -12,6 +12,7 @@ export function createStructureDSL(
     props,
     type: 'react.component',
     name,
+    label: '',
     version: '',
     ...partial,
   };

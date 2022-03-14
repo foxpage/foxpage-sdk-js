@@ -5,6 +5,7 @@ import { FoxpageRenderHooks } from './render';
 import { FoxpageAppIgniteHooks } from './ignite';
 import { FoxpageParserRegisterHooks } from './parser';
 import { FoxpageContextHooks } from './context';
+import { FoxpageRouterRegisterHooks } from './router';
 import { StructureNode } from '../structure';
 import { Context } from '../context'
 
@@ -28,4 +29,5 @@ export type FoxpageHooks =
   FoxpageRenderHooks &
   FoxpageAppIgniteHooks &
   FoxpageParserRegisterHooks &
+  FoxpageRouterRegisterHooks &
   FoxpageContextHooks;

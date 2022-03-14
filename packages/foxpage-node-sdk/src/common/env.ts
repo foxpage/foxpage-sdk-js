@@ -16,3 +16,17 @@ const isMode =
  * check is preview mode
  */
 export const isPreviewMode = isMode({ ctxKey: 'isPreviewMode', queryKey: 'preview' });
+
+/**
+ * check is debug mode
+ */
+export const isDebugMode = isMode({ ctxKey: 'isDebugMode', queryKey: 'debug' });
+
+/**
+ * init mode
+ * @param ctx context
+ */
+export const initMode = (ctx: Context) => {
+  ctx.isPreviewMode = isPreviewMode(ctx);
+  ctx.isDebugMode = isDebugMode(ctx);
+};

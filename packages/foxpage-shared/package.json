@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-shared",
-  "version": "0.4.2",
+  "version": "0.4.11",
   "description": "foxpage common utils",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -16,15 +16,16 @@
     "typescript"
   ],
   "dependencies": {
-    "debug": "^4.1.1",
+    "format-util": "^1.0.5",
     "lodash": "^4.17.15",
     "moment": "^2.29.1",
     "shortid": "^2.2.16"
   },
   "devDependencies": {
-    "@foxpage/foxpage-types": "^0.4.2",
+    "@foxpage/foxpage-types": "^0.4.4",
     "@types/debug": "0.0.31",
     "@types/faker": "^4.1.5",
+    "@types/format-util": "^1.0.2",
     "@types/lodash": "^4.14.153",
     "@types/shortid": "^0.0.29",
     "faker": "^4.1.0",

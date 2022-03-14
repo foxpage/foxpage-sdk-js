@@ -324,7 +324,7 @@ export class ComponentLoaderImpl implements ComponentLoader {
       return {
         type,
         name: node.name,
-        version: node.version,
+        version: node.version || pkg.version,
         browserURL,
         debugURL,
         nodeURL: downloadUrl,

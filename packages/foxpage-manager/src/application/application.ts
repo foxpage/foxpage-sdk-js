@@ -18,6 +18,8 @@ import {
   PageManager,
   PluginManager,
   RelationInfo,
+  Route,
+  Router,
   TagManager,
   TemplateManager,
   VariableManager,
@@ -26,14 +28,15 @@ import {
 import { createLogger, FPEventEmitterInstance } from '../common';
 import { ConditionManagerImpl } from '../condition';
 import { foxpageDataService } from '../data-service';
+import { FileManagerImpl } from '../file';
 import { FunctionManagerImpl } from '../function';
 import { PackageManagerImpl } from '../package';
 import { PageManagerImpl } from '../page';
 import { PluginManagerImpl } from '../plugin';
+import { RouterImpl } from '../router';
 import { TagManagerImpl } from '../tag';
 import { TemplateManagerImpl } from '../template';
 import { VariableManagerImpl } from '../variable';
-import { FileManagerImpl } from '..';
 
 import { initAppConfig } from './config';
 import { Schedule, ScheduleOptions } from './schedule';
@@ -61,6 +64,7 @@ function createSourceUpdateSchedule(app: ApplicationImpl) {
       result.appId = app.appId;
       return result;
     } catch (e) {
+      app.logger?.error((e as Error).message);
       return {
         appId: app.appId,
         contents: {},
@@ -154,6 +158,12 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
    */
   public readonly pluginManager: PluginManager;
   /**
+   * router
+   *
+   * @type {Router}
+   */
+  public readonly routeManager: Router;
+  /**
    * logger
    *
    * @type {Logger}
@@ -192,18 +202,14 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
     this.functionManager = new FunctionManagerImpl(this);
     this.tagManager = new TagManagerImpl(this);
     this.pluginManager = new PluginManagerImpl({ plugins: opt.plugins, baseDir: opt.pluginDir || '', api: {} });
+    this.routeManager = new RouterImpl(this);
     this.hooks = opt.hooks;
 
     //logger
     this.logger = createLogger('Application');
 
     // listen push
-    this.tagManager.on('DATA_PUSH', (data: ContentInfo) => {
-      this.emit('DATA_STASH', data);
-    });
-    this.pageManager.on('DATA_PUSH', (data: ContentInfo) => {
-      this.emit('DATA_STASH', data);
-    });
+    this.initEvents();
 
     if (this.enableSchedule()) {
       // instance resource update schedule
@@ -222,7 +228,17 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
   public async prepare() {
     await this.packageManager.freshPackages();
     this.pluginManager.loadPlugins();
-    // await this.templateManager.freshTemplates();
+
+    const hooks = this.pluginManager.getHooks();
+    const { registerRouter } = hooks || {};
+    if (typeof registerRouter === 'function') {
+      const routes = (await registerRouter()) as unknown as Route[];
+      if (Array.isArray(routes)) {
+        this.routeManager.register(routes);
+      } else {
+        this.routeManager.register([routes]);
+      }
+    }
 
     // schedule
     if (this.enableSchedule()) {
@@ -391,6 +407,15 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
     return list.findIndex(cont => cont.id === value) > -1;
   }
 
+  private initEvents() {
+    this.tagManager.on('DATA_PUSH', (data: ContentInfo) => {
+      this.emit('DATA_STASH', data);
+    });
+    this.pageManager.on('DATA_PUSH', (data: ContentInfo) => {
+      this.emit('DATA_STASH', data);
+    });
+  }
+
   /**
    * destroy
    */
@@ -404,6 +429,7 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
     this.templateManager.destroy();
     this.variableManager.destroy();
     this.pluginManager.destroy();
+    this.routeManager.destroy();
     this.schedule?.stop();
   }
 }

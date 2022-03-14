@@ -78,7 +78,7 @@
                 ],
                 "id": "stru_aamqfegPuqxQqS4",
                 "label": "context-provider",
-                "name": "cloud-flight-seo-context-provider",
+                "name": "@ctrip/cloud-flight-seo-context-provider",
                 "props": {},
                 "type": "react.component",
                 "enableChildren": true
@@ -86,7 +86,7 @@
             ],
             "id": "stru_mnqaep7OGra5XAK",
             "label": "csr-entry",
-            "name": "cloud-flight-seo-csr-entry",
+            "name": "@ctrip/cloud-flight-seo-csr-entry",
             "props": {
               "resource": {},
               "entryLink": {}
@@ -97,7 +97,7 @@
             "children": [],
             "id": "stru_zdjrrvzbB90fkK0",
             "label": "ubt",
-            "name": "cloud-flight-seo-common-ubt",
+            "name": "@ctrip/cloud-flight-seo-common-ubt",
             "props": {},
             "type": "react.component"
           }

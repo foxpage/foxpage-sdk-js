@@ -3,7 +3,6 @@ import { FoxpageHooks } from '@foxpage/foxpage-types';
 
 import { createHeadManager, renderWithHelmet } from './main';
 
-export * from './utils';
 export * from './main';
 
 /**

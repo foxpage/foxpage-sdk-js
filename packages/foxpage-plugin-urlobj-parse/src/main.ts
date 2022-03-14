@@ -38,7 +38,11 @@ export const getURLQueryVar = (ctx: PickContext<'URL'> = {}) => {
 
 export const getURLVar = (
   ctx: PickContext<'URL'> = {},
-): URL & { params: Record<string, string>; queryParams: Record<string, string>; query: Record<string, string> } => {
+): PickContext<'URL'> & {
+  params: Record<string, string>;
+  queryParams: Record<string, string>;
+  query: Record<string, string>;
+} => {
   const URL = ctx && ctx.URL;
   if (!URL) {
     return {} as any;

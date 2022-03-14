@@ -1,4 +1,4 @@
-import { StructureNode } from '@foxpage/foxpage-types';
+import { Page, StructureNode } from '@foxpage/foxpage-types';
 
 import { combineNode, merge, preMerge } from '@/merger';
 import { MergeStrategy } from '@/merger/strategy';
@@ -98,5 +98,87 @@ describe('merger/main', () => {
     const str = JSON.stringify(merged);
     expect(str).toContain('new code');
     expect(str).not.toContain('window.__BF_CUSTOM_LOAD_FLAG__ = true;');
+  });
+
+  it('DSL test', () => {
+    const current = {
+      id: 'cont_lU0AGtJMD8OweYD',
+      relation: {},
+      schemas: [
+        {
+          id: 'stru_tspgqvEzK0KwaWq',
+          name: '@fox-design/react-text',
+          label: '@fox-design/react-text',
+          props: {
+            text: 'Base content!!!11',
+          },
+          directive: {},
+          extension: {
+            extendId: 'stru_wwhkobWBDryUAil',
+          },
+        },
+      ],
+      extensions: {
+        extendId: 'cont_jf8kOTmsfnZmBNV',
+      },
+      version: '1.0',
+    } as unknown as Page;
+
+    const base = {
+      id: 'cont_jf8kOTmsfnZmBNV',
+      schemas: [
+        {
+          id: 'stru_vpwqcuZl4uYCU4YB',
+          name: '',
+          type: '',
+          props: {
+            width: '100%',
+            height: '100%',
+          },
+          children: [
+            {
+              id: 'stru_rftvzjtCstudkwC',
+              label: '@fox-design/react-image',
+              name: '@fox-design/react-image',
+              props: {
+                src: 'https://ak-d.tripcdn.com/images/0a15u120008yx4834A845.jpg',
+              },
+            },
+            {
+              id: 'stru_wwhkobWBDryUAil',
+              label: '@fox-design/react-text',
+              name: '@fox-design/react-text',
+              props: {
+                text: 'Base content!!!',
+                tagName: 'div',
+                textAlign: 'center',
+                style: {
+                  marginTop: '',
+                  marginBottom: '',
+                  paddingTop: 20,
+                  paddingBottom: 20,
+                  paddingLeft: '',
+                },
+              },
+            },
+          ],
+          directive: {
+            tpl: '{{__templates:cont_wlY8nusRmoyfQ5q:schemas}}',
+          },
+        },
+      ],
+      relation: {
+        '__templates:cont_wlY8nusRmoyfQ5q:schemas': {
+          id: 'cont_wlY8nusRmoyfQ5q',
+          type: 'template',
+        },
+      },
+      version: '1.0',
+      extensions: {
+        extendId: '',
+      },
+    } as unknown as Page;
+    const merged = merge(base, current, { strategy: MergeStrategy.COMBINE_BY_EXTEND });
+    expect(merged).toBeDefined();
   });
 });

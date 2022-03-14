@@ -12,6 +12,7 @@ import {
   ConditionManager,
   TemplateManager,
   FunctionManager,
+  Router,
   AppEvents,
   RelationInfo,
 } from '../manager';
@@ -60,6 +61,7 @@ export interface Application extends TypedEventEmitter<AppEvents> {
   readonly conditionManager: ConditionManager;
   readonly templateManager: TemplateManager;
   readonly functionManager: FunctionManager;
+  readonly routeManager: Router;
   readonly configs: AppConfig;
 
   enableSchedule(): boolean;

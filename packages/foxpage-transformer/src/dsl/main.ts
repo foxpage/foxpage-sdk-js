@@ -71,6 +71,7 @@ export const transformToNewDSL = (pageDSL: PageDSL, schemaMap?: SchemaRecord): P
       id: value.id,
       name: value.type,
       type: 'react.component',
+      label: '',
       props: value.props || {},
       directive: schema ? schema.directive : {},
       children: [],

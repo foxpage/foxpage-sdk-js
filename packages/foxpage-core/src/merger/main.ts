@@ -64,6 +64,8 @@ export const postMerge = <T extends MergeStructureNode>(record: Record<string, T
           .sort((one, two) => (one.extension?.sort || 0) - (two.extension?.sort || 0));
         item.children = children.length > 0 ? dfs(children) : [];
       }
+      // avoid the extension data
+      delete item.childIds;
     });
     return list;
   }

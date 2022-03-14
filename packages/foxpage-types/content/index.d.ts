@@ -14,10 +14,15 @@ import {
 } from "../manager";
 import { StructureNode } from '../structure';
 
+export interface ContentExtension {
+  extendId?: string;
+}
+
 export interface ContentVersion<T> {
   id: string;
   schemas: T[];
   relation?: Relation;
+  extension?: ContentExtension;
 }
 
 export interface ContentDetail<T = StructureNode | VariableItem | ConditionItem | FPFunctionItem> extends ContentVersion<T> {

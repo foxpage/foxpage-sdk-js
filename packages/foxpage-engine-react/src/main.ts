@@ -3,77 +3,75 @@ import ReactDOMServer from 'react-dom/server';
 
 import { cloneDeep } from 'lodash';
 
-// import ReactIs from 'react-is';
 import { Context, PageRenderOption, ParsedDSL, StructureNode, StructureNodeProps } from '@foxpage/foxpage-types';
 
 import { Container } from './components';
 
 type ElementType = ReactElement<StructureNodeProps<any>, string | React.JSXElementConstructor<any>> | null | undefined;
 
-async function build(schemas: StructureNode[], ctx: Context) {
-  async function creator(node: StructureNode) {
-    try {
-      const { id, show = true, name, type, version, children = [] } = node;
-      if (!show) {
+async function creator(node: StructureNode, ctx: Context) {
+  try {
+    const { id, show = true, name, type, version, children = [] } = node;
+    if (!show) {
+      return null;
+    }
+
+    const component = ctx.componentMap?.get(id);
+    if (component) {
+      const { factory } = component;
+      if (!factory) {
+        ctx.logger?.warn(`render node ${name}${id} failed, factory is undefined.`);
         return null;
       }
 
-      const component = ctx.componentMap?.get(id);
-      if (component) {
-        const { factory } = component;
-        if (!factory) {
-          ctx.logger?.warn(`render node ${name}${id} failed, factory is undefined.`);
-          return null;
+      const childrenElements: ElementType[] = await Promise.all(
+        children.length > 0 ? children.map(item => creator(item, ctx)) : [],
+      );
+
+      let buildHookProps;
+      if (typeof factory.beforeNodeBuild === 'function') {
+        try {
+          buildHookProps = await factory.beforeNodeBuild(ctx, node);
+          ctx.logger?.info(`Hook [ buildHookProps ][ ${name} ] success.`);
+        } catch (e) {
+          ctx.logger?.error(`Hook [ buildHookProps ][ ${name} ] run error: ${(e as Error).message}`);
         }
-
-        const childrenElements: ElementType[] = await Promise.all(
-          children.length > 0 ? children.map(item => creator(item)) : [],
-        );
-
-        let buildHookProps;
-        if (typeof factory.beforeNodeBuild === 'function') {
-          try {
-            buildHookProps = await factory.beforeNodeBuild(ctx, node);
-            ctx.logger?.info(`Hook [ buildHookProps ][ ${name} ] success.`);
-          } catch (e) {
-            ctx.logger?.error(`Hook [ buildHookProps ][ ${name} ] run error: ${(e as Error).message}`);
-          }
-        }
-
-        // injector
-        const injector = {
-          id,
-          type,
-          name,
-          version,
-        };
-
-        // merge props
-        const finalProps = {
-          $injector: injector,
-          ...node.props,
-          ...(cloneDeep(buildHookProps) || {}),
-        };
-
-        // important
-        // for update final props to component
-        // for csr render get the right data
-        const structure = ctx.structureMap?.get(id);
-        if (structure) {
-          structure.props = Object.assign({}, finalProps);
-        }
-
-        const element = createElement(factory, finalProps, ...childrenElements);
-        return element;
       }
-    } catch (e) {
-      ctx.logger?.error('render node %c failed.', node, e);
-      return null;
+
+      // injector
+      const injector = {
+        id,
+        type,
+        name,
+        version,
+      };
+
+      // merge props
+      const finalProps = {
+        $injector: injector,
+        ...node.props,
+        ...(cloneDeep(buildHookProps) || {}),
+      };
+
+      // important
+      // for update final props to component
+      // for csr render get the right data
+      const structure = ctx.structureMap?.get(id);
+      if (structure) {
+        structure.props = Object.assign({}, finalProps);
+      }
+
+      const element = createElement(factory, finalProps, ...childrenElements);
+      return element;
     }
+  } catch (e) {
+    ctx.logger?.error('render node %c failed.', node, e);
+    return null;
   }
+}
 
-  const elements = await Promise.all(schemas.map(item => creator(item)));
-
+async function build(schemas: StructureNode[], ctx: Context) {
+  const elements = await Promise.all(schemas.map(item => creator(item, ctx)));
   return elements;
 }
 

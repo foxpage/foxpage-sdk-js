@@ -7,6 +7,7 @@ export * from './tag';
 export * from './template';
 export * from './variable';
 export * from './plugin';
+export * from './router';
 
 export * from './relation';
 

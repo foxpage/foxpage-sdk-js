@@ -1,5 +1,4 @@
-import { format } from 'util';
-
+import format from 'format-util';
 import { isError } from 'lodash';
 
 import { LoggerClass, Loggers } from './impl';

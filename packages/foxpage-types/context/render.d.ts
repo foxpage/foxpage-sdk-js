@@ -54,6 +54,11 @@ export interface Context {
   // app base
   readonly appId: string;
   readonly appSlug: string;
+  readonly settings?: {
+    debugger: {
+      url: string;
+    };
+  };
 
   page: Page;
   tags?: Tag[];

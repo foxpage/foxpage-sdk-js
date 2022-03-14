@@ -1,4 +1,6 @@
-import { appTask, contextTask, pageTask, parseTask, renderTask, tagTask } from '../task';
+import { Content, Route } from '@foxpage/foxpage-types';
+
+import { appTask, contextTask, pageTask, parseTask, renderTask, routerTask } from '../task';
 
 import { FoxpageRequestOptions } from './interface';
 
@@ -23,13 +25,20 @@ export const routerHandler = () => async (opt: FoxpageRequestOptions) => {
     const ctx = await contextTask(app, opt);
 
     // get content
-    const content = await tagTask(app, ctx);
+    const content = await routerTask(app, ctx);
     if (!content) {
       return null;
     }
 
+    // check page route
+    if (!(content as Content).id) {
+      // dispatch
+      const result = (content as Route).action(ctx);
+      return result;
+    }
+
     // get page
-    const page = await pageTask(content.id, app, ctx);
+    const page = await pageTask((content as Content).id, app, ctx);
     if (!page) {
       return null;
     }

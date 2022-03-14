@@ -76,29 +76,8 @@ const parent: Page = {
               label: 'csr-entry',
               name: '@ctrip/cloud-flight-seo-csr-entry',
               props: {
-                resource: {
-                  requirejsLink: 'https://xxx/modules/ibu/cloud-foxpage/library/requirejs.min.3e9a0d.js',
-                  libs: {
-                    react: {
-                      url: 'https://xxx/modules/ibu/cloud-foxpage/library/react.min.b722e6.js',
-                      injectWindow: 'React',
-                      umdModuleName: 'react',
-                    },
-                    'react-dom': {
-                      url: 'https://xxx/modules/ibu/cloud-foxpage/library/react-dom.min.5cd6ab.js',
-                      injectWindow: 'ReactDOM',
-                      umdModuleName: 'react-dom',
-                    },
-                    'react-helmet': {
-                      url: 'https://xxx/modules/ibu/cloud-foxpage/library/react-helmet.min.5c994e.js',
-                      injectWindow: 'Helmet',
-                      umdModuleName: 'react-helmet',
-                    },
-                  },
-                },
-                entryLink: {
-                  url: 'https://xxx/modules/ibu/cloud-foxpage/entry.098b49.js',
-                },
+                resource: {},
+                entryLink: {},
               },
               type: 'react.component',
             },

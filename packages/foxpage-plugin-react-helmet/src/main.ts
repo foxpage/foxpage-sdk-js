@@ -5,8 +5,7 @@ import { Context, StructureNode } from '@foxpage/foxpage-types';
 
 import { InnerHTML } from './components/InnerHTML';
 import { HeadManager } from './head-manager';
-import { findStructure } from './utils';
-const { appendStructure, createStructureWithFactory } = structureUtils;
+const { appendStructure, createStructureWithFactory, findBody } = structureUtils;
 
 /**
  * create a head manager set to context
@@ -36,7 +35,7 @@ export const renderWithHelmet = async (ctx: Context) => {
   // for avoid pollute the origin dsl
   const dsl = _.cloneDeep(ctx.page.schemas);
 
-  const mountPoint = getMountPointNode(dsl, ctx);
+  const mountPoint = findBody(dsl, ctx);
   // no mount point node
   if (mountPoint) {
     const mountPointHtml = await render(mountPoint.children, ctx);
@@ -84,14 +83,4 @@ function handleHeadNode(ctx: Context, dsl: Context['page']['schemas']) {
   const { headManager } = ctx;
   headManager.collectComponentResources(ctx);
   headManager.outputToDSL(ctx, dsl);
-}
-
-/**
- * get the mountNode
- * current default use "isBody" meta
- * @param {Context} ctx
- */
-function getMountPointNode(dsl: StructureNode[], ctx: Context) {
-  const headNode = findStructure(dsl, ctx, 'isBody');
-  return headNode;
 }

@@ -7,6 +7,21 @@ export type StructureNodeProps<T extends Record<string, any>> = T & {
   __listeners?: ComponentListeners;
 };
 
+export type Extension = {
+  /**
+ * extend node id
+ */
+  extendId?: string;
+  /**
+   * parent node id
+   */
+  parentId?: string;
+  /**
+   * node sort
+   */
+  sort?: number;
+}
+
 /**
  * structure node
  *
@@ -21,11 +36,18 @@ export interface StructureNode<P = any> {
    */
   id: string;
   /**
-   * structure node name
+   * structure node type name
    *
    * @type {string}
    */
   name: string;
+  /**
+   * structure node name
+   *
+   * @type {string}
+   * @memberof StructureNode
+   */
+  label: string;
   /**
    * structure node props
    *
@@ -68,6 +90,12 @@ export interface StructureNode<P = any> {
    * @type {boolean}
    */
   show?: boolean;
+  /**
+   * extension info
+   *
+   * @type {Extension}
+   */
+  extension?: Extension,
 }
 
 

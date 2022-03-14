@@ -4,7 +4,7 @@ import { ManagerOption } from '@foxpage/foxpage-types';
 
 // TODO: will remove it
 const TOKEN =
-  'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzZXItZHZiZlcxcXNsOHFrejM5IiwiYWNjb3VudCI6ImZveC11c2VyIiwiaWF0IjoxNjMzNzQ2ODExLCJleHAiOjE2NDIzODY4MTF9.C6ySkpQcVojGks-MdgiM22Zf5zYngd8MJVtYWMFQkiXHzwzrUh1DAhxDy9z3Kj3JCVVmQePcY-bGJCnNjNNkcMmKdBh0xbEwRdcOt3pmlHhZHhAPzPH7AjrNw9fLSX2Plj3NMlFnsOgQ81HHinY0DFGSVFF8NhtwLZ7SC6HFJCxodYC45FrD0fBAtoAxG_Zs9C7esTNKTzqxgPVN5rmR-loZnCE5YhLMYVOBTrRj-BpxyYdn3_FFBUzeuGKH3O3LxkiFV13xMJoJT1Am2ymJazdftfD0CqMYRAdEToz_jelmEyOEVkNJMLF7SbQlRAzAFQ68956P5In2mkmcJA4oq2QF75c51_7wGsXWYAnDH9CTyAd0IbqdxllHZsSt82J6vHOyXSm-9m2IHsEDbdw3D-FSY_NnPH3c-ZHSVom7l2h2W47ETWgJg1FyBb636jn35MDbI1FHjB1zmgWDH9yms6glNlJUFRSH2k-DFDvHwTuXLrE-E6Lh2StMCF1TTwburD2dkZyekmbSOH2qrSF8NUPHQET7kYlIQui9khH8E7LahlWSuuVn2EE7HbGdBxf2FW3RbaE0rIoA305EcYA1jS9X0r6o9Y37iHbQOJLYS4X-iZplcjqIG9l8mmKNbgjDUS1L9-Su7Z8vlaZa-UTKb-_1TAqOmDVU4VPh2UKsUKM';
+  'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzZXItZHZiZlcxcXNsOHFrejM5IiwiYWNjb3VudCI6ImZveC11c2VyIiwiaWF0IjoxNjM4MzI2OTE4LCJleHAiOjE2NDY5NjY5MTh9.Hzcq8sjZn7SiZ1FBf4HKBdebMH5A922w-q_SCqSR9qTYYVNArmcoevjIYFPTz0FwowDu899xplO72v1zNpwo6Gjxx1ynMRcjziTUUXYhmLKEuIuhimt5lVbc5byrOPRSkHatgtkDPF7PtC390a9BYzlmCg11BTNM_bAMI5MkCZYduTw2ZW0CK8R_aoz-Hj8i0NlW9vJt6KPC7vsBQBdiv92Z0Gerz7n0V-5RhTYZVJyIQFzuddNmrdMg_YrQH46ESm5ZJ-cKzYac8Pfi6YU-5FfHd3XqnUfGTgfaxnL7WhtgrEkDHkg1CINynBALPkEUNTCMvINMNhbso-IVd5mmEcqheNzLiHFLXI8dAQjHXoBq6xycBicp-P6D1sjFrPSJHkqvPngqUP1wXendHPEcT8zChj0Jf0-GET986bAZLWowpaRvDvS_EkOBfu1GJ5vWXasPcWvheFXX490OT8zuaWidJdfE-l1CgGYhjhxzWEZBwZ9EWVgUcpH2NYsodpaiiCXANRqyL3AwNyUnCr6XM2dYy8SEuNm0XV4T8Us968EUOaKldTjXGBNSX_e1IH7eegSdV2LiFSg2F0VYXatdClIIPo2c4S5TIyTJpdCfJFraLvZC6EvFqb5d_OmzLFbpnoJvFjDVm9TpzLLiY3HdcM_icKpHxIlFHJmiYbsxObg';
 
 interface WebApiResponse<T> {
   data?: T;
@@ -31,7 +31,10 @@ export type FoxpageRequest = <T>(
   },
 ) => Promise<T | null>;
 
-function handleError(err: Error, detail: { api: string; method: string; params: Record<string, unknown> }) {
+function handleError(
+  err: Error,
+  detail: { host: string; api: string; method: string; params: Record<string, unknown> },
+) {
   const { api, method } = detail;
   return `[DATA SERVICE] [${api}]<${method}> Error: ${err.message}, detail: ${JSON.stringify(detail)}`;
 }
@@ -59,7 +62,7 @@ export const createRequest = (opt: ManagerOption['dataService']): FoxpageRequest
       if (data?.code === 200) {
         return result.data.data as unknown as T;
       } else {
-        throw new Error(data?.msg || 'fetched failed');
+        throw new Error('code:' + data.code + ', msg:' + (data?.msg || 'fetched failed'));
       }
     } catch (e) {
       let err: Error;
@@ -70,7 +73,7 @@ export const createRequest = (opt: ManagerOption['dataService']): FoxpageRequest
         err = new Error(`request failed.`);
       }
 
-      err.message = handleError(err, { api, method, params });
+      err.message = handleError(err, { host: opt.host, api, method, params });
       throw err;
     }
   };

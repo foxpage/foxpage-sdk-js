@@ -1,5 +1,3 @@
-// import { join } from 'path';
-
 // import heapdump from 'heapdump';
 
 import * as foxpageSDK from '@foxpage/foxpage-node-sdk';
@@ -15,13 +13,17 @@ if (isDev) {
 Promise.all([foxpageSDK.init()]).then(() => {
   const server = app.listen(PORT, () => {
     console.log("App Say : Hi, I'm OK!");
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}, process: ${process.pid}`);
   });
   server.keepAliveTimeout = 10 * 1000;
   server.headersTimeout = 65 * 1000;
 });
 
 // setInterval(() => {
-//   const file = join(__dirname, Date.now() + '.heapsnapshot');
-//   heapdump.writeSnapshot(file);
-// }, 10 * 1000);
+//   dump();
+// }, 2 * 60 * 60 * 1000);
+
+// function dump() {
+//   const filename = `${__dirname}/heapdump-${process.pid}-${Date.now()}.heapsnapshot`;
+//   heapdump.writeSnapshot(filename);
+// }
