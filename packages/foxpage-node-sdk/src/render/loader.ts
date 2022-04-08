@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import { getApplication } from '@foxpage/foxpage-manager';
-import { Messages } from '@foxpage/foxpage-shared';
+import { Messages, packager } from '@foxpage/foxpage-shared';
 import {
   Application,
   ComponentLoader,
@@ -360,10 +360,10 @@ export class ComponentLoaderImpl implements ComponentLoader {
   }
 
   private generateKey(name: string, version?: string) {
-    return `${name}:${version || ''}`;
+    return packager.generateKey(name, version);
   }
 
   private splitKey = (key: string) => {
-    return key.split(':');
+    return packager.splitKey(key);
   };
 }

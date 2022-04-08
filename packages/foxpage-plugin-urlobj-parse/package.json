@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-plugin-urlobj-parse",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "foxpage urlobj parse plugin",
   "keywords": [
     "foxpage",
@@ -36,7 +36,7 @@
     "typescript": "^3.9.0"
   },
   "dependencies": {
-    "@foxpage/foxpage-core": "^0.4.9",
-    "@foxpage/foxpage-shared": "^0.4.11"
+    "@foxpage/foxpage-core": "^0.4.10",
+    "@foxpage/foxpage-shared": "^0.4.12"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-manager",
-  "version": "0.4.10",
+  "version": "0.4.11",
   "description": "foxpage resource manager",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -19,9 +19,9 @@
   "author": "drxiao",
   "license": "MIT",
   "dependencies": {
-    "@foxpage/foxpage-core": "^0.4.9",
+    "@foxpage/foxpage-core": "^0.4.10",
     "@foxpage/foxpage-plugin": "^0.2.3",
-    "@foxpage/foxpage-shared": "^0.4.11",
+    "@foxpage/foxpage-shared": "^0.4.12",
     "axios": "^0.21.1",
     "fs-extra": "^7.0.1",
     "json5": "^2.1.0",

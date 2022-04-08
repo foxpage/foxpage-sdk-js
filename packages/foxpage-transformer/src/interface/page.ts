@@ -23,4 +23,5 @@ export interface PageDSL {
   pageId?: string;
   appId?: string;
   type?: number;
+  extendId?: string;
 }

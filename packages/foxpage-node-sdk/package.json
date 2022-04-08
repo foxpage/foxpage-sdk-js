@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-node-sdk",
-  "version": "0.4.10",
+  "version": "0.4.11",
   "description": "foxpage node sdk",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -16,9 +16,9 @@
     "node-sdk"
   ],
   "dependencies": {
-    "@foxpage/foxpage-core": "^0.4.9",
-    "@foxpage/foxpage-manager": "^0.4.10",
-    "@foxpage/foxpage-shared": "^0.4.11",
+    "@foxpage/foxpage-core": "^0.4.10",
+    "@foxpage/foxpage-manager": "^0.4.11",
+    "@foxpage/foxpage-shared": "^0.4.12",
     "fs-extra": "^7.0.1"
   },
   "devDependencies": {

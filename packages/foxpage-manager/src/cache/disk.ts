@@ -1,10 +1,10 @@
 import { readJSON } from 'fs-extra';
 
-import { ResourceCache } from '@foxpage/foxpage-types';
+import { Logger, ResourceCache } from '@foxpage/foxpage-types';
 
 import { resolveContentPath, storeContent } from './local';
 
-export type DiskCacheOption = { appId: string; type: string };
+export type DiskCacheOption = { appId: string; type: string; logger?: Logger };
 
 /**
  * disk cache
@@ -18,10 +18,12 @@ export class DiskCache<T> implements ResourceCache<T> {
   diskCache = new Map<string, string>();
   private appId: string;
   private type: string;
+  private logger?: Logger;
 
   constructor(opt: DiskCacheOption) {
     this.appId = opt.appId;
     this.type = opt.type;
+    this.logger = opt.logger;
   }
 
   /**
@@ -32,10 +34,14 @@ export class DiskCache<T> implements ResourceCache<T> {
    * @return {*}  {Promise<void>}
    */
   async set(id: string, resource: T): Promise<void> {
-    const dirs = this.generateDirs(id);
-    const filePath = resolveContentPath(this.appId, dirs);
-    this.diskCache.set(id, filePath);
-    await storeContent(filePath, resource);
+    try {
+      const dirs = this.generateDirs(id);
+      const filePath = resolveContentPath(this.appId, dirs);
+      this.diskCache.set(id, filePath);
+      await storeContent(filePath, resource);
+    } catch (e) {
+      this.logger?.error('store content failed:' + (e as Error).message);
+    }
   }
 
   /**

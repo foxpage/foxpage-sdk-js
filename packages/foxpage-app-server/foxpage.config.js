@@ -1,11 +1,11 @@
-const { join } = require('path');
+// const { join } = require('path');
 const { LOGGER_LEVEL } = require('@foxpage/foxpage-shared');
 
 // dev config
 module.exports = {
   apps: [
     {
-      appId: 'appl_yqfu8BI1BRe15fs',
+      appId: 'appl_O6Rj7weDnMQ5y5o',
       configs: {
       },
       // app plugins
@@ -17,12 +17,11 @@ module.exports = {
       ],
     },
   ],
-  // dataService: { host: 'https://api.foxfamily.io' },
   dataService: { host: 'http://10.32.114.170:50000' },
   // plugins
   plugins: ['@foxpage/foxpage-plugin-function-parse', '@foxpage/foxpage-plugin-urlquery-parse', '@foxpage/foxpage-plugin-log'],
   // common plugin dir, contain root and apps
-  commonPluginDir: process.env.FOXPAGE_ENV === 'dev' ? join(process.cwd(), '../../') : '',
+  // commonPluginDir: process.env.FOXPAGE_ENV === 'dev' ? join(process.cwd(), '../../') : '',
   // library config for webpack compile static resource
   libraries: {
     react: {

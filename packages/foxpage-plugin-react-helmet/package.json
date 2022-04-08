@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-plugin-react-helmet",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "description": "react helmet plugin for foxpage",
   "keywords": [
     "foxpage",
@@ -30,9 +30,9 @@
     "react-dom": "^16.8.6"
   },
   "dependencies": {
-    "@foxpage/foxpage-core": "^0.4.9",
+    "@foxpage/foxpage-core": "^0.4.10",
     "@foxpage/foxpage-plugin": "^0.2.3",
-    "@foxpage/foxpage-shared": "^0.4.11",
+    "@foxpage/foxpage-shared": "^0.4.12",
     "lodash": "^4.17.15",
     "react-helmet": "^6.1.0"
   },

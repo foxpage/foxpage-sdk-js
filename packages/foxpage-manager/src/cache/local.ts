@@ -1,8 +1,10 @@
 import { join } from 'path';
 
-import { outputJSON } from 'fs-extra';
+import { outputJSON, pathExists } from 'fs-extra';
 
 import { FOXPAGE_ROOT } from '../common';
+
+import { withLock } from './locker';
 
 export const FOXPAGE_CONTENT = 'contents';
 export const FOXPAGE_CONTENT_FILE = '.json';
@@ -22,11 +24,19 @@ export async function storeContent<T>(filePath: string, content?: T) {
   if (!content) {
     return;
   }
-  try {
-    // if (await pathExists(filePath)) {
-    //   return;
-    // }
 
-    await outputJSON(filePath, content, { spaces: 2 });
-  } catch (_error) {}
+  if (await pathExists(filePath)) {
+    return;
+  }
+
+  let lockStr = filePath.replace('.json', '-locked');
+
+  // TODO:
+  const pkgMark = `contents${process.platform === 'win32' ? '\\' : '/'}packages`;
+  const [dir, value] = lockStr.split(pkgMark);
+  if (value) {
+    lockStr = dir + pkgMark + value.replace(':', '_').replace(/\./g, '-');
+  }
+
+  await withLock(lockStr, () => outputJSON(filePath, content, { spaces: 2, flag: 'wx' }));
 }

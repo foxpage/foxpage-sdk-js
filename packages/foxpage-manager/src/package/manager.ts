@@ -1,4 +1,4 @@
-import { isNotNill } from '@foxpage/foxpage-shared';
+import { isNotNill, packager } from '@foxpage/foxpage-shared';
 import {
   Application,
   FPPackage,
@@ -354,11 +354,11 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
   }
 
   private generateKey = (name: string, version: string) => {
-    return `${name}:${version || ''}`;
+    return packager.generateKey(name, version);
   };
 
   private splitKey = (key: string) => {
-    return key.split(':');
+    return packager.splitKey(key);
   };
 
   public destroy() {

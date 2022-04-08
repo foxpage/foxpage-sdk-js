@@ -111,7 +111,11 @@ export abstract class ManagerBaseImpl<T> extends FPEventEmitterInstance<ManagerE
     // cache
     this.hotResources = createLRUCache(opt?.lruCache?.size);
     if (opt?.diskCache?.enable) {
-      this.diskResources = createDiskCache({ appId: this.appId, type: `${opt?.type || 'default'}s` });
+      this.diskResources = createDiskCache({
+        appId: this.appId,
+        type: `${opt?.type || 'default'}s`,
+        logger: this.logger,
+      });
     }
   }
 

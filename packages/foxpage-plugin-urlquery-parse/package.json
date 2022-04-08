@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-plugin-urlquery-parse",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "foxpage urlquery parse plugin",
   "keywords": [
     "foxpage",
@@ -36,6 +36,6 @@
     "typescript": "^3.9.0"
   },
   "dependencies": {
-    "@foxpage/foxpage-core": "^0.4.9"
+    "@foxpage/foxpage-core": "^0.4.10"
   }
 }

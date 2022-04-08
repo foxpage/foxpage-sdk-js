@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-plugin-styled-component",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "foxpage styled component plugin for collect styles",
   "keywords": [
     "foxpage",
@@ -30,7 +30,7 @@
     "react-dom": "^16.8.6"
   },
   "dependencies": {
-    "@foxpage/foxpage-core": "^0.4.9",
+    "@foxpage/foxpage-core": "^0.4.10",
     "@foxpage/foxpage-plugin": "^0.2.3",
     "lodash": "^4.17.15",
     "styled-components": "^5.3.3"

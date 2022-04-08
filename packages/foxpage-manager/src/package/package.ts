@@ -1,6 +1,6 @@
 import { outputFile, pathExists } from 'fs-extra';
 
-import { getESModuleExport, Messages, Option, optional } from '@foxpage/foxpage-shared';
+import { getESModuleExport, Messages, Option, optional, packager } from '@foxpage/foxpage-shared';
 import {
   FPPackage,
   FPPackageDependency,
@@ -11,6 +11,7 @@ import {
   PackageInstallOption,
 } from '@foxpage/foxpage-types';
 
+import { locker } from '../cache';
 import { createLogger } from '../common';
 
 import { PackageFetcher } from './fetcher';
@@ -65,7 +66,7 @@ export class PackageInstance implements Package {
     this.name = info.name;
     this.type = info.type;
     this.version = info.version;
-    this.key = `${info.name}:${info.version}`;
+    this.key = packager.generateKey(info.name, info.version);
     this.source = info.resource.entry;
     this.downloadUrl = this.source.node.downloadHost + this.source.node.path;
     this.dependencies = info.resource.dependencies || [];
@@ -163,24 +164,21 @@ export class PackageInstance implements Package {
 
   public async processJSCode(jsContent: string) {
     const targetJsPath = resolvePackageJSPath(this.appId, this.name, this.version);
-
+    const lockedStr = targetJsPath.replace('.js', '-locked');
     try {
       const exist = await pathExists(targetJsPath);
       if (!exist) {
-        // write to disk
-        await outputFile(targetJsPath, jsContent, {
-          encoding: 'utf-8',
-          flag: 'wx',
+        await locker.withLock(lockedStr, async () => {
+          await outputFile(targetJsPath, jsContent, {
+            encoding: 'utf-8',
+            flag: 'wx',
+          });
+          this.logger.info('install package %s@%j succeed', this.name, this.version);
         });
-        this.logger.info('install package %s@%j succeed', this.name, this.version);
       }
     } catch (err) {
-      const isExistError = (err as { code: 'EEXIST' }).code === 'EEXIST' || String(err).includes('exists');
-      if (!isExistError) {
-        this.logger.error('process code failed:', err);
-        throw err;
-      }
-      this.logger.warn('process code failed:', err);
+      this.logger.error(`process [${process.pid}] code failed:`, err);
+      throw err;
     }
   }
 

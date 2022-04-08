@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-plugin-log",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "foxpage logger plugin",
   "keywords": [
     "plugin",
@@ -32,7 +32,7 @@
     "typescript": "^3.9.0"
   },
   "dependencies": {
-    "@foxpage/foxpage-shared": "^0.4.11",
+    "@foxpage/foxpage-shared": "^0.4.12",
     "debug": "^4.1.1"
   }
 }
