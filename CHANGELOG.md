@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.2](https://github.com/foxpage/foxpage-sdk-js/compare/v0.3.0...v0.3.2) (2022-04-26)
+
+
+### Features
+
+* 🎸 add application customizer ([fb41321](https://github.com/foxpage/foxpage-sdk-js/commit/fb41321291e9d1b0f21dc48cd6bf6f583016e95f))
+
 ## [0.3.0](https://github.com/foxpage/foxpage-sdk-js/compare/v0.2.2...v0.3.0) (2022-04-08)
 
 
