@@ -17,6 +17,7 @@ import { createLogger } from '../common';
 import { PackageFetcher } from './fetcher';
 import { resolvePackageJSPath } from './resolver';
 import { loadFile, runInNodeContext } from './utils';
+import { wrapCode } from './wrapper';
 
 /**
  * package
@@ -115,7 +116,7 @@ export class PackageInstance implements Package {
     this.status = 'installed';
   }
 
-  private async fetchCode({ inspect = true }: PackageInstallOption) {
+  private async fetchCode({ inspect = false, wrap = true }: PackageInstallOption) {
     if (this.filePath && (await pathExists(this.filePath))) {
       return;
     }
@@ -125,8 +126,7 @@ export class PackageInstance implements Package {
       throw fetchResult.error;
     }
 
-    // TODO: need wrapper
-    const code = fetchResult.data.content;
+    const code = wrap && this.deps.length > 0 ? wrapCode(fetchResult.data.content, this) : fetchResult.data.content;
 
     if (inspect) {
       const inspectResult = await this.inspectPackage(code);

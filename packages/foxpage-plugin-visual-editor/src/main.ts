@@ -21,10 +21,13 @@ const html = `<!doctype html>
 export const handleRegisterRouter = async () => {
   return {
     pathname: 'foxpage-visual-editor.html',
-    action: (_ctx: Context) => {
+    action: (ctx: Context) => {
       const result = html.replace(
         '$link',
-        'http://unpkg.com/@foxpage/foxpage-visual-editor@latest/dist/main.bundle.js', // always use the latest version
+        `${ctx.URL?.origin}${
+          ctx.appConfigs?.virtualPath ? `/${ctx.appConfigs?.virtualPath}` : ''
+        }/foxpage/static/foxpage-visual-editor.js`,
+        // 'http://unpkg.com/@foxpage/foxpage-visual-editor@latest/dist/main.bundle.js', // always use the latest version
       );
       return result;
     },

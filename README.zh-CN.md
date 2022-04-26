@@ -46,15 +46,6 @@ Foxpage JS SDK 是供浏览器端使用的，目前提供浏览器端解析和�
   └── jest.config.js                // jest common config
 ```
 
-## ⌨️ 本地开发
-克隆到本地:
-
-```bash
-$ git clone git@git.dev.sh.ctripcorp.com:fox-open/foxpage-sdk-js.git
-$ cd foxpage-sdk-js
-$ yarn boot
-```
-
 ## 📦 代码提交
 
 代码提交使用标准 [angular standard](https://github.com/angular/angular/blob/master/CONTRIBUTING.md。

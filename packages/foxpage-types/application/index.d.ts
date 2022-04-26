@@ -17,7 +17,7 @@ import {
   RelationInfo,
 } from '../manager';
 import { ContentDetail } from '../content';
-import { TypedEventEmitter } from '../common'
+import { TypedEventEmitter } from '../common';
 import { AppConfig } from './config';
 import { ResourceUpdateInfo } from '../ws';
 
@@ -66,14 +66,12 @@ export interface Application extends TypedEventEmitter<AppEvents> {
 
   enableSchedule(): boolean;
   onScheduled(): void;
-  async refresh(updateInfos: AppScheduleDataType): void;
-  async getContentRelationInfo(content: ContentDetail): Promise<RelationInfo>;
+  refresh(updateInfos: AppScheduleDataType): void;
+  getContentRelationInfo(content: ContentDetail): Promise<RelationInfo>;
   destroy(): void;
 }
 
-
-export interface FPApplicationSetting {
-}
+export interface FPApplicationSetting {}
 
 export interface FPApplication {
   id: string;

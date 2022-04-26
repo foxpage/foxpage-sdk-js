@@ -1,4 +1,4 @@
-import { Messages } from '../common/index'
+import { MessageArray } from '../common/index';
 import { Application } from '../application';
 import { StructureNode } from '../structure';
 import { FoxpageStaticComponent } from '../hook';
@@ -44,6 +44,6 @@ export interface FoxpageComponent extends FoxpageStaticComponent {
   supportSSR: boolean;
   factory?: any;
   dependencies?: string[];
-  messages?: Messages;
+  messages?: MessageArray;
   isBuiltinComponent?: boolean;
 }

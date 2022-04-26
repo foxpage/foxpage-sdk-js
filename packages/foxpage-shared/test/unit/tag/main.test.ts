@@ -8,17 +8,17 @@ describe('tag main', () => {
   });
 
   it('match content', () => {
-    const tags = [
-      {
-        locale: 'en_US',
-        status: true,
-      },
-      {
-        query: {
-          a: '1',
-          b: '2',
-        },
-      },
+    const tags: any[] = [
+      // {
+      //   locale: 'en_US',
+      //   status: true,
+      // },
+      // {
+      //   query: {
+      //     a: '1',
+      //     b: '2',
+      //   },
+      // },
     ];
     const contents = [
       {

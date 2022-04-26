@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-plugin-visual-editor",
-  "version": "0.1.2",
+  "version": "0.1.5",
   "description": "foxpage visual editor plugin",
   "keywords": [
     "foxpage",
@@ -29,8 +29,11 @@
   },
   "devDependencies": {
     "@foxpage/foxpage-plugin": "^0.2.3",
-    "@foxpage/foxpage-types": "^0.4.4",
+    "@foxpage/foxpage-types": "^0.4.7",
     "rimraf": "^2.6.3",
     "typescript": "^3.9.0"
+  },
+  "dependencies": {
+    "@foxpage/foxpage-visual-editor": "^0.4.1"
   }
 }

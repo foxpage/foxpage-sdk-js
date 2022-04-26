@@ -38,14 +38,12 @@ export interface FPPackageResource {
   dependencies?: FPPackageDependency[];
 }
 
-
 export interface FPUrlInfo {
   host: string;
   downloadHost: string;
   path: string;
   origin: string;
 }
-
 
 export interface FPPackageEntrySource {
   browser: FPUrlInfo;
@@ -60,7 +58,7 @@ export interface FPPackageMeta {
   isHead?: boolean;
   isBody?: boolean;
   // will remove
-  [key: string]: any
+  [key: string]: any;
 }
 
 export type PackageURLSource = { type: 'url'; url: string };
@@ -69,9 +67,9 @@ export type PackageCodeSource = { type: 'code'; code: string };
 export type PackageNetSource = string | PackageURLSource;
 export type PackageSource = PackageNetSource | PackageFilesystemSource | PackageCodeSource;
 
-
 export interface PackageInstallOption {
   inspect?: boolean;
+  wrap?: boolean;
 }
 
 export interface Package {
@@ -94,7 +92,7 @@ export interface Package {
   exported?: any;
   componentFactory?: any;
 
-  async install(opt: PackageInstallOption): void;
+  install(opt: PackageInstallOption): void;
 }
 
 export interface PackageNamedVersion {
@@ -102,12 +100,13 @@ export interface PackageNamedVersion {
   version: string;
 }
 
-export interface PackageVersionMap extends Map<string, Package> { };
+export interface PackageVersionMap extends Map<string, Package> {}
 
 export interface PackageManager<T = FPPackage> extends ManagerBase<T> {
   addPackage(content: FPPackage): Package | null;
   removePackages(names: string[]): void;
   getPackage(name: string, version?: string): Promise<Package | undefined>;
+  getPackageSync(name: string, version?: string): Package | null;
   getLocalPackage(name: string, version?: string): Promise<Package | null>;
   freshPackages(params?: { namedVersions: PackageNamedVersion[] }): Promise<Package[]>;
   fetchPackages(packageIds?: string[]): Promise<FPPackage[]>;

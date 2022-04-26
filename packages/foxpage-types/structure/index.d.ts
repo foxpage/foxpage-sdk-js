@@ -1,7 +1,7 @@
 import { Directive } from '../directive';
 import { ComponentListeners } from '../listener';
 
-export type StructureNodeType = 'react.component';
+export type StructureNodeType = 'react.component' | string;
 
 export type StructureNodeProps<T extends Record<string, any>> = T & {
   __listeners?: ComponentListeners;
@@ -9,8 +9,8 @@ export type StructureNodeProps<T extends Record<string, any>> = T & {
 
 export type Extension = {
   /**
- * extend node id
- */
+   * extend node id
+   */
   extendId?: string;
   /**
    * parent node id
@@ -20,7 +20,7 @@ export type Extension = {
    * node sort
    */
   sort?: number;
-}
+};
 
 /**
  * structure node
@@ -95,8 +95,5 @@ export interface StructureNode<P = any> {
    *
    * @type {Extension}
    */
-  extension?: Extension,
+  extension?: Extension;
 }
-
-
-

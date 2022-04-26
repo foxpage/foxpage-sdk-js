@@ -195,6 +195,16 @@ export abstract class ManagerBaseImpl<T> extends FPEventEmitterInstance<ManagerE
   }
 
   /**
+   *
+   * @param key
+   * @returns
+   */
+  protected findOne(key: string) {
+    const resource = this.hotResources.get(key);
+    return resource as T | null | undefined;
+  }
+
+  /**
    * [batch] find all sources from local via source keys
    *
    * @protected

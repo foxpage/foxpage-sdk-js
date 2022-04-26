@@ -1,16 +1,17 @@
 import * as url from 'url';
 import { FoxpageComponent } from '../component';
-import { Package, Tag, Page, Template, Variable, Condition, FPFunction, RelationInfo } from '../manager'
+import { Package, Tag, Page, Template, Variable, Condition, FPFunction, RelationInfo } from '../manager';
 import { Logger } from '../logger';
 import { BrowserInitialStateOption, BrowserResource } from '../browser';
 import { FoxpageHooks } from '../hook';
 import { RequestMode } from '../request';
 import { StructureNode } from '../structure';
+import { AppConfig } from '../application';
 
 type ContentType = Template | Variable | Condition | FPFunction;
 
-export interface FrameworkResource extends BrowserResource { }
-export interface RenderOption extends BrowserInitialStateOption { }
+export interface FrameworkResource extends BrowserResource {}
+export interface RenderOption extends BrowserInitialStateOption {}
 
 export interface ParsedContent<T = ContentType, P = any> {
   content: T;
@@ -54,11 +55,7 @@ export interface Context {
   // app base
   readonly appId: string;
   readonly appSlug: string;
-  readonly settings?: {
-    debugger: {
-      url: string;
-    };
-  };
+  readonly appConfigs?: AppConfig;
 
   page: Page;
   tags?: Tag[];
@@ -69,12 +66,15 @@ export interface Context {
    */
   componentMap?: Map<string, FoxpageComponent>;
   /**
- * key - string - structure id
- * value - FoxpageComponent - component
- */
+   * key - string - structure id
+   * value - FoxpageComponent - component
+   */
   dependencies?: Map<string, FoxpageComponent>;
 
-  structureMap?: Map<string, Pick<StructureNode, 'id' | 'name' | 'version' | 'type' | 'props'> & { childrenIds: string[] }>;
+  structureMap?: Map<
+    string,
+    Pick<StructureNode, 'id' | 'name' | 'version' | 'type' | 'props'> & { childrenIds: string[] }
+  >;
 
   // getters
   templates: Record<string, Template>;
@@ -104,11 +104,7 @@ export interface Context {
   updateOriginPage(page: Page): void;
   getOrigin<K extends keyof ContextOrigin>(key: K): ContextOrigin[K];
   updatePage(page: Page): void;
-  updateResource<K extends keyof ContextResource, T extends RenderContent>(
-    target: K,
-    key: string,
-    value: T,
-  ): void;
+  updateResource<K extends keyof ContextResource, T extends RenderContent>(target: K, key: string, value: T): void;
 
   render?: (dsl: Page['schemas'], ctx: Context) => Promise<string>;
 }

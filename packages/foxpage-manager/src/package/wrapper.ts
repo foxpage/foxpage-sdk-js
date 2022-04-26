@@ -1,9 +1,12 @@
 import { pick } from '@foxpage/foxpage-shared';
 
+import { getApplication } from '../service';
+
 export interface WrappedPackageDetail {
+  appId?: string;
   name?: string;
   version?: string;
-  dependencies?: Record<string, string>;
+  deps?: string[];
 }
 
 /**
@@ -11,27 +14,17 @@ export interface WrappedPackageDetail {
  *
  * @export
  * @param {NodeRequire} req
- * @param {WrappedPackageDetail} [{ dependencies = {} }={}]
+ * @param {WrappedPackageDetail} [{ deps = [] }={}]
  * @return {*}  {NodeRequire}
  */
-export function wrapRequire(req: NodeRequire, { dependencies = {} }: WrappedPackageDetail = {}): NodeRequire {
-  const overrideRequireId = Object.entries(dependencies).reduce<Record<string, { name: string; version: string }>>(
-    (deps, [name, version]) => {
-      deps[name] = deps[`${name}@${version}`] = {
-        name,
-        version,
-      };
-      return deps;
-    },
-    {},
-  );
+export function wrapRequire(req: NodeRequire, { appId = '', deps }: WrappedPackageDetail = {}): NodeRequire {
   const wrappedRequire: (id: string) => any = (id: string) => {
-    if (id in overrideRequireId) {
-      // const { name, version } = overrideRequireId[id];
-      // const foxpagePackage = foxpagePackageManager.get(name)?.get(version);
-      // if (foxpagePackage && foxpagePackage.available) {
-      //   return foxpagePackage.exported;
-      // }
+    const idx = deps ? deps.findIndex(it => it === id) : -1;
+    if (idx > -1) {
+      const foxpagePackage = getApplication(appId)?.packageManager.getPackageSync(id);
+      if (foxpagePackage && foxpagePackage.available) {
+        return foxpagePackage.exported;
+      }
     }
     return req(id);
   };
@@ -46,7 +39,7 @@ const fnName = 'wrapRequire';
  * @param code
  */
 export function wrapCode(code: string, detail: WrappedPackageDetail): string {
-  const data: WrappedPackageDetail = pick(detail, ['name', 'version', 'dependencies']);
+  const data: WrappedPackageDetail = pick(detail, ['appId', 'name', 'version', 'deps']);
   const arg = JSON.stringify(data, undefined, 2);
   const filepath = __filename.replace(/\\/g, '\\\\');
   const wrapped = `

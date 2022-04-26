@@ -60,7 +60,8 @@ export const routerTask = async (app: Application, ctx: Context) => {
     return route;
   }
 
-  const tags = tag.generateTagByQuerystring(searchParams.toString());
+  const searchStr = searchParams.toString();
+  const tags = searchStr ? tag.generateTagByQuerystring(searchStr) : [];
 
   const file = await app.fileManager.getFileByPathname(pathnameStr);
   return await app.tagManager.matchTag(tags, {

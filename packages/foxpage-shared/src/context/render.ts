@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 import {
+  AppConfig,
   Context,
   ContextOrigin,
   ContextResource,
@@ -29,6 +30,7 @@ export abstract class ContextInstance implements Context {
   // app base info
   readonly appId: string;
   readonly appSlug: string;
+  readonly appConfigs?: AppConfig;
 
   private innerPage?: Page;
 
@@ -52,6 +54,7 @@ export abstract class ContextInstance implements Context {
   constructor(info: RenderAppInfo) {
     this.appId = info.appId;
     this.appSlug = info.slug;
+    this.appConfigs = info.configs;
   }
 
   /**

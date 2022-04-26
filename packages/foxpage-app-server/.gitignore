@@ -39,3 +39,5 @@ test/unit/test.js
 *.tsbuildinfo
 
 *.heapsnapshot
+
+library/

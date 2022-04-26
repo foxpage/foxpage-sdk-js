@@ -134,6 +134,45 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
   }
 
   /**
+   * get package sync from hot
+   * @param name package name
+   * @param version package version
+   * @returns pkg
+   */
+  public getPackageSync(name: string, version?: string): Package | null {
+    const versions = this.getPackageVersionsByNames([name])[name];
+    if (!versions) {
+      return null;
+    }
+
+    if (version && versions.indexOf(version) === -1) {
+      this.logger.debug(`get local package: ${name}@${version} is empty.`);
+      return null;
+    }
+
+    // !version use live version, or use appoint version
+    let curVersion = this.getPackageLiveVersion(name);
+    if (version && version !== curVersion) {
+      this.logger.info(`package ${name} local live version is: ${curVersion}, appoint version is: ${version}`);
+      curVersion = version;
+    }
+    if (!curVersion) {
+      this.logger.debug('the version is invalid');
+      return null;
+    }
+
+    const key = this.generateKey(name, curVersion);
+    const pkg = this.findOne(key);
+    if (!pkg || pkg.version !== curVersion) {
+      this.logger.warn(`get local package: ${key} is empty.`);
+      return null;
+    }
+
+    this.logger.debug(`get local package: ${key} succeed.`);
+    return pkg;
+  }
+
+  /**
    * get local package
    *
    * @param {string} name package name

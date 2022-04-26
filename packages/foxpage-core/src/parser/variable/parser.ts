@@ -1,5 +1,12 @@
 import { ContentType } from '@foxpage/foxpage-shared';
-import { Context, FoxpageHooks, VariableItem, VariableParseEntity, VariableType } from '@foxpage/foxpage-types';
+import {
+  Context,
+  FoxpageHooks,
+  Variable,
+  VariableItem,
+  VariableParseEntity,
+  VariableType,
+} from '@foxpage/foxpage-types';
 
 import { FunctionParser } from '../function';
 import { executeObject } from '../sandbox';
@@ -108,7 +115,8 @@ export class VariableParser {
 
     try {
       let nextLoop = false;
-      variables?.forEach(item => {
+
+      const echo = async (item: Variable) => {
         if (parsedVarSet.has(item.id)) {
           return;
         }
@@ -118,7 +126,7 @@ export class VariableParser {
         if (!existNoParsedFn && !existNoParsedVar) {
           const variable = item.schemas[0];
           const parser = this.createParser(ctx);
-          const { parsed, status, messages } = parser(variable);
+          const { parsed, status, messages } = await parser(variable);
           ctx.updateResource(ContentType.VARIABLE, variable.name, {
             content: item,
             parsed,
@@ -132,7 +140,13 @@ export class VariableParser {
           }
           nextLoop = true;
         }
-      });
+      };
+
+      if (variables && variables.length > 0) {
+        for (const item of variables) {
+          await echo(item);
+        }
+      }
 
       if (nextLoop) {
         this.parse(ctx, { parsedVarSet, parsedFnSet });
@@ -149,7 +163,7 @@ export class VariableParser {
   }
 
   private createParser(ctx: Context) {
-    return (content: VariableItem) => {
+    return async (content: VariableItem) => {
       const parser = this.get(content.type);
       const messages: string[] = [];
       if (parser) {
@@ -158,7 +172,7 @@ export class VariableParser {
         content.props = resolvedProps;
 
         try {
-          const parsed = parser.parse(content, ctx);
+          const parsed = await parser.parse(content, ctx);
           return { parsed, status: true, messages };
         } catch (e) {
           const msg = `parse variable@${content.name} failed: ${(e as Error).message}`;

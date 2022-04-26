@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-transformer",
-  "version": "0.3.5",
+  "version": "0.3.8",
   "description": "dsl transformer",
   "author": "drxiao",
   "homepage": "",
@@ -25,7 +25,7 @@
     "shortid": "^2.2.16"
   },
   "devDependencies": {
-    "@foxpage/foxpage-types": "^0.4.4",
+    "@foxpage/foxpage-types": "^0.4.7",
     "rimraf": "^2.6.3",
     "typescript": "^3.9.0"
   }

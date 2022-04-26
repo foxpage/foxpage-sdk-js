@@ -1,5 +1,6 @@
 const { npmModuleWebpackConfig } = require('./webpack.config.library.base');
-const config = require('../foxpage.config');
+const { join } = require('path');
+const config = require(join(process.cwd(), 'foxpage.config'));
 const opts = config.libraries;
 
 function getNpmModuleWebpackConfig(pkgName, opt) {

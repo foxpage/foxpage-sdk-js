@@ -45,15 +45,6 @@ Foxpage JS SDK is for browser use. Currently, provides browser-side parsing and 
   └── jest.config.js                // jest common config
 ```
 
-## ⌨️ Development
-clone locally:
-
-```bash
-$ git clone git@git.dev.sh.ctripcorp.com:fox-open/foxpage-sdk-js.git
-$ cd foxpage-sdk-js
-$ yarn boot
-```
-
 ## 📦 Commit
 
 commit used [angular standard](https://github.com/angular/angular/blob/master/CONTRIBUTING.md。

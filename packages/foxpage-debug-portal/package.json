@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-debug-portal",
-  "version": "0.1.6",
+  "version": "0.1.11",
   "description": "foxpage debug portal on live",
   "keywords": [
     "foxpage",
@@ -47,7 +47,7 @@
     "@babel/preset-env": "^7.7.5",
     "@babel/preset-react": "^7.7.4",
     "@babel/preset-typescript": "^7.7.4",
-    "@foxpage/foxpage-plugin-debugger": "^0.1.6",
+    "@foxpage/foxpage-plugin-debugger": "^0.1.11",
     "@foxpage/foxpage-types": "^0.4.3",
     "@types/react": "^16.9.1",
     "@types/react-dom": "^16.8.5",
@@ -69,8 +69,8 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
-    "@foxpage/foxpage-browser-loader": "^0.2.10",
-    "@foxpage/foxpage-types": "^0.4.4",
+    "@foxpage/foxpage-browser-loader": "^0.2.14",
+    "@foxpage/foxpage-types": "^0.4.7",
     "antd": "^4.1.0",
     "core-js": "^3.6.4",
     "react": "^17.0.2",

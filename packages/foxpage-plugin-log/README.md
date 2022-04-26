@@ -1,11 +1,11 @@
-# `@ctrip/foxpage-plugin-log`
+# `@foxpage/foxpage-plugin-log`
 
 > TODO: description
 
 ## Usage
 
 ```
-const foxpagePluginLog = require('@ctrip/foxpage-plugin-log');
+const foxpagePluginLog = require('@foxpage/foxpage-plugin-log');
 
 // TODO: DEMONSTRATE API
 ```

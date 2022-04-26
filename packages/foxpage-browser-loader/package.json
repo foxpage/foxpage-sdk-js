@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-browser-loader",
-  "version": "0.2.10",
+  "version": "0.2.14",
   "description": "foxpage browser loader",
   "license": "MIT",
   "main": "lib/index.js",
@@ -25,9 +25,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@foxpage/foxpage-shared": "^0.4.12"
+    "@foxpage/foxpage-shared": "^0.4.16"
   },
   "devDependencies": {
-    "@foxpage/foxpage-types": "^0.4.4"
+    "@foxpage/foxpage-types": "^0.4.7"
   }
 }

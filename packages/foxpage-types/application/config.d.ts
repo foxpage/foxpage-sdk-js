@@ -4,5 +4,8 @@ export interface AppConfig {
   'schedule.interval'?: number;
   // plugins
   plugins?: string[];
-  //
+  virtualPath?: string;
+  debugger: {
+    url: string;
+  };
 }

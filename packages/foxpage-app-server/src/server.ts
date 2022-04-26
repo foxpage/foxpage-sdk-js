@@ -1,5 +1,3 @@
-// import heapdump from 'heapdump';
-
 import * as foxpageSDK from '@foxpage/foxpage-node-sdk';
 
 import app from './app';
@@ -18,12 +16,3 @@ Promise.all([foxpageSDK.init()]).then(() => {
   server.keepAliveTimeout = 10 * 1000;
   server.headersTimeout = 65 * 1000;
 });
-
-// setInterval(() => {
-//   dump();
-// }, 2 * 60 * 60 * 1000);
-
-// function dump() {
-//   const filename = `${__dirname}/heapdump-${process.pid}-${Date.now()}.heapsnapshot`;
-//   heapdump.writeSnapshot(filename);
-// }

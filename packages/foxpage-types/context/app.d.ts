@@ -2,12 +2,11 @@ import {
   TagManager,
   PageManager,
   PackageManager,
-  VariableProviderManager,
   VariableManager,
   ConditionManager,
   TemplateManager,
-  FunctionManager
-} from "../manager";
+  FunctionManager,
+} from '../manager';
 import { Application } from '../application';
 
 /**

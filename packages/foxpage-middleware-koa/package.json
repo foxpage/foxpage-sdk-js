@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-middleware-koa",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "foxpage koa middleware",
   "keywords": [
     "foxpage",
@@ -34,8 +34,14 @@
     "@types/koa": "^2.0.48",
     "@types/koa-bodyparser": "^4.2.2",
     "@types/koa-router": "^7.0.40",
+    "@types/koa-static-cache": "^5.1.1",
     "@types/koa__cors": "^3.0.3",
     "rimraf": "^2.6.3",
     "typescript": "^3.9.0"
+  },
+  "dependencies": {
+    "http-proxy-middleware": "^2.0.4",
+    "koa-connect": "^2.1.0",
+    "koa-static-cache": "^5.1.4"
   }
 }

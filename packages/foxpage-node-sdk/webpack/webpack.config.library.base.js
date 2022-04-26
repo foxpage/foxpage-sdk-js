@@ -2,7 +2,8 @@ const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const { join } = require('path');
 
-const ROOT = join(__dirname, '..');
+const ROOT = join(process.cwd());
+const FOXPAGE_ROOT_DIR = '@foxpage';
 
 /**
  *
@@ -11,7 +12,20 @@ const ROOT = join(__dirname, '..');
  */
 function _npmModuleWebpackEntry(pkgName, outputName = pkgName, _entry) {
   const resolvePath = require.resolve(pkgName);
-  const pkgRootDirPath = resolvePath.slice(0, resolvePath.indexOf(pkgName) + pkgName.length);
+  let pkgRootDirPath = '';
+
+  const localMark = join('foxpage-sdk-js', 'packages');
+  const inFoxpageProjectLocal = resolvePath.indexOf(localMark) > -1;
+  if (inFoxpageProjectLocal) {
+    // for local foxpage lerna project
+    const localPkgName = pkgName.replace(`${FOXPAGE_ROOT_DIR}/`,'');
+    pkgRootDirPath = resolvePath.slice(0, resolvePath.indexOf(localPkgName) + localPkgName.length);
+  } else {
+    const list = pkgName.split('/');
+    const realPkgName = join(...list);
+    pkgRootDirPath = resolvePath.slice(0, resolvePath.indexOf(realPkgName) + realPkgName.length);
+  }
+
   const entryFile = join(pkgRootDirPath, _entry);
   const entry = {
     [outputName]: entryFile,
@@ -23,12 +37,15 @@ function _npmModuleWebpackEntry(pkgName, outputName = pkgName, _entry) {
  *
  * @param {string} pkgName
  */
-const npmModuleWebpackConfig = (pkgName, {
-  fileName = pkgName,
-  library = pkgName,
-  prod: isProd = process.env.NODE_ENV === 'production',
-  entry: _entry = 'index.js',
-}) => {
+const npmModuleWebpackConfig = (
+  pkgName,
+  {
+    fileName = pkgName,
+    library = pkgName,
+    prod: isProd = process.env.NODE_ENV === 'production',
+    entry: _entry = 'index.js',
+  },
+) => {
   const entry = _npmModuleWebpackEntry(pkgName, fileName, _entry);
 
   /** @type {import('webpack').Configuration} */
@@ -50,14 +67,16 @@ const npmModuleWebpackConfig = (pkgName, {
       symlinks: true,
     },
     externals: {
-      'react': 'react',
+      react: 'react',
     },
     optimization: {
       sideEffects: true,
       minimize: !!isProd,
-      minimizer: [new TerserPlugin({
-        extractComments: false,
-      })],
+      minimizer: [
+        new TerserPlugin({
+          extractComments: false,
+        }),
+      ],
     },
     plugins: [
       new webpack.DefinePlugin({
@@ -72,4 +91,4 @@ const npmModuleWebpackConfig = (pkgName, {
 
 module.exports = {
   npmModuleWebpackConfig,
-}
+};

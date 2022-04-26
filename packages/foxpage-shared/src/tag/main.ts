@@ -81,15 +81,18 @@ export const generateQueryStringByTags = (tags: Tag[] = []) => {
  * @param tags tags
  * @returns matched content
  */
-export const matchContent = (contents: Content[], tags: Tag[]) => {
-  const filtered = contents.filter(content => {
-    const { generals: contentGenerals, locales: contentLocales } = tagsToStrings(content.tags);
-    const { generals, locales } = tagsToStrings(tags);
-    const result =
-      contentGenerals.findIndex(cTag => generals.indexOf(cTag) === -1) === -1 &&
-      contentLocales.indexOf(locales[0]) > -1;
-    return result;
-  });
+export const matchContent = (contents: Content[], tags: Tag[] = []) => {
+  const filtered =
+    tags && tags.length > 0
+      ? contents.filter(content => {
+          const { generals: contentGenerals, locales: contentLocales } = tagsToStrings(content.tags);
+          const { generals, locales } = tagsToStrings(tags);
+          const result =
+            contentGenerals.findIndex(cTag => generals.indexOf(cTag) === -1) === -1 &&
+            contentLocales.indexOf(locales[0]) > -1;
+          return result;
+        })
+      : contents;
 
   // default select first
   // expend: return with weight
