@@ -4,6 +4,8 @@ import { Context } from '@foxpage/foxpage-types';
 import { DebugEntry, DebugPlaceholder, PLACEHOLDER } from './components';
 import { DebugState } from './interface';
 
+const COMMON_SUFFIX = '/_foxpage';
+
 /**
  * before page render handler
  * note: the debugger must deps the head & body node
@@ -11,6 +13,12 @@ import { DebugState } from './interface';
  * @returns
  */
 export const handleBeforePageRender = async (ctx: Context) => {
+  const { enable = true, url: customURL } = ctx.appConfigs?.debugger || {};
+  // not open debugger
+  if (!enable) {
+    return ctx.page?.schemas;
+  }
+
   const debug = ctx.isDebugMode || false;
   const dsl = ctx.page?.schemas;
   if (debug) {
@@ -20,8 +28,22 @@ export const handleBeforePageRender = async (ctx: Context) => {
       const headResult = structureUtils.createStructureWithFactory(DebugPlaceholder, {});
       structureUtils.appendStructure(head, headResult.structure, headResult.component, ctx);
 
+      let realURL: string | undefined = '';
+
+      if (typeof customURL === 'function') {
+        realURL = customURL(ctx.request.req);
+      } else {
+        realURL = customURL;
+      }
+
+      if (!realURL) {
+        realURL = `${ctx.URL?.origin}${
+          ctx.appConfigs?.virtualPath ? `/${ctx.appConfigs?.virtualPath}` : ''
+        }${COMMON_SUFFIX}/static/debugger.min.js`;
+      }
+
       const bodyResult = structureUtils.createStructureWithFactory(DebugEntry, {
-        url: ctx.settings?.debugger.url || '/debug.js',
+        url: realURL,
       });
       structureUtils.appendStructure(body, bodyResult.structure, bodyResult.component, ctx);
     } else {
@@ -39,6 +61,17 @@ export const handleBeforePageRender = async (ctx: Context) => {
  * @returns
  */
 export const handleAfterPageRender = (ctx: Context, html: string) => {
+  const { enable = true } = ctx.appConfigs?.debugger || {};
+  // not open debugger
+  if (!enable) {
+    return html;
+  }
+
+  const debug = ctx.isDebugMode || false;
+  if (!debug) {
+    return html;
+  }
+
   const data = getDebugData(ctx);
   return html.replace(PLACEHOLDER, safeStringify(data));
 };

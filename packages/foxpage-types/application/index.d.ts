@@ -15,6 +15,7 @@ import {
   Router,
   AppEvents,
   RelationInfo,
+  MockManager,
 } from '../manager';
 import { ContentDetail } from '../content';
 import { TypedEventEmitter } from '../common';
@@ -33,11 +34,24 @@ export interface AppScheduleDataType {
   timestamp?: number;
 }
 
+export interface ApplicationResourceItem {
+  name: string;
+  host?: string;
+  downloadHost?: string;
+}
+
 export interface ApplicationOption {
   plugins?: string[];
   pluginDir?: string;
   hooks?: ApplicationHooks;
+  /**
+   * from  foxpage.config.js
+   */
   configs?: AppConfig;
+  /**
+ * application resource
+ */
+  resources?: ApplicationResourceItem[];
 }
 
 export interface UserRequest {
@@ -62,7 +76,10 @@ export interface Application extends TypedEventEmitter<AppEvents> {
   readonly templateManager: TemplateManager;
   readonly functionManager: FunctionManager;
   readonly routeManager: Router;
-  readonly configs: AppConfig;
+  readonly mockManager: MockManager;
+  configs: AppConfig;
+  hooks: ApplicationOption['hooks'];
+  resources?: ApplicationOption['resources'];
 
   enableSchedule(): boolean;
   onScheduled(): void;
@@ -71,7 +88,7 @@ export interface Application extends TypedEventEmitter<AppEvents> {
   destroy(): void;
 }
 
-export interface FPApplicationSetting {}
+export interface FPApplicationSetting { }
 
 export interface FPApplication {
   id: string;

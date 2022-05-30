@@ -174,14 +174,16 @@ export class PluginLoaderImpl implements PluginLoader {
    * current only support Mode.PIPE
    * @return {*}
    */
-  public getHooks() {
+  public getHooks(mode?: Mode) {
     const hookKeys = Object.keys(this.visitors) as (keyof FoxpageHooks)[];
     if (hookKeys.length === 0) {
       return {};
     }
 
+    const _mode = mode || this.mode;
+
     const visitors: Partial<Record<keyof FoxpageHooks, () => void>> = {};
-    if (this.mode === Mode.PIPE) {
+    if (_mode === Mode.PIPE) {
       hookKeys.forEach(key => {
         const hooks = this.visitors[key];
         const executor = async (...args: unknown[]) => {
@@ -194,7 +196,7 @@ export class PluginLoaderImpl implements PluginLoader {
         };
         visitors[key] = executor;
       });
-    } else if (this.mode === Mode.DISTRIBUTION) {
+    } else if (_mode === Mode.DISTRIBUTION) {
       hookKeys.forEach(key => {
         const hooks = this.visitors[key];
         const executor = async (...args: unknown[]) => {
@@ -207,7 +209,7 @@ export class PluginLoaderImpl implements PluginLoader {
         };
         visitors[key] = executor;
       });
-    } else if (this.mode === Mode.COVER) {
+    } else if (_mode === Mode.COVER) {
       hookKeys.forEach(key => {
         const hooks = this.visitors[key];
         // core: get the last one

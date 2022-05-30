@@ -1,13 +1,13 @@
 {
   "name": "@foxpage/foxpage-shared",
-  "version": "0.4.16",
+  "version": "0.5.3",
   "description": "foxpage common utils",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc --project tsconfig.prod.json",
     "build:npm": "npm run build -- --skipLibCheck",
-    "prebuild": "rimraf lib",
+    "clean": "rimraf lib",
     "prepublishOnly": "npm install && npm run build:npm"
   },
   "keywords": [
@@ -22,7 +22,7 @@
     "shortid": "^2.2.16"
   },
   "devDependencies": {
-    "@foxpage/foxpage-types": "^0.4.7",
+    "@foxpage/foxpage-types": "^0.5.2",
     "@types/debug": "0.0.31",
     "@types/faker": "^4.1.5",
     "@types/format-util": "^1.0.2",

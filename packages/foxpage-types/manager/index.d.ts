@@ -1,6 +1,7 @@
 export * from './file';
 export * from './condition';
 export * from './function';
+export * from './mock';
 export * from './package';
 export * from './page';
 export * from './tag';

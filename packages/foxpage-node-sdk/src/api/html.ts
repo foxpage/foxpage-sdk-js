@@ -3,6 +3,7 @@ import { Application, Page } from '@foxpage/foxpage-types';
 
 import { FoxpageRequestOptions } from '../api';
 import { updateContextWithPage } from '../context';
+import { NotFoundAppError, NotFoundDSLError, ParseDSLError } from '../errors';
 import { contextTask, pageTask, parseTask, renderTask } from '../task';
 
 /**
@@ -14,22 +15,22 @@ import { contextTask, pageTask, parseTask, renderTask } from '../task';
 export const renderToHtmlByPageId = async (pageId: string, appId: string, opt: FoxpageRequestOptions) => {
   const app = getApplication(appId);
   if (!app) {
-    return null;
+    throw new NotFoundAppError(appId);
   }
 
   // init renderContext task
-  const ctx = await contextTask(app, opt);
+  const ctx = opt.ctx ? opt.ctx : await contextTask(app, opt);
 
   // get page
   const page = await pageTask(pageId, app, ctx);
   if (!page) {
-    return null;
+    throw new NotFoundDSLError(pageId);
   }
 
   // parse page
   const { page: parsedPage, ctx: context } = await parseTask(page, ctx);
   if (!parsedPage.schemas) {
-    return null;
+    throw new ParseDSLError(new Error('parsedPage.schemas is empty'), ctx.origin);
   }
 
   // render task
@@ -51,13 +52,13 @@ export async function renderToHtmlByPage(
   const pageInstance = new PageInstance(page);
 
   // init renderContext task
-  const ctx = await contextTask(app, opt);
+  const ctx = opt.ctx ? opt.ctx : await contextTask(app, opt);
   await updateContextWithPage(ctx, { app, page: pageInstance });
 
   // parse page
   const { page: parsedPage, ctx: context } = await parseTask(pageInstance, ctx);
   if (!parsedPage.schemas) {
-    return null;
+    throw new ParseDSLError(new Error('parsedPage.schemas is empty'), ctx.origin);
   }
 
   // render task

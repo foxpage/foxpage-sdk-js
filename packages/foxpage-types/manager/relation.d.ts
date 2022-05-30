@@ -1,5 +1,6 @@
 import { Template, Variable, Condition, FPFunction } from './index';
 import { ContentInfo } from '../content';
+import { Page } from '../manager';
 
 export type RelationTypes = 'sys-variable' | 'variable' | 'condition' | 'template' | 'function';
 
@@ -13,4 +14,5 @@ export interface Relation {
 
 export interface RelationInfo extends Pick<ContentInfo, 'templates' | 'variables' | 'conditions' | 'functions'> {
   sysVariables?: string[];
+  mocks?: Mock[];
 }

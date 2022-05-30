@@ -1,4 +1,5 @@
 import { ManagerBase } from '../../manager';
+import { MessageArray } from '../../common/message';
 
 export interface FPPackage {
   /**
@@ -91,6 +92,7 @@ export interface Package {
   supportNode: boolean;
   exported?: any;
   componentFactory?: any;
+  messages: MessageArray;
 
   install(opt: PackageInstallOption): void;
 }
@@ -100,7 +102,7 @@ export interface PackageNamedVersion {
   version: string;
 }
 
-export interface PackageVersionMap extends Map<string, Package> {}
+export interface PackageVersionMap extends Map<string, Package> { }
 
 export interface PackageManager<T = FPPackage> extends ManagerBase<T> {
   addPackage(content: FPPackage): Package | null;

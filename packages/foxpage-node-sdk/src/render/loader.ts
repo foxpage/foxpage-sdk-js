@@ -306,8 +306,12 @@ export class ComponentLoaderImpl implements ComponentLoader {
   }
 
   private componentFormatter(node: StructureNode, pkg?: Package | null, messages?: Messages): FoxpageComponent {
+    const newMsg = messages || new Messages();
     if (pkg) {
-      const { type, source, supportNode, deps, componentFactory, downloadUrl } = pkg;
+      const { type, source, supportNode, deps, componentFactory, downloadUrl, messages: pkgMessages } = pkg;
+      pkgMessages.forEach(msg => {
+        newMsg.push(msg);
+      });
       const { browser, debug, css } = source;
       const browserURL = browser.host && browser.path ? browser.host + browser.path : '';
       const debugURL = debug.path && debug.host ? debug.host + debug.path : browserURL;
@@ -341,7 +345,7 @@ export class ComponentLoaderImpl implements ComponentLoader {
     return {
       name: node.name,
       version: node.version,
-      messages,
+      messages: newMsg.hasError ? newMsg : undefined,
     } as FoxpageComponent;
   }
 

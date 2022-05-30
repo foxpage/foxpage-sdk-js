@@ -1,3 +1,4 @@
+import { Mode } from '@foxpage/foxpage-plugin';
 import { createPluginLoader, PluginLoader, PluginLoaderOptions } from '@foxpage/foxpage-plugin';
 import { createLogger } from '@foxpage/foxpage-shared';
 import { FoxpageHooks, Logger, PluginManager } from '@foxpage/foxpage-types';
@@ -65,8 +66,8 @@ export class PluginManagerImpl implements PluginManager {
   /**
    * getHooks
    */
-  public getHooks() {
-    return this.loader.getHooks() as FoxpageHooks | undefined;
+  public getHooks(mode?: Mode) {
+    return this.loader.getHooks(mode) as FoxpageHooks | undefined;
   }
 
   /**

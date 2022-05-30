@@ -21,7 +21,6 @@ function percent(size: number) {
 
 const Functions = () => {
   const functions = getFunctions();
-  console.log(functions);
   if (!functions.length) {
     return <Text>no functions</Text>;
   }

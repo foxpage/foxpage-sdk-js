@@ -4,6 +4,8 @@ import { URL } from 'url';
 
 import Cookies from 'cookies';
 
+import { Context } from '@foxpage/foxpage-types';
+
 /**
  * request handle option
  * contains user request data
@@ -102,4 +104,5 @@ export interface FoxpageRequestOptions {
   request: FoxpageDelegatedRequest;
   response: FoxpageDelegatedResponse;
   cookies: FoxpageDelegatedCookie;
+  ctx?: Context;
 }

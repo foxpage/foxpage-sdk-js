@@ -9,7 +9,7 @@ const Drawer = (props: { visible?: boolean; onClose: () => void }) => {
 
   return (
     <AntdDrawer
-      title="Debugger portal"
+      title="Debugger"
       placement="bottom"
       height={450}
       closable={false}

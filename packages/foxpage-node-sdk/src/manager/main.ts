@@ -1,8 +1,35 @@
 import { initManager } from '@foxpage/foxpage-manager';
-import { ManagerOption } from '@foxpage/foxpage-types';
+import { ContentDetailInstance, relationsMerge } from '@foxpage/foxpage-shared';
+import { Application, ContentDetail, ManagerOption, RelationInfo } from '@foxpage/foxpage-types';
 
 import { config } from '../common';
 import { pm2 } from '../pm2';
+
+/**
+ * get relations
+ * contains all relations
+ * @param page
+ * @param app
+ * @returns
+ */
+export const getRelations = async (content: ContentDetail, app: Application) => {
+  const instance = new ContentDetailInstance(content);
+  return await app.getContentRelationInfo(instance);
+};
+
+/**
+ * get relations batch
+ * @param contents
+ * @param app
+ */
+export const getRelationsBatch = async (contents: ContentDetail[] = [], app: Application) => {
+  const relations: RelationInfo = {};
+  for (const item of contents) {
+    const relation = await getRelations(item, app);
+    relationsMerge(relation, relations);
+  }
+  return relations;
+};
 
 /**
  * init foxpage node source manager

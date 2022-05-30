@@ -9,7 +9,7 @@
   },
   "include": [
     "src/*",
-    "src/**/*",
+    "src/**/*"
   ],
   "exclude": [
     "**/__mocks__/**",

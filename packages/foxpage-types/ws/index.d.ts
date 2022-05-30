@@ -10,4 +10,9 @@ type PackageUpdateInfo = Partial<{
   removes: PackageNamedVersion[];
 }>;
 
-export type ResourceUpdateInfo = Partial<Record<'template' | 'page' | 'variable' | 'condition' | 'function' | 'component' | 'tag' | 'file', ContentUpdateInfo>>;
+export type ResourceUpdateInfo = Partial<
+  Record<
+    'template' | 'page' | 'variable' | 'condition' | 'function' | 'component' | 'tag' | 'file' | 'mock',
+    ContentUpdateInfo
+  >
+>;

@@ -12,7 +12,7 @@ import { foxpageStaticHandler, FoxpageStaticOptions } from './static';
  */
 export const foxpageRequestHandler = (
   app: Koa,
-  options: { staticServer?: FoxpageStaticOptions } = { staticServer: { enable: true } },
+  options: { staticServer?: FoxpageStaticOptions } = { staticServer: { enable: false } },
 ): Middleware => {
   if (options.staticServer?.enable) {
     foxpageStaticHandler(app, options.staticServer);
@@ -30,9 +30,14 @@ export const foxpageRequestHandler = (
       return _next();
     }
 
-    const body = await handler({ request: ctx.request, response: ctx.response, cookies: ctx.cookies });
-    if (body) {
-      ctx.body = body;
+    try {
+      const body = await handler({ request: ctx.request, response: ctx.response, cookies: ctx.cookies });
+      if (body) {
+        ctx.body = body;
+      }
+    } catch (e) {
+      ctx.body = `request failed: ${JSON.stringify(e)}`;
+      ctx.status = 400;
     }
 
     await _next();

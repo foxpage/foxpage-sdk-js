@@ -13,8 +13,8 @@ app.use(cors());
 // custom routers
 app.use(routes);
 
-app.use(foxpageMiddleWare(app));
-
 app.use(bodyParser());
+
+app.use(foxpageMiddleWare(app));
 
 export default app;

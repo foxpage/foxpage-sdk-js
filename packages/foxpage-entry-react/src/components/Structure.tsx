@@ -81,6 +81,7 @@ export class Structure extends React.Component<StructureProps, StructureState> {
       ...this.state.propsFromStore,
     };
 
+    // @ts-ignore
     return <Component {...mergeProps}>{children}</Component>;
   }
 }

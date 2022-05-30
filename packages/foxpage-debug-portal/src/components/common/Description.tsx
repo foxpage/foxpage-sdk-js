@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 
 import { Descriptions, Typography } from 'antd';
 import { DescriptionsProps } from 'antd/es/descriptions';
@@ -9,7 +9,7 @@ const { Text } = Typography;
 export interface DescriptionProps<T extends any = Record<string, string>> extends DescriptionsProps {
   data: T;
   getLabel?: (key: string, val: string) => string;
-  getText?: (val: string, key: string) => ReactNode;
+  getText?: (val: string, key: string) => string;
   keys?: Array<keyof T>;
   showNill?: boolean;
 }

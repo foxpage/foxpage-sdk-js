@@ -1,0 +1,163 @@
+{
+    "appInfo": {
+      "appId": "appl_O6Rj7weDnMQ5y5o",
+      "slug": "/",
+      "configs": {}
+    },
+    "relationInfo": {
+      "templates": [
+        {
+          "version": "1.0",
+          "id": "cont_wlY8nusRmoyfQ5q",
+          "schemas": [
+            {
+              "id": "stru_shymhhIC_dLnnEv",
+              "label": "@fox-design/react-html",
+              "name": "@fox-design/react-html",
+              "children": [
+                {
+                  "id": "stru_hjsghpFDjyCnett",
+                  "label": "@fox-design/react-head",
+                  "name": "@fox-design/react-head",
+                  "children": [],
+                  "type": "react.component",
+                  "props": {},
+                  "extension": {
+                    "sort": 100
+                  }
+                },
+                {
+                  "id": "stru_cbgrjvhWzLRtxtu",
+                  "label": "@fox-design/react-body",
+                  "name": "@fox-design/react-body",
+                  "children": [
+                    {
+                      "children": [],
+                      "id": "stru_E7Ald8DKhEY7wqu",
+                      "label": "@fox-design/react-text",
+                      "name": "@fox-design/react-text",
+                      "props": {
+                        "text": "Template text!!!!!",
+                        "tagName": "div",
+                        "fontSize": 24,
+                        "textAlign": "center"
+                      },
+                      "mock": {},
+                      "extension": {
+                        "parentId": "stru_cbgrjvhWzLRtxtu",
+                        "sort": 100
+                      }
+                    },
+                    {
+                      "children": [],
+                      "id": "stru_Y1j82yKscu6tBYa",
+                      "label": "@fox-design/react-image",
+                      "name": "@fox-design/react-image",
+                      "props": {
+                        "src": "https://ak-d.tripcdn.com/images/0a12a120009fpp0vc1FAA.jpg"
+                      },
+                      "extension": {
+                        "parentId": "stru_cbgrjvhWzLRtxtu",
+                        "sort": 200
+                      }
+                    },
+                    {
+                      "id": "stru_tynmherL5aEgd_9",
+                      "label": "@fox-design/react-container",
+                      "name": "@fox-design/react-container",
+                      "type": "react.component",
+                      "children": [
+                        {
+                          "children": [],
+                          "id": "stru_fzgznois5cYPxVnN",
+                          "label": "@fox-design/react-slot",
+                          "name": "@fox-design/react-slot",
+                          "props": {},
+                          "directive": {
+                            "tpl": "{{$this.children}}"
+                          },
+                          "extension": {
+                            "sort": 100
+                          }
+                        }
+                      ],
+                      "props": {},
+                      "extension": {
+                        "sort": 300
+                      }
+                    },
+                    {
+                      "children": [],
+                      "id": "stru_L7LngjQdunDV1rH",
+                      "label": "@fox-design/react-text",
+                      "name": "@fox-design/react-text",
+                      "props": {
+                        "text": "Template text1~~~~~",
+                        "tagName": "div",
+                        "textAlign": "center",
+                        "fontSize": 30
+                      },
+                      "extension": {
+                        "parentId": "stru_cbgrjvhWzLRtxtu",
+                        "sort": 400
+                      }
+                    }
+                  ],
+                  "type": "react.component",
+                  "props": {},
+                  "extension": {
+                    "sort": 200
+                  }
+                }
+              ],
+              "type": "react.component",
+              "props": {},
+              "extension": {
+                "sort": 100
+              }
+            }
+          ],
+          "relation": {},
+          "extension": {
+            "mockId": "cont_9mCxb01Wo6UOVaE"
+          },
+          "mocks": {
+            "id": "cont_9mCxb01Wo6UOVaE",
+            "relation": {},
+            "schemas": [
+              {
+                "id": "stru_E7Ald8DKhEY7wqu",
+                "name": "@fox-design/react-text",
+                "props": {
+                  "text": "template mock 1"
+                }
+              }
+            ],
+            "enable": true,
+            "version": "1.0"
+          }
+        }
+      ],
+      "variables": [
+        {
+          "version": "0.0.1",
+          "id": "cont_qVzQX35pIPcgcMm",
+          "schemas": [
+            {
+              "props": {
+                "value": {
+                  "a": "a"
+                },
+                "type": "json"
+              },
+              "type": "data.static",
+              "name": "aaaaaa"
+            }
+          ],
+          "relation": {}
+        }
+      ],
+      "conditions": [],
+      "functions": []
+    }
+  }

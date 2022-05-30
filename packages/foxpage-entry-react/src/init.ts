@@ -17,7 +17,7 @@ function configComponents(state: InitialState) {
         url,
         version,
       },
-      { ignoreStyleAsset: true },
+      // { ignoreStyleAsset: false },
     );
   }
 }

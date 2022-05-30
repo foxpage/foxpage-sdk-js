@@ -35,9 +35,13 @@ export const loadComponents = async (schemas: StructureNode[], appId: string, op
  */
 export const renderToHTML = async (dsl: ParsedDSL['schemas'], ctx: Context, opt: RenderToHTMLOptions) => {
   try {
+    ctx.logger?.info('render DSL:', JSON.stringify(dsl));
+
     if (dsl && dsl.length > 0) {
       const { dsl: newDSL, structureMap } = prepareDSL(dsl);
       let preparedDSL = newDSL;
+
+      ctx.logger?.info('preparedDSL:', JSON.stringify(preparedDSL));
 
       ctx.page.schemas = preparedDSL;
       ctx.structureMap = structureMap;
@@ -48,7 +52,7 @@ export const renderToHTML = async (dsl: ParsedDSL['schemas'], ctx: Context, opt:
       ctx.componentMap = components;
       ctx.dependencies = dependencies;
 
-      ctx.logger?.info('components load completed.');
+      ctx.logger?.info('components load completed.', JSON.stringify(Array.from(components?.values())));
 
       let html = '';
 

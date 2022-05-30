@@ -45,13 +45,6 @@ const TemplateTitle = styled.p`
   line-height: 24px;
 `;
 
-const NoData = styled.p`
-  padding: 20px;
-  color: #c5c5c5;
-  text-align: center;
-  padding-top: 200px;
-`;
-
 const options = ['parsed', 'page', 'template'];
 
 function StructureContainer() {

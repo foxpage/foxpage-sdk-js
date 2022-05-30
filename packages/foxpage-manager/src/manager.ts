@@ -66,7 +66,7 @@ export class ManagerImpl implements Manager {
       api: getApis(),
       mode: Mode.DISTRIBUTION,
     });
-
+    this.pluginManager.loadPlugins();
     this.options = opt;
     this.settings = opt.settings;
     this.messages = new Messages();
@@ -82,8 +82,12 @@ export class ManagerImpl implements Manager {
    *
    * @memberof ManagerImpl
    */
-  public async prepare() {
-    this.pluginManager.loadPlugins();
+  public async prepare(opt?: ManagerOption) {
+    // update opt
+    if (opt) {
+      this.options = opt;
+      this.settings = opt.settings;
+    }
     // init logger: for bind logger hook
     await initLogger(this.hooks);
     // create foxpage data service
@@ -225,10 +229,10 @@ export class ManagerImpl implements Manager {
   private async registerApplication(app: FPApplication, metaData?: ManagerAppMeta) {
     const { id: appId } = app;
     if (!this.existApplication(app.id) && !this.existApplicationBySlug(app.slug)) {
-      const { plugins, hooks } = metaData || {};
+      const { plugins, hooks, configs = {}, resources = [] } = metaData || {};
       const appInstance = new ApplicationImpl(
         app,
-        this.generateAppConfig(app, { plugins, pluginDir: this.pluginDir, hooks }),
+        this.generateAppConfig(app, { plugins, pluginDir: this.pluginDir, hooks, configs, resources }),
       );
 
       this.applicationMap.set(appId, appInstance);
@@ -262,6 +266,7 @@ export class ManagerImpl implements Manager {
 
   private generateAppConfig(app: FPApplication, options: ApplicationOption | undefined) {
     // merge online settings & local settings
+    // TODO: app.settings
     const appSettings = Object.assign({}, options, app.settings);
     if (!appSettings.configs) {
       appSettings.configs = {};

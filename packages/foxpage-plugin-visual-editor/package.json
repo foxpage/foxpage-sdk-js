@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-plugin-visual-editor",
-  "version": "0.1.5",
+  "version": "0.2.2",
   "description": "foxpage visual editor plugin",
   "keywords": [
     "foxpage",
@@ -24,12 +24,13 @@
   "scripts": {
     "build": "tsc --project tsconfig.prod.json",
     "build:npm": "npm run build -- --skipLibCheck",
-    "prebuild": "rimraf lib",
+    "clean": "rimraf lib",
     "prepublishOnly": "npm install && npm run build:npm"
   },
   "devDependencies": {
-    "@foxpage/foxpage-plugin": "^0.2.3",
-    "@foxpage/foxpage-types": "^0.4.7",
+    "@foxpage/foxpage-plugin": "^0.2.5",
+    "@foxpage/foxpage-types": "^0.5.2",
+    "@types/koa": "^2.13.4",
     "rimraf": "^2.6.3",
     "typescript": "^3.9.0"
   },

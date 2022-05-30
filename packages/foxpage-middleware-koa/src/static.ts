@@ -6,7 +6,7 @@ import serve from 'koa-static-cache';
 
 import proxy, { Koa2ProxyMiddlewareConfig } from './proxy';
 
-const PATH = '/foxpage/static';
+const PATH = '/_foxpage/static';
 const LIBRARY_PATH = join(process.cwd(), 'library');
 const LIBRARY_MANIFEST = join(LIBRARY_PATH, 'manifest.json');
 
@@ -34,7 +34,6 @@ export const foxpageStaticHandler = (app: Koa, opt: FoxpageStaticOptions = { pat
     options = {
       targets: {
         [`${path}/(.*).js`]: {
-          // target: 'http://localhost:3000',
           changeOrigin: true,
           pathRewrite: (requestPath: string) => {
             return libraries[requestPath.replace(`${path}/`, '')] || '/404';

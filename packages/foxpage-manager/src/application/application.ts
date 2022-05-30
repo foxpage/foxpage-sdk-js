@@ -1,5 +1,6 @@
 import _ from 'lodash';
 
+import { Mode } from '@foxpage/foxpage-plugin';
 import { ContentType } from '@foxpage/foxpage-shared';
 import {
   AppConfig,
@@ -14,6 +15,7 @@ import {
   FPApplication,
   FunctionManager,
   Logger,
+  MockManager,
   PackageManager,
   PageManager,
   PluginManager,
@@ -30,6 +32,7 @@ import { ConditionManagerImpl } from '../condition';
 import { foxpageDataService } from '../data-service';
 import { FileManagerImpl } from '../file';
 import { FunctionManagerImpl } from '../function';
+import { MockManagerImpl } from '../mock';
 import { PackageManagerImpl } from '../package';
 import { PageManagerImpl } from '../page';
 import { PluginManagerImpl } from '../plugin';
@@ -158,6 +161,12 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
    */
   public readonly pluginManager: PluginManager;
   /**
+   * mock manager
+   *
+   * @type {MockManager}
+   */
+  public readonly mockManager: MockManager;
+  /**
    * router
    *
    * @type {Router}
@@ -184,6 +193,8 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
 
   public readonly hooks: ApplicationOption['hooks'];
 
+  public readonly resources?: ApplicationOption['resources'];
+
   constructor(app: FPApplication, opt: ApplicationOption) {
     super();
     this.appId = app.id;
@@ -191,6 +202,8 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
     this.app = app;
     // init configs
     this.configs = initAppConfig(opt.configs);
+    this.hooks = opt.hooks;
+    this.resources = opt.resources;
 
     // init source managers
     this.fileManager = new FileManagerImpl(this);
@@ -201,9 +214,13 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
     this.templateManager = new TemplateManagerImpl(this);
     this.functionManager = new FunctionManagerImpl(this);
     this.tagManager = new TagManagerImpl(this);
-    this.pluginManager = new PluginManagerImpl({ plugins: opt.plugins, baseDir: opt.pluginDir || '', api: {} });
+    this.pluginManager = new PluginManagerImpl({
+      plugins: opt.plugins,
+      baseDir: opt.pluginDir || '',
+      api: {},
+    });
+    this.mockManager = new MockManagerImpl(this);
     this.routeManager = new RouterImpl(this);
-    this.hooks = opt.hooks;
 
     //logger
     this.logger = createLogger('Application');
@@ -229,7 +246,7 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
     await this.packageManager.freshPackages();
     this.pluginManager.loadPlugins();
 
-    const hooks = this.pluginManager.getHooks();
+    const hooks = this.pluginManager.getHooks(Mode.DISTRIBUTION);
     const { registerRouter } = hooks || {};
     if (typeof registerRouter === 'function') {
       const routes = (await registerRouter()) as unknown as Route[];
@@ -352,7 +369,7 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
   }
 
   private relationGetter<T extends Partial<ContentDetail>>(content: T, relations: RelationInfo) {
-    return async <K extends keyof Omit<RelationInfo, 'sysVariables'>>(
+    return async <K extends keyof Omit<RelationInfo, 'sysVariables' | 'extendPage'>>(
       key: K,
       getter: (_filtered: string[]) => Promise<RelationInfo[K]>,
     ): Promise<RelationInfo[K] | []> => {
@@ -429,6 +446,7 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
     this.templateManager.destroy();
     this.variableManager.destroy();
     this.pluginManager.destroy();
+    this.mockManager.destroy();
     this.routeManager.destroy();
     this.schedule?.stop();
   }

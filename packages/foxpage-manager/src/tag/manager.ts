@@ -100,7 +100,7 @@ export class TagManagerImpl extends ManagerBaseImpl<Content> implements TagManag
       result = await foxpageDataService.fetchContentByTags(this.appId, pathname, tags);
     }
     if (!result) {
-      this.logger.warn(`not match the pathname "${pathname}"， tags:`, tags);
+      this.logger.warn(`not match the pathname "${pathname}", tags:`, tags);
       return null;
     }
     return result;

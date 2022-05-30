@@ -7,7 +7,7 @@ const config = {
   displayName: 'foxpage-js-sdk',
   // setupFiles: ['<rootDir>/config/jest/setup.ts'],
   testRegex: 'test/.*\\.(test|spec)\\.(ts|tsx)$',
-  testEnvironment: 'node',
+  // testEnvironment: ['node','jsdom'],
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
   },

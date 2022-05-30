@@ -11,8 +11,11 @@ const html = `<!doctype html>
 </head>
 <body>
   <script src="$link"></script>
+  <script src="https://www.unpkg.com/requirejs@2.3.6/require.js"></script>
 </body>
 </html>`;
+
+const COMMON_SUFFIX = '/_foxpage';
 
 /**
  * register router
@@ -20,16 +23,31 @@ const html = `<!doctype html>
  */
 export const handleRegisterRouter = async () => {
   return {
-    pathname: 'foxpage-visual-editor.html',
+    pathname: `${COMMON_SUFFIX}/visual-editor.html`,
     action: (ctx: Context) => {
-      const result = html.replace(
+      const { enable = true, url } = ctx.appConfigs?.visualEditor || {};
+      if (!enable) {
+        return 'Not found';
+      }
+
+      let realURL: string | undefined = '';
+
+      if (typeof url === 'function') {
+        realURL = url(ctx.request.req);
+      } else {
+        realURL = url;
+      }
+
+      if (realURL) {
+        return html.replace('$link', realURL);
+      }
+
+      return html.replace(
         '$link',
         `${ctx.URL?.origin}${
           ctx.appConfigs?.virtualPath ? `/${ctx.appConfigs?.virtualPath}` : ''
-        }/foxpage/static/foxpage-visual-editor.js`,
-        // 'http://unpkg.com/@foxpage/foxpage-visual-editor@latest/dist/main.bundle.js', // always use the latest version
+        }${COMMON_SUFFIX}/static/visual-editor.js`,
       );
-      return result;
     },
   } as Route;
 };

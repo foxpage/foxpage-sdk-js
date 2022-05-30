@@ -5,6 +5,6 @@ export interface PluginManager<T = any> {
   loadPlugins(): void;
   getPlugins(): string[];
   hasPlugin(name: string): boolean;
-  getHooks(): FoxpageHooks | undefined;
+  getHooks(mode?: number): FoxpageHooks | undefined;
   destroy(): void;
 }

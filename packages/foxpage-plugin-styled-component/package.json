@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-plugin-styled-component",
-  "version": "0.2.15",
+  "version": "0.3.3",
   "description": "foxpage styled component plugin for collect styles",
   "keywords": [
     "foxpage",
@@ -22,7 +22,7 @@
   "scripts": {
     "build": "tsc --project tsconfig.prod.json",
     "build:npm": "npm run build -- --skipLibCheck",
-    "prebuild": "rimraf lib",
+    "clean": "rimraf lib",
     "prepublishOnly": "npm install && npm run build:npm"
   },
   "peerDependencies": {
@@ -30,13 +30,13 @@
     "react-dom": "^16.8.6"
   },
   "dependencies": {
-    "@foxpage/foxpage-core": "^0.4.15",
-    "@foxpage/foxpage-plugin": "^0.2.3",
+    "@foxpage/foxpage-core": "^0.5.3",
+    "@foxpage/foxpage-plugin": "^0.2.5",
     "lodash": "^4.17.15",
     "styled-components": "^5.3.3"
   },
   "devDependencies": {
-    "@foxpage/foxpage-types": "^0.4.7",
+    "@foxpage/foxpage-types": "^0.5.2",
     "@types/styled-components": "^5.1.15",
     "rimraf": "^2.6.3",
     "typescript": "^3.9.0"

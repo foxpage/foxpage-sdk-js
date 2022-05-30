@@ -1,6 +1,6 @@
 import { Context, RequestMode } from '@foxpage/foxpage-types';
 
-const isMode =
+const parseParams =
   ({ ctxKey, queryKey }: { ctxKey: keyof RequestMode; queryKey: string }) =>
   (ctx?: Partial<Context>): boolean => {
     if (ctx) {
@@ -15,18 +15,24 @@ const isMode =
 /**
  * check is preview mode
  */
-export const isPreviewMode = isMode({ ctxKey: 'isPreviewMode', queryKey: 'preview' });
+export const isPreviewMode = parseParams({ ctxKey: 'isPreviewMode', queryKey: 'preview' });
 
 /**
  * check is debug mode
  */
-export const isDebugMode = isMode({ ctxKey: 'isDebugMode', queryKey: 'debug' });
+export const isDebugMode = parseParams({ ctxKey: 'isDebugMode', queryKey: 'debug' });
+
+/**
+ * check is debug mode
+ */
+export const isMock = parseParams({ ctxKey: 'isMock', queryKey: 'mock' });
 
 /**
  * init mode
  * @param ctx context
  */
-export const initMode = (ctx: Context) => {
+export const initEnv = (ctx: Context) => {
   ctx.isPreviewMode = isPreviewMode(ctx);
   ctx.isDebugMode = isDebugMode(ctx);
+  ctx.isMock = ctx.isPreviewMode && isMock(ctx);
 };

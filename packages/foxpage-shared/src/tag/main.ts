@@ -89,7 +89,7 @@ export const matchContent = (contents: Content[], tags: Tag[] = []) => {
           const { generals, locales } = tagsToStrings(tags);
           const result =
             contentGenerals.findIndex(cTag => generals.indexOf(cTag) === -1) === -1 &&
-            contentLocales.indexOf(locales[0]) > -1;
+            (contentLocales.length > 0 ? contentLocales.indexOf(locales[0]) > -1 : true);
           return result;
         })
       : contents;

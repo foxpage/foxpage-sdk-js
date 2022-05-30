@@ -1,12 +1,12 @@
 {
   "name": "@foxpage/foxpage-sdk-js",
-  "version": "0.3.2",
+  "version": "0.5.0",
   "private": true,
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
-    "build": "lerna run build && lerna run build --scope @foxpage/foxpage-node-sdk",
+    "build": "lerna run clean & node ./scripts/build.js",
     "boot": "yarn & lerna bootstrap & npm run build",
     "commit": "git-cz",
     "start:sb": "start-storybook --port 49500 --ci",
@@ -64,6 +64,7 @@
     "@types/supertest": "^2.0.10",
     "@typescript-eslint/eslint-plugin": "^3.10.0",
     "@typescript-eslint/parser": "^3.10.0",
+    "chalk": "^4.0.1",
     "commitizen": "^4.1.0",
     "commitlint": "^9.1.0",
     "cz-conventional-changelog": "^3.1.0",
@@ -73,6 +74,7 @@
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-simple-import-sort": "^5.0.3",
+    "fs-extra": "^10.0.0",
     "git-cz": "^4.6.1",
     "husky": "^4.2.5",
     "jest": "26.1.0",

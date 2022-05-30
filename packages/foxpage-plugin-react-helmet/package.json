@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-plugin-react-helmet",
-  "version": "0.3.15",
+  "version": "0.4.3",
   "description": "react helmet plugin for foxpage",
   "keywords": [
     "foxpage",
@@ -22,7 +22,7 @@
   "scripts": {
     "build": "tsc --project tsconfig.prod.json",
     "build:npm": "npm run build -- --skipLibCheck",
-    "prebuild": "rimraf lib",
+    "clean": "rimraf lib",
     "prepublishOnly": "npm install && npm run build:npm"
   },
   "peerDependencies": {
@@ -30,14 +30,14 @@
     "react-dom": "^16.8.6"
   },
   "dependencies": {
-    "@foxpage/foxpage-core": "^0.4.15",
-    "@foxpage/foxpage-plugin": "^0.2.3",
-    "@foxpage/foxpage-shared": "^0.4.16",
+    "@foxpage/foxpage-core": "^0.5.3",
+    "@foxpage/foxpage-plugin": "^0.2.5",
+    "@foxpage/foxpage-shared": "^0.5.3",
     "lodash": "^4.17.15",
     "react-helmet": "^6.1.0"
   },
   "devDependencies": {
-    "@foxpage/foxpage-types": "^0.4.7",
+    "@foxpage/foxpage-types": "^0.5.2",
     "@types/lodash": "^4.14.145",
     "@types/react-helmet": "^6.1.0",
     "rimraf": "^2.6.3",

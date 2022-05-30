@@ -20,13 +20,12 @@ async function creator(node: StructureNode, ctx: Context) {
     if (component) {
       const { factory } = component;
       if (!factory) {
-        ctx.logger?.warn(`render node ${name}${id} failed, factory is undefined.`);
+        ctx.logger?.warn(`render node ${name}@${id} failed, factory is undefined.`);
         return null;
       }
 
-      const childrenElements: ElementType[] = await Promise.all(
-        children.length > 0 ? children.map(item => creator(item, ctx)) : [],
-      );
+      const childrenElements: ElementType[] =
+        children.length > 0 ? await Promise.all(children.map(item => creator(item, ctx))) : [];
 
       let buildHookProps;
       if (typeof factory.beforeNodeBuild === 'function') {

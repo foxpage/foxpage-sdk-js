@@ -8,6 +8,7 @@ export interface ResponsiveTableProps<T> extends TableProps<T> {
 }
 
 const ResponsiveTable = <T extends any>(props: PropsWithChildren<T>) => {
+  // @ts-ignore
   return <Table scroll={{ y: 326, x: true }} size="middle" pagination={false} {...props} />;
 };
 

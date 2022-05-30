@@ -20,7 +20,16 @@ export const initManager = async (opt: ManagerOption): Promise<ManagerImpl> => {
   }
   try {
     if (manager) {
-      await manager.prepare();
+      let config = opt;
+
+      const { afterManagerCreate } = manager.hooks || {};
+      if (typeof afterManagerCreate === 'function') {
+        config = ((await afterManagerCreate(opt)) as Array<ManagerOption>)[0];
+      }
+
+      // manager prepare
+      await manager.prepare(config);
+
       // register apps
       await manager.registerApplications(opt.apps);
     }

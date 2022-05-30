@@ -1,21 +1,22 @@
 import { getApplication } from '@foxpage/foxpage-manager';
 
 import { FoxpageRequestOptions } from '../api';
+import { NotFoundAppError, NotFoundDSLError } from '../errors';
 import { contextTask, pageTask, parseTask } from '../task';
 
 export const getDSL = async (pageId: string, appId: string, opt: FoxpageRequestOptions) => {
   const app = getApplication(appId);
   if (!app) {
-    return null;
+    throw new NotFoundAppError(appId);
   }
 
   // init renderContext task
-  const ctx = await contextTask(app, opt);
+  const ctx = opt.ctx ? opt.ctx : await contextTask(app, opt);
 
   // get page
   const page = await pageTask(pageId, app, ctx);
   if (!page) {
-    return null;
+    throw new NotFoundDSLError(pageId);
   }
 
   // parse page

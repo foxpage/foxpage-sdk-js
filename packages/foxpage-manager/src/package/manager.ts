@@ -1,6 +1,7 @@
 import { isNotNill, packager } from '@foxpage/foxpage-shared';
 import {
   Application,
+  ApplicationOption,
   FPPackage,
   FPPackageResponse,
   Package,
@@ -36,9 +37,14 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
    * @private
    */
   private packageIdMap = new Map<string, string>();
+  /**
+   * component resource config
+   */
+  private resourceConfig: ApplicationOption['resources'];
 
   constructor(app: Application) {
     super(app, { type: 'package', diskCache: { enable: true } });
+    this.resourceConfig = app.resources;
   }
 
   /**
@@ -307,7 +313,7 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
   }
 
   private newPackage(data: FPPackage) {
-    return new PackageInstance(data, this.appId);
+    return new PackageInstance(data, this.appId, { resource: this.resourceConfig });
   }
 
   private resolvePackage(packageInfos: FPPackageResponse[]) {

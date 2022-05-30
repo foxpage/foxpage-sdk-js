@@ -1,4 +1,4 @@
-import { Application } from "../application";
+import { Application } from '../application';
 import {
   Condition,
   FPFunction,
@@ -11,11 +11,14 @@ import {
   FPFunctionItem,
   VariableItem,
   FPFile,
-} from "../manager";
+  Mock,
+  MockItem,
+} from '../manager';
 import { StructureNode } from '../structure';
 
 export interface ContentExtension {
   extendId?: string;
+  mockId?: string;
 }
 
 export interface ContentVersion<T> {
@@ -25,7 +28,8 @@ export interface ContentVersion<T> {
   extension?: ContentExtension;
 }
 
-export interface ContentDetail<T = StructureNode | VariableItem | ConditionItem | FPFunctionItem> extends ContentVersion<T> {
+export interface ContentDetail<T = StructureNode | VariableItem | ConditionItem | FPFunctionItem | MockItem>
+  extends ContentVersion<T> {
   relationMap?: Map<string, string[]>;
   // getters
   templates?: string[];
@@ -33,6 +37,7 @@ export interface ContentDetail<T = StructureNode | VariableItem | ConditionItem 
   sysVariables?: string[];
   functions?: string[];
   conditions?: string[];
+  mocks?: string[];
 }
 
 export interface Content {
@@ -50,12 +55,15 @@ export interface ContentInfo {
   functions?: FPFunction[];
   conditions?: Condition[];
   files?: FPFile[];
+  mocks?: Mock[];
 }
 
-
-export type RenderAppInfo = Pick<Application, 'appId' | 'slug' | 'configs'> & { pluginManager?: Application['pluginManager'] };
+export type RenderAppInfo = Pick<Application, 'appId' | 'slug' | 'configs'> & {
+  pluginManager?: Application['pluginManager'];
+};
 
 export interface ContentRelationInfo {
   content: ContentDetail;
   relations: ContentInfo;
+  mock?: Mock;
 }

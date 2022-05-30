@@ -1,0 +1,40 @@
+{
+  "name": "@foxpage/foxpage-plugin-parse-page",
+  "version": "0.2.8",
+  "description": "foxpage parse page plugin",
+  "keywords": [
+    "foxpage",
+    "parse page"
+  ],
+  "author": "xdr肖达荣 <drxiao@trip.com>",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "license": "MIT",
+  "files": [
+    "lib/**"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/foxpage/foxpage-sdk-js.git"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.prod.json",
+    "build:npm": "npm run build -- --skipLibCheck",
+    "clean": "rimraf lib",
+    "prepublishOnly": "npm install && npm run build:npm"
+  },
+  "devDependencies": {
+    "@foxpage/foxpage-plugin": "^0.2.5",
+    "@foxpage/foxpage-types": "^0.5.2",
+    "rimraf": "^2.6.3",
+    "typescript": "^3.9.0"
+  },
+  "dependencies": {
+    "@foxpage/foxpage-node-sdk": "^0.5.7",
+    "@types/koa": "^2.13.4"
+  }
+}

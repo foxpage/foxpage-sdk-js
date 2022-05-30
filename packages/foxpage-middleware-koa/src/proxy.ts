@@ -20,7 +20,7 @@ const proxy = (options: Koa2ProxyMiddlewareConfig): Middleware => {
     const { path } = ctx;
     for (const route of Object.keys(targets)) {
       if (pathToRegexp(route).test(path)) {
-        const opt: Options = Object.assign({}, targets[route], { target: ctx.request.origin });
+        const opt: Options = Object.assign({}, targets[route], { target: ctx.request.origin }, { logLevel: 'error' });
         const httpProxy = createProxyMiddleware(opt);
         //@ts-ignore
         await kc(httpProxy)(ctx, next);

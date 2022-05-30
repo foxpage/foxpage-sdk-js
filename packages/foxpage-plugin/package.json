@@ -1,13 +1,13 @@
 {
   "name": "@foxpage/foxpage-plugin",
-  "version": "0.2.3",
+  "version": "0.2.5",
   "description": "foxpage plugin loader",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc --project tsconfig.prod.json",
     "build:npm": "npm run build -- --skipLibCheck",
-    "prebuild": "rimraf lib",
+    "clean": "rimraf lib",
     "prepublishOnly": "npm install && npm run build:npm"
   },
   "keywords": [

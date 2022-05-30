@@ -149,7 +149,7 @@ export class VariableParser {
       }
 
       if (nextLoop) {
-        this.parse(ctx, { parsedVarSet, parsedFnSet });
+        await this.parse(ctx, { parsedVarSet, parsedFnSet });
       }
     } catch (e) {
       ctx.logger?.error((e as Error).message);

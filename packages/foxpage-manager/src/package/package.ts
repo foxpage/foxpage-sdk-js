@@ -2,6 +2,7 @@ import { outputFile, pathExists } from 'fs-extra';
 
 import { getESModuleExport, Messages, Option, optional, packager } from '@foxpage/foxpage-shared';
 import {
+  ApplicationOption,
   FPPackage,
   FPPackageDependency,
   FPPackageEntrySource,
@@ -18,6 +19,10 @@ import { PackageFetcher } from './fetcher';
 import { resolvePackageJSPath } from './resolver';
 import { loadFile, runInNodeContext } from './utils';
 import { wrapCode } from './wrapper';
+
+export interface PackageInstanceOption {
+  resource?: ApplicationOption['resources'];
+}
 
 /**
  * package
@@ -59,7 +64,7 @@ export class PackageInstance implements Package {
   private _exported?: any;
   private _loaded = false;
 
-  constructor(info: FPPackage, appId: string) {
+  constructor(info: FPPackage, appId: string, opt?: PackageInstanceOption) {
     this.appId = appId;
     this.status = 'preInstall';
     this.available = false;
@@ -68,7 +73,7 @@ export class PackageInstance implements Package {
     this.type = info.type;
     this.version = info.version;
     this.key = packager.generateKey(info.name, info.version);
-    this.source = info.resource.entry;
+    this.source = this.initResource(info.resource.entry, opt?.resource);
     this.downloadUrl = this.source.node.downloadHost + this.source.node.path;
     this.dependencies = info.resource.dependencies || [];
     this.deps = this.dependencies.map(item => item.name);
@@ -187,5 +192,33 @@ export class PackageInstance implements Package {
     this.messages.push(message);
     this.status = 'fail';
     this.logger.warn('install package %s@%j failed:', this.name, this.version, message);
+  }
+
+  private initResource<T extends keyof FPPackageEntrySource>(
+    resource: FPPackageEntrySource,
+    configs?: PackageInstanceOption['resource'],
+  ) {
+    try {
+      if (configs && configs.length > 0) {
+        const config = configs.find(item => item.name === resource?.node?.origin);
+        if (config?.downloadHost || config?.host) {
+          Object.keys(resource).forEach(key => {
+            const keyStr = key as T;
+            const value = resource[keyStr];
+            if (value && value.origin === config.name) {
+              if (config.downloadHost && value.downloadHost) {
+                value.downloadHost = config.downloadHost;
+              }
+              if (config.host && value.host) {
+                value.host = config.host;
+              }
+            }
+          });
+        }
+      }
+    } catch (e) {
+      this.logger.error('replace package download host failed', e);
+    }
+    return resource;
   }
 }

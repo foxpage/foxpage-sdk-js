@@ -9,6 +9,7 @@ import {
   FPPackage,
   FPPackageResponse,
   ManagerOption,
+  Mock,
   PackageNamedVersion,
   Page,
   ResourceUpdateInfo,
@@ -173,12 +174,12 @@ export class FoxpageDataService {
    * @return {*}  {Promise<Content>}
    */
   public async fetchContentByTags(appId: string, pathname: string, tags: Tag[]): Promise<Content> {
-    const result = (await this.request('post', '/content/tag-versions', {
+    const result = (await this.request('post', '/content/tag-contents', {
       applicationId: appId,
       pathname,
       tags,
-    })) as Content[];
-    return result[0];
+    })) as { content: Content }[];
+    return result[0]?.content;
   }
 
   /**
@@ -226,6 +227,17 @@ export class FoxpageDataService {
   public async fetchAppVariables(appId: string, { variableIds }: { variableIds: string[] }): Promise<Variable[]> {
     return ((await this.request('post', '/variables/lives', { applicationId: appId, ids: variableIds })) ||
       []) as Variable[];
+  }
+
+  /**
+   * fetch application mocks
+   *
+   * @param {string} appId
+   * @param {{ mockIds: string[] }} { mock content ids }
+   * @return {*}  {(Promise<Variable[]>)}
+   */
+  public async fetchAppMocks(appId: string, { mockIds }: { mockIds: string[] }): Promise<Mock[]> {
+    return ((await this.request('post', '/mocks/lives', { applicationId: appId, ids: mockIds })) || []) as Mock[];
   }
 
   /**

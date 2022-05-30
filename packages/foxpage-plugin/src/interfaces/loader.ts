@@ -21,6 +21,6 @@ export interface PluginLoader {
   getList(): string[];
   hasPlugin(name: string): boolean;
   mergeVisitors(): void;
-  getHooks(): Record<string, any>;
+  getHooks(mode?: Mode): Record<string, any>;
   destroy(): void;
 }

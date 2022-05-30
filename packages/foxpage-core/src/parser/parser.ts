@@ -83,7 +83,7 @@ export class ParserImpl implements Parser {
    * second: condition
    * last: page
    */
-  public parse() {
+  public async parse() {
     if (!this.ctx) {
       throw new Error('render context is invalid.');
     }
@@ -92,7 +92,7 @@ export class ParserImpl implements Parser {
     }
     this.ctx.logger?.debug('start parse');
 
-    this.variableParser?.parse(this.ctx, {});
+    await this.variableParser?.parse(this.ctx, {});
     this.conditionParser?.parse(this.ctx);
     this.templateParser?.parse(this.ctx);
 

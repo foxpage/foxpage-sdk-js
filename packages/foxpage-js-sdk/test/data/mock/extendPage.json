@@ -1,0 +1,127 @@
+{
+    "id": "cont_izA6gLLtGUGjrnP",
+    "schemas": [
+      {
+        "id": "stru_goujkr9Yb5F84XZi",
+        "name": "",
+        "type": "",
+        "props": {
+          "width": "100%",
+          "height": "100%"
+        },
+        "children": [
+          {
+            "children": [],
+            "id": "stru_zgfobm2OfNnB3qn",
+            "label": "@fox-design/react-text",
+            "name": "@fox-design/react-text",
+            "props": {
+              "text": "parent 2 without mock 3"
+            },
+            "mock": {
+              "text": "base mock test 2",
+              "textColor": "#287dfa"
+            },
+            "extension": {
+              "parentId": "stru_goujkr9Yb5F84XZi",
+              "sort": 100
+            }
+          },
+          {
+            "id": "stru_ywigcspHBQ2d52oZ",
+            "label": "@fox-design/react-container",
+            "name": "@fox-design/react-container",
+            "type": "react.component",
+            "props": {},
+            "children": [
+              {
+                "id": "stru_xmawnmijoJspgXF",
+                "label": "@fox-design/react-slot",
+                "name": "@fox-design/react-slot",
+                "type": "react.component",
+                "props": {},
+                "children": [
+                  {
+                    "children": [],
+                    "id": "stru_zoopzz3564i5bL-",
+                    "label": "@fox-design/react-text",
+                    "name": "@fox-design/react-text",
+                    "props": {
+                      "text": "Base content 1 {{aaaaaa:a}} "
+                    },
+                    "extension": {
+                      "parentId": "stru_goujkr9Yb5F84XZi",
+                      "sort": 100
+                    }
+                  }
+                ],
+                "relation": {},
+                "extension": {
+                  "parentId": "stru_ywigcspHBQ2d52oZ",
+                  "sort": 100
+                }
+              }
+            ],
+            "relation": {},
+            "extension": {
+              "parentId": "stru_goujkr9Yb5F84XZi",
+              "sort": 200
+            }
+          },
+          {
+            "children": [],
+            "id": "stru_ntkscpPwxzE8C1g",
+            "label": "@fox-design/react-image",
+            "name": "@fox-design/react-image",
+            "props": {
+              "src": "https://ak-d.tripcdn.com/images/0a15u120008yx4834A845.jpg"
+            },
+            "extension": {
+              "parentId": "stru_goujkr9Yb5F84XZi",
+              "sort": 300
+            }
+          },
+          {
+            "children": [],
+            "id": "stru_pivvcmv-omUMRnn",
+            "label": "@fox-design/react-text",
+            "name": "@fox-design/react-text",
+            "props": {
+              "text": " base -1 234",
+              "textColor": "#287dfa",
+              "fontSize": 16
+            },
+            "extension": {
+              "parentId": "stru_xmawnmijoJspgXF",
+              "sort": 400
+            }
+          }
+        ],
+        "directive": {
+          "tpl": "{{__templates:cont_wlY8nusRmoyfQ5q:schemas}}"
+        },
+        "extension": {
+          "sort": 100
+        }
+      }
+    ],
+    "relation": {
+      "__templates:cont_wlY8nusRmoyfQ5q:schemas": {
+        "id": "cont_wlY8nusRmoyfQ5q",
+        "type": "template"
+      },
+      "aaaaaa": {
+        "type": "variable",
+        "id": "cont_qVzQX35pIPcgcMm"
+      },
+      "aaaaaa:a": {
+        "type": "variable",
+        "id": "cont_qVzQX35pIPcgcMm"
+      }
+    },
+    "version": "1.0",
+    "extension": {
+      "extendId": "cont_DBFdqWYR4tNssg2",
+      "mockId": "cont_3CiALefNXnGRaM3"
+    }
+  }

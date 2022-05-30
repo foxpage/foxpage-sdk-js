@@ -1,10 +1,19 @@
+import Axios from 'axios';
+
 import { createContentInstance, variable } from '@foxpage/foxpage-shared';
 import { ContentDetail, Context, Page, RelationInfo, RenderAppInfo } from '@foxpage/foxpage-types';
 
 import { createRenderContext } from './context';
 import { parse } from './parser';
 
-export type PageParseOption = { appInfo: RenderAppInfo; relationInfo: RelationInfo };
+export type PageParseOption = { appInfo: RenderAppInfo; relationInfo: RelationInfo; locale?: string };
+export type PageParseInServerOption = PageParseOption & {
+  // not set, will redirect to the site host
+  host?: string;
+};
+
+// simmer to foxpage-plugin-page-parse
+export const PARSE_PAGE_PATH = '/_foxpage/parse-page';
 
 /**
  * parse page
@@ -24,4 +33,22 @@ export const parsePage = async (page: Page, opt: PageParseOption) => {
   // parse
   const parsed = await parse(page, ctx);
   return parsed;
+};
+
+/**
+ * parse page in server
+ * @param page page content
+ * @param opt parse option
+ */
+export const parsePageInServer = async (page: Page, opt: PageParseInServerOption) => {
+  const url = opt.host ? `${opt.host}${PARSE_PAGE_PATH}` : PARSE_PAGE_PATH;
+  const result = await Axios.post(url, {
+    page,
+    opt: {
+      appId: opt.appInfo.appId,
+      relationInfo: opt.relationInfo,
+      locale: opt.locale,
+    },
+  });
+  return result;
 };

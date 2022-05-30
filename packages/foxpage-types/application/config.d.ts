@@ -5,7 +5,12 @@ export interface AppConfig {
   // plugins
   plugins?: string[];
   virtualPath?: string;
-  debugger: {
-    url: string;
+  debugger?: {
+    enable?: boolean;
+    url?: string | ((req: any) => string);
+  };
+  visualEditor?: {
+    enable?: boolean;
+    url?: string | ((req: any) => string);
   };
 }

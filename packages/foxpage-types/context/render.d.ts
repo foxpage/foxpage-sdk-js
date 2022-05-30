@@ -1,6 +1,6 @@
 import * as url from 'url';
 import { FoxpageComponent } from '../component';
-import { Package, Tag, Page, Template, Variable, Condition, FPFunction, RelationInfo } from '../manager';
+import { Package, Tag, Page, Template, Variable, Condition, FPFunction, RelationInfo, Mock } from '../manager';
 import { Logger } from '../logger';
 import { BrowserInitialStateOption, BrowserResource } from '../browser';
 import { FoxpageHooks } from '../hook';
@@ -10,8 +10,8 @@ import { AppConfig } from '../application';
 
 type ContentType = Template | Variable | Condition | FPFunction;
 
-export interface FrameworkResource extends BrowserResource {}
-export interface RenderOption extends BrowserInitialStateOption {}
+export interface FrameworkResource extends BrowserResource { }
+export interface RenderOption extends BrowserInitialStateOption { }
 
 export interface ParsedContent<T = ContentType, P = any> {
   content: T;
@@ -33,12 +33,14 @@ export interface ContextResource {
 
 export interface ContextOrigin {
   page?: Page;
+  extendPage?: Page;
   templates?: Template[];
   packages?: Package[];
   variables?: Variable[];
   sysVariables?: Variable[];
   conditions?: Condition[];
   functions?: FPFunction[];
+  mocks?: Mock[];
 }
 
 /**
@@ -51,6 +53,7 @@ export interface Context {
   URL?: url.URL;
   url: string;
   host: string;
+  locale?: string;
 
   // app base
   readonly appId: string;
@@ -101,6 +104,7 @@ export interface Context {
   // performance
 
   updateOrigin(relation: RelationInfo): void;
+  updateOriginByKey<K extends keyof ContextOrigin>(key: K, value: ContextOrigin[K]): void;
   updateOriginPage(page: Page): void;
   getOrigin<K extends keyof ContextOrigin>(key: K): ContextOrigin[K];
   updatePage(page: Page): void;

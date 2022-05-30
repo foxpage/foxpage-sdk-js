@@ -37,7 +37,7 @@ export const parse = async (page: Page, ctx: Context) => {
   }
 
   parser.preParse(page, ctx);
-  const parsed = parser.parse();
+  const parsed = await parser.parse();
 
   const result = {
     messages: parser.messages,

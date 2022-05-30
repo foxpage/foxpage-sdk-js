@@ -12,7 +12,7 @@ const Tool = styled.div`
 `;
 
 const App = () => {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
 
   return (
     <>

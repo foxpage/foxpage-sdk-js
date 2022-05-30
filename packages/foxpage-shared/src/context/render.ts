@@ -59,19 +59,33 @@ export abstract class ContextInstance implements Context {
 
   /**
    * update relation info
-   * @param relation relation info
+   * @param relationInfo relation info
    */
-  public updateOrigin(relation: RelationInfo) {
-    const { templates = [], sysVariables = [], variables = [], conditions = [], functions = [] } = relation;
-    this.origin.templates = templates;
-    this.origin.sysVariables = sysVariables.map(item => createSysVariable(item));
-    if (this.origin.sysVariables) {
-      this.origin.variables = this.origin.sysVariables.concat(variables);
-    } else {
-      this.origin.variables = variables;
+  public updateOrigin<K extends keyof Pick<ContextOrigin, 'templates' | 'functions' | 'conditions' | 'mocks'>>(
+    relationInfo: RelationInfo,
+  ) {
+    const { sysVariables = [], variables = [], ...rest } = relationInfo;
+    // 'templates' | 'functions' | 'conditions' | 'mocks'
+    Object.keys(rest).forEach(key => {
+      const type = key as K;
+      this.updateOriginByKey(type, rest[type]);
+    });
+    this.updateOriginByKey(
+      'sysVariables',
+      sysVariables.map(item => createSysVariable(item)),
+    );
+    this.updateOriginByKey('variables', (this.origin.sysVariables || []).concat(variables));
+  }
+
+  /**
+   * update origin data
+   * @param key key type
+   * @param value data
+   */
+  public updateOriginByKey<K extends keyof ContextOrigin>(key: K, value: ContextOrigin[K]): void {
+    if (value !== undefined) {
+      this.origin[key] = value;
     }
-    this.origin.conditions = conditions;
-    this.origin.functions = functions;
   }
 
   /**
@@ -80,7 +94,7 @@ export abstract class ContextInstance implements Context {
    * @param {Page} page
    */
   public updateOriginPage(page: Page) {
-    this.origin.page = page;
+    this.updateOriginByKey('page', page);
   }
 
   /**

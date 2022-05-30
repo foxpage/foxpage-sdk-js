@@ -40,7 +40,12 @@ export class DiskCache<T> implements ResourceCache<T> {
       this.diskCache.set(id, filePath);
       await storeContent(filePath, resource);
     } catch (e) {
-      this.logger?.error('store content failed:' + (e as Error).message);
+      const msg = (e as Error).message;
+      if (msg.indexOf('EEXIST') > -1) {
+        this.logger?.warn('store content failed:' + msg);
+      } else {
+        this.logger?.error('store content failed:' + msg);
+      }
     }
   }
 

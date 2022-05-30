@@ -1,7 +1,18 @@
-import { DebugState } from '@foxpage/foxpage-plugin-debugger/lib/interface';
-import { BrowserInitialState, BrowserStructure } from '@foxpage/foxpage-types';
+import { BrowserInitialState, BrowserStructure, ContextOrigin, Page } from '@foxpage/foxpage-types';
 
 import { PLACEHOLDER, SCRIPT_ID, WIN_DATA_KEY, WIN_INITIAL_KEY } from './constant';
+
+export interface DebugState {
+  origin: ContextOrigin;
+  parsedDSL: Page;
+  baseInfo: {
+    appId: string;
+    appSlug: string;
+  };
+  netInfo: Record<string, any>;
+  variableValue?: Record<string, any>;
+  conditionValue?: Record<string, any>;
+}
 
 export interface InitialState extends BrowserInitialState {
   structureMap: Record<string, BrowserStructure>;
@@ -62,6 +73,10 @@ export const getInitialState = () => {
   let initialState = (window[WIN_INITIAL_KEY] as InitialState) || null;
   if (!initialState && __DEV__) {
     initialState = require('../mock/initial.json');
+  }
+
+  if (!initialState) {
+    return null;
   }
 
   const components = initialState.modules || [];
