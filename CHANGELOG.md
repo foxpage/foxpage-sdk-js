@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.1](https://github.com/foxpage/foxpage-sdk-js/compare/v0.4.0...v0.4.1) (2022-06-20)
+
+
+### Features
+
+* 🎸 upgrade node sdk & new visual html,render mark plugin ([5e3b42a](https://github.com/foxpage/foxpage-sdk-js/commit/5e3b42a09a6cb9168053d4bdfda98ababe689d8f))
+
 ## [0.4.0](https://github.com/foxpage/foxpage-sdk-js/compare/v0.3.2...v0.4.0) (2022-05-30)
 
 
