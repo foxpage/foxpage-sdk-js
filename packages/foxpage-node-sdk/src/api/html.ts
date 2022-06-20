@@ -1,4 +1,5 @@
 import { getApplication, PageInstance } from '@foxpage/foxpage-manager';
+import { tag } from '@foxpage/foxpage-shared';
 import { Application, Page } from '@foxpage/foxpage-types';
 
 import { FoxpageRequestOptions } from '../api';
@@ -65,3 +66,52 @@ export async function renderToHtmlByPage(
   const html = (await renderTask(parsedPage, context)) || null;
   return html;
 }
+
+/**
+ * render html by file id and locale
+ * @param fileId file id
+ * @param locale locale
+ * @param appId application id
+ * @param opt options
+ * @returns
+ */
+export const renderToHtmlByFileIdAndLocale = async (
+  fileId: string,
+  locale = '',
+  appId: string,
+  opt: FoxpageRequestOptions,
+) => {
+  const app = getApplication(appId);
+  if (!app) {
+    throw new NotFoundAppError(appId);
+  }
+
+  // init renderContext task
+  const ctx = opt.ctx ? opt.ctx : await contextTask(app, opt);
+
+  // get file
+  const tags = locale ? tag.generateTagByQuerystring(`locale=${locale}`) : [];
+  const content = await app.tagManager.matchTag(tags, {
+    fileId,
+    withContentInfo: !ctx.isPreviewMode,
+  });
+  if (!content) {
+    throw new NotFoundDSLError(`fileId@${fileId}`);
+  }
+
+  // get page
+  const page = await pageTask(content.id, app, ctx);
+  if (!page) {
+    throw new NotFoundDSLError(content.id);
+  }
+
+  // parse page
+  const { page: parsedPage, ctx: context } = await parseTask(page, ctx);
+  if (!parsedPage.schemas) {
+    throw new ParseDSLError(new Error('parsedPage.schemas is empty'), ctx.origin);
+  }
+
+  // render task
+  const html = (await renderTask(parsedPage, context)) || null;
+  return { html, dsl: context.page, vars: context.variables };
+};

@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-plugin-debugger",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "foxpage debugger plugin",
   "keywords": [
     "foxpage",
@@ -40,6 +40,6 @@
   },
   "dependencies": {
     "@foxpage/foxpage-core": "^0.5.3",
-    "@foxpage/foxpage-debug-portal": "^0.2.3"
+    "@foxpage/foxpage-debug-portal": "^0.2.4"
   }
 }

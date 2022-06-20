@@ -41,10 +41,8 @@ export class DiskCache<T> implements ResourceCache<T> {
       await storeContent(filePath, resource);
     } catch (e) {
       const msg = (e as Error).message;
-      if (msg.indexOf('EEXIST') > -1) {
-        this.logger?.warn('store content failed:' + msg);
-      } else {
-        this.logger?.error('store content failed:' + msg);
+      if (msg.indexOf('EEXIST') === -1) {
+        this.logger?.error('store content failed,' + e);
       }
     }
   }

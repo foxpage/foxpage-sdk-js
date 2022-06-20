@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-plugin-preview-page",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "foxpage preview plugin",
   "keywords": [
     "foxpage",
@@ -35,7 +35,7 @@
     "typescript": "^3.9.0"
   },
   "dependencies": {
-    "@foxpage/foxpage-node-sdk": "^0.5.7",
+    "@foxpage/foxpage-node-sdk": "^0.5.8",
     "@types/koa": "^2.13.4"
   }
 }

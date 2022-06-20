@@ -182,8 +182,10 @@ export class PackageInstance implements Package {
         });
       }
     } catch (err) {
-      this.logger.error(`process [${process.pid}] code failed:`, err);
-      throw err;
+      const isExistError = (err as { code: 'EEXIST' }).code === 'EEXIST' || String(err).includes('exists');
+      if (!isExistError) {
+        throw err;
+      }
     }
   }
 
@@ -217,7 +219,7 @@ export class PackageInstance implements Package {
         }
       }
     } catch (e) {
-      this.logger.error('replace package download host failed', e);
+      this.logger.error('replace package download host failed,', e);
     }
     return resource;
   }

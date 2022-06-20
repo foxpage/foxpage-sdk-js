@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-plugin-common-base",
-  "version": "0.2.11",
+  "version": "0.2.16",
   "description": "foxpage common base plugin",
   "keywords": [
     "plugin",
@@ -21,24 +21,25 @@
   "scripts": {
     "build": "tsc --project tsconfig.prod.json",
     "build:npm": "npm run build -- --skipLibCheck",
-    "clean": "rimraf lib",
-    "prepublishOnly": "npm install && npm run build:npm"
+    "clean": "rimraf lib"
   },
   "devDependencies": {
     "rimraf": "^2.6.3",
     "typescript": "^3.9.0"
   },
   "dependencies": {
-    "@foxpage/foxpage-plugin-debug-page": "^0.2.10",
-    "@foxpage/foxpage-plugin-debugger": "^0.2.3",
+    "@foxpage/foxpage-plugin-debug-page": "^0.2.11",
+    "@foxpage/foxpage-plugin-debugger": "^0.2.4",
     "@foxpage/foxpage-plugin-function-parse": "^0.4.2",
     "@foxpage/foxpage-plugin-log": "^0.2.3",
-    "@foxpage/foxpage-plugin-parse-page": "^0.2.8",
-    "@foxpage/foxpage-plugin-preview-page": "^0.1.10",
+    "@foxpage/foxpage-plugin-parse-page": "^0.2.9",
+    "@foxpage/foxpage-plugin-preview-page": "^0.1.11",
     "@foxpage/foxpage-plugin-react-helmet": "^0.4.3",
     "@foxpage/foxpage-plugin-react-render": "^0.3.2",
     "@foxpage/foxpage-plugin-urlobj-parse": "^0.3.3",
     "@foxpage/foxpage-plugin-urlquery-parse": "^0.3.3",
-    "@foxpage/foxpage-plugin-visual-editor": "^0.2.2"
+    "@foxpage/foxpage-plugin-visual-editor": "^0.2.2",
+    "@foxpage/foxpage-plugin-visual-html": "^0.1.0",
+    "@foxpage/foxpage-plugin-render-mark":"^0.1.0"
   }
 }

@@ -1,14 +1,13 @@
 {
   "name": "@foxpage/foxpage-manager",
-  "version": "0.5.5",
+  "version": "0.5.9",
   "description": "foxpage resource manager",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc --project tsconfig.prod.json",
     "build:npm": "npm run build -- --skipLibCheck",
-    "clean": "rimraf lib",
-    "prepublishOnly": "npm install && npm run build:npm"
+    "clean": "rimraf lib"
   },
   "keywords": [
     "foxpage",

@@ -1,1 +1,1 @@
-export { merger } from '@foxpage/foxpage-core';
+export * from '@foxpage/foxpage-core/lib/merger';

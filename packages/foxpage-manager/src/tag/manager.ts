@@ -71,7 +71,7 @@ export class TagManagerImpl extends ManagerBaseImpl<Content> implements TagManag
    * @return {*}  {(Promise<Content | null>)}
    */
   public async matchTag(tags: Tag[], opt: TagMatchOption): Promise<Content | null> {
-    const { pathname, fileId } = opt;
+    const { pathname = '', fileId = '' } = opt;
 
     if (fileId) {
       const pageIds = this.pageIdMap.get(fileId);
@@ -95,9 +95,9 @@ export class TagManagerImpl extends ManagerBaseImpl<Content> implements TagManag
 
     let result: Content | null = null;
     if (opt.withContentInfo) {
-      result = await this.freshWithTags(pathname, tags);
+      result = await this.freshWithTags(fileId, pathname, tags);
     } else {
-      result = await foxpageDataService.fetchContentByTags(this.appId, pathname, tags);
+      result = await foxpageDataService.fetchContentByTags(this.appId, fileId, pathname, tags);
     }
     if (!result) {
       this.logger.warn(`not match the pathname "${pathname}", tags:`, tags);
@@ -131,8 +131,8 @@ export class TagManagerImpl extends ManagerBaseImpl<Content> implements TagManag
     return undefined;
   }
 
-  private async freshWithTags(pathname: string, tags: Tag[] = []): Promise<Content | null> {
-    const result = await foxpageDataService.fetchAppContentByTags(this.appId, pathname, tags);
+  private async freshWithTags(fileId: string, pathname: string, tags: Tag[] = []): Promise<Content | null> {
+    const result = await foxpageDataService.fetchAppContentByTags(this.appId, fileId, pathname, tags);
     if (result && result.content) {
       this.logger.info('fetched content info with tags:', JSON.stringify(tags));
 

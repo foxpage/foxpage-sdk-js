@@ -2,7 +2,7 @@ import { Template, Variable, Condition, FPFunction } from './index';
 import { ContentInfo } from '../content';
 import { Page } from '../manager';
 
-export type RelationTypes = 'sys-variable' | 'variable' | 'condition' | 'template' | 'function';
+export type RelationTypes = 'sys_variable' | 'variable' | 'condition' | 'template' | 'function';
 
 export interface Relation {
   [k: string]: {

@@ -1,0 +1,36 @@
+{
+  "name": "@foxpage/foxpage-plugin-visual-html",
+  "version": "0.1.0",
+  "description": "foxpage visual html plugin",
+  "keywords": [
+    "foxpage",
+    "foxpage visual html"
+  ],
+  "author": "xdr肖达荣 <drxiao@trip.com>",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/**"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/foxpage/foxpage-sdk-js.git"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.prod.json",
+    "build:npm": "npm run build -- --skipLibCheck",
+    "clean": "rimraf lib"
+  },
+  "devDependencies": {
+    "@foxpage/foxpage-plugin": "^0.2.5",
+    "@foxpage/foxpage-types": "^0.5.2",
+    "@types/koa": "^2.13.4",
+    "rimraf": "^2.6.3",
+    "typescript": "^3.9.0"
+  }
+}

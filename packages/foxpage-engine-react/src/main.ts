@@ -3,16 +3,53 @@ import ReactDOMServer from 'react-dom/server';
 
 import { cloneDeep } from 'lodash';
 
-import { Context, PageRenderOption, ParsedDSL, StructureNode, StructureNodeProps } from '@foxpage/foxpage-types';
+import {
+  ComponentNodeInjectProps,
+  Context,
+  PageRenderOption,
+  ParsedDSL,
+  StructureNode,
+  StructureNodeProps,
+} from '@foxpage/foxpage-types';
 
 import { Container } from './components';
 
 type ElementType = ReactElement<StructureNodeProps<any>, string | React.JSXElementConstructor<any>> | null | undefined;
 
+const initInjectProps = (node: StructureNode, ctx: Context): ComponentNodeInjectProps => {
+  const comp = node && ctx.componentMap?.get(node.name);
+  return {
+    $locale: ctx.locale,
+    $runtime: {
+      isServer: true,
+      isBrowser: false,
+      clientType: 'server',
+    },
+    $eid: node.id,
+    $ename: node.name,
+    $elabel: node.label,
+    $etype: node.type,
+    $dsl: {
+      appId: ctx.appId,
+      id: ctx.page.id,
+      name: ctx.origin.page?.name,
+      fileId: ctx.origin.page?.fileId,
+      version: ctx.origin.page?.versionNumber,
+      structure: {
+        id: node.id,
+        name: node.name,
+        label: node.label,
+        type: node.type,
+        version: comp?.version,
+      },
+    },
+  };
+};
+
 async function creator(node: StructureNode, ctx: Context) {
   try {
     const { id, show = true, name, type, version, children = [] } = node;
-    if (!show) {
+    if (!ctx.disableConditionRender && !show) {
       return null;
     }
 
@@ -33,7 +70,7 @@ async function creator(node: StructureNode, ctx: Context) {
           buildHookProps = await factory.beforeNodeBuild(ctx, node);
           ctx.logger?.info(`Hook [ buildHookProps ][ ${name} ] success.`);
         } catch (e) {
-          ctx.logger?.error(`Hook [ buildHookProps ][ ${name} ] run error: ${(e as Error).message}`);
+          ctx.logger?.error(`Hook [ buildHookProps ][ ${name} ] run failed,`, e);
         }
       }
 
@@ -48,6 +85,7 @@ async function creator(node: StructureNode, ctx: Context) {
       // merge props
       const finalProps = {
         $injector: injector,
+        ...initInjectProps(node, ctx),
         ...node.props,
         ...(cloneDeep(buildHookProps) || {}),
       };

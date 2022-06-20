@@ -145,7 +145,11 @@ export const pageTask = async (pageId: string, app: Application, ctx: Context) =
   // update context
   if (page) {
     page = new PageInstance(page);
-    await updateContextWithPage(ctx, { app, page });
+    if (ctx.isPreviewMode) {
+      ctx.updateOriginPage(page);
+    } else {
+      await updateContextWithPage(ctx, { app, page });
+    }
   }
 
   // with mock

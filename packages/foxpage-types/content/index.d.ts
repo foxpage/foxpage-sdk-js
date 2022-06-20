@@ -26,6 +26,10 @@ export interface ContentVersion<T> {
   schemas: T[];
   relation?: Relation;
   extension?: ContentExtension;
+  version?: string;
+  versionNumber?: number;
+  name?: string;
+  fileId?: string;
 }
 
 export interface ContentDetail<T = StructureNode | VariableItem | ConditionItem | FPFunctionItem | MockItem>

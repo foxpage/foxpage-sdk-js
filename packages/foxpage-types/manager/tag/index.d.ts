@@ -20,8 +20,8 @@ export interface ContentTag {
 }
 
 export interface TagMatchOption {
-  pathname: string;
-  fileId: string;
+  pathname?: string;
+  fileId?: string;
   withContentInfo?: boolean
 }
 

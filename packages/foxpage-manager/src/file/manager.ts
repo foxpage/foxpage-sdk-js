@@ -29,12 +29,11 @@ export class FileManagerImpl extends ManagerBaseImpl<FPFile> implements FileMana
    */
   public addFile(file: FPFile) {
     const pathname = this.getPathname(file);
-    if (!pathname) {
-      this.logger.warn('this file pathname is invalid.');
-      return;
+    if (pathname) {
+      this.removePathname(pathname, file.id);
+      this.addPathname(pathname, file.id);
     }
-    this.removePathname(pathname, file.id);
-    this.addPathname(pathname, file.id);
+
     this.addOne(file.id, file, file);
     return file;
   }
@@ -69,6 +68,16 @@ export class FileManagerImpl extends ManagerBaseImpl<FPFile> implements FileMana
       return null;
     }
     return file;
+  }
+
+  /**
+   * get file by fileId
+   * @param fileId file id
+   * @returns file
+   */
+  public async getFileById(fileId: string): Promise<FPFile | null> {
+    const file = await this.findOneFromLocal(fileId);
+    return file || null;
   }
 
   /**
@@ -109,8 +118,12 @@ export class FileManagerImpl extends ManagerBaseImpl<FPFile> implements FileMana
     });
   }
 
-  protected async onFetch(): Promise<undefined> {
-    return undefined;
+  protected async onFetch(fileIds: string[]): Promise<FPFile[]> {
+    const files = await foxpageDataService.fetchFiles(this.appId, { fileIds });
+    files.forEach(file => {
+      this.addFile(file);
+    });
+    return files;
   }
 
   protected async createInstance(data: FPFile) {

@@ -33,6 +33,22 @@ export class ContentDetailInstance<T = any> implements ContentDetail<T> {
    * extension
    */
   extension?: Extension;
+  /**
+   * content version
+   */
+  version?: string;
+  /**
+   * content version
+   */
+  versionNumber?: number;
+  /**
+   * content name
+   */
+  name?: string;
+  /**
+   * file id
+   */
+  fileId?: string;
 
   relationMap: Map<string, string[]> = new Map<string, string[]>();
 
@@ -41,6 +57,10 @@ export class ContentDetailInstance<T = any> implements ContentDetail<T> {
     this.schemas = data.schemas;
     this.relation = data.relation;
     this.extension = data.extension;
+    this.version = data.version;
+    this.versionNumber = data.versionNumber;
+    this.name = data.name;
+    this.fileId = data.fileId;
 
     this.initRelationMap(this.relation, this.relationMap);
   }
@@ -73,7 +93,7 @@ export class ContentDetailInstance<T = any> implements ContentDetail<T> {
     Object.keys(relation).forEach(key => {
       const { id, type } = relation[key];
       // sysVariables,variables,conditions,functions,...
-      const keyStr = type === 'sys-variable' ? 'sysVariables' : `${type}s`;
+      const keyStr = type === 'sys_variable' ? 'sysVariables' : `${type}s`;
       const value = relationMap.get(keyStr) || ([] as string[]);
 
       if (keyStr === ContentType.SYS_VARIABLE) {

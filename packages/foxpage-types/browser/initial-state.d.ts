@@ -29,9 +29,13 @@ export interface BrowserInitialStateOption {
 }
 
 export interface BrowserInitialStatePage {
-  appId: string,
-  slug: string,
-  pageId: string,
+  appId: string;
+  slug: string;
+  pageId: string;
+  name?: string;
+  locale?: string;
+  fileId?: string;
+  version?: string;
 }
 
 export interface BrowserResource {
@@ -44,7 +48,7 @@ export interface BrowserModule extends Pick<FoxpageComponent, 'name' | 'version'
   deps?: string[];
 }
 
-export interface BrowserStructure extends Pick<StructureNode, 'id' | 'name' | 'props' | 'version' | 'show'> {
+export interface BrowserStructure extends StructureNode {
   childrenIds: string[];
 }
 

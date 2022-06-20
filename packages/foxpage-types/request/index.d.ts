@@ -4,4 +4,5 @@ export interface RequestMode {
   isMock?: boolean;
   isFetchLatestMode?: boolean;
   isPerformanceMode?: boolean;
+  isPreviewWithMark?: boolean;
 }

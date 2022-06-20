@@ -6,6 +6,8 @@ const usePlugins = () => {
     '@foxpage/foxpage-plugin-parse-page',
     '@foxpage/foxpage-plugin-preview-page',
     '@foxpage/foxpage-plugin-debug-page',
+    '@foxpage/foxpage-plugin-visual-html',
+    '@foxpage/foxpage-plugin-render-mark',
   ];
 
   const commons = [

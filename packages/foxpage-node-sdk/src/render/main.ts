@@ -98,7 +98,7 @@ function prepareDSL(schemas: StructureNode[]) {
     const newDSL: StructureNode[] = [];
 
     dsl.forEach(item => {
-      const { id, name, type, version, props, show, children = [] } = item;
+      const { id, name, label, type, version, props, show, children = [] } = item;
       if (show) {
         const childList = children.length > 0 ? doPrepare(children) : [];
         // push new dsl nodes
@@ -107,6 +107,7 @@ function prepareDSL(schemas: StructureNode[]) {
         structureMap?.set(id, {
           id,
           name,
+          label,
           version,
           type,
           props,

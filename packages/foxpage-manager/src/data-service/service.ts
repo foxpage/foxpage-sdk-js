@@ -148,6 +148,7 @@ export class FoxpageDataService {
    */
   public async fetchAppContentByTags(
     appId: string,
+    fileId: string,
     pathname: string,
     tags: Tag[],
   ): Promise<{
@@ -156,6 +157,7 @@ export class FoxpageDataService {
   }> {
     const result = (await this.request('post', '/content/tag-versions', {
       applicationId: appId,
+      fileId,
       pathname,
       tags,
     })) as {
@@ -173,9 +175,10 @@ export class FoxpageDataService {
    * @param {Tag[]} tags
    * @return {*}  {Promise<Content>}
    */
-  public async fetchContentByTags(appId: string, pathname: string, tags: Tag[]): Promise<Content> {
+  public async fetchContentByTags(appId: string, fileId: string, pathname: string, tags: Tag[]): Promise<Content> {
     const result = (await this.request('post', '/content/tag-contents', {
       applicationId: appId,
+      fileId,
       pathname,
       tags,
     })) as { content: Content }[];

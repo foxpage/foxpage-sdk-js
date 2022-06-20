@@ -47,3 +47,30 @@ export interface FoxpageComponent extends FoxpageStaticComponent {
   messages?: MessageArray;
   isBuiltinComponent?: boolean;
 }
+
+export interface ComponentNodeInjectProps {
+  $locale?: string;
+  $runtime: {
+    isServer: boolean;
+    isBrowser: boolean;
+    clientType: 'server' | 'client';
+  };
+  $eid: string;
+  $ename: string;
+  $elabel: string;
+  $etype: string;
+  $dsl: {
+    id: string;
+    name?: string;
+    fileId?: string;
+    version?: string | number;
+    appId: string;
+    structure: {
+      id: string;
+      name: string;
+      label: string;
+      type: string;
+      version?: string;
+    };
+  };
+}

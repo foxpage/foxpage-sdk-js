@@ -76,7 +76,7 @@ export interface Context {
 
   structureMap?: Map<
     string,
-    Pick<StructureNode, 'id' | 'name' | 'version' | 'type' | 'props'> & { childrenIds: string[] }
+    StructureNode & { childrenIds: string[] }
   >;
 
   // getters
@@ -99,6 +99,7 @@ export interface Context {
 
   frameworkResource?: FrameworkResource;
   options?: RenderOption;
+  disableConditionRender?: boolean;
 
   logger?: Logger;
   // performance

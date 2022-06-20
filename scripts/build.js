@@ -6,7 +6,7 @@ const { execSync } = require('child_process');
 const ROOT = join(process.cwd(), 'packages');
 
 function getModules() {
-  const packages = readdirSync(ROOT);
+  const packages = readdirSync(ROOT).filter(item => item.startsWith('foxpage'));
   return packages.map(item => readJSONSync(join(ROOT, item, 'package.json')));
 }
 
@@ -69,7 +69,6 @@ function sortByDependency(modules = []) {
 function main() {
   console.log(chalk.yellow('[BUILD StART]'));
   const modules = sortByDependency(getModules());
-  // console.log(modules);
   modules.forEach(module => {
     if (module !== '@foxpage/foxpage-types') {
       console.log(chalk.green(` [START BUILD] ${module}`));

@@ -1,14 +1,13 @@
 {
   "name": "@foxpage/foxpage-js-sdk",
-  "version": "0.5.4",
+  "version": "0.5.6",
   "description": "foxpage js sdk",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc --project tsconfig.prod.json",
     "build:npm": "npm run build -- --skipLibCheck",
-    "clean": "rimraf lib",
-    "prepublishOnly": "npm install && npm run build:npm"
+    "clean": "rimraf lib"
   },
   "keywords": [
     "foxpage",
@@ -25,7 +24,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@foxpage/foxpage-browser-loader": "^0.3.3",
+    "@foxpage/foxpage-browser-loader": "^0.3.4",
     "@foxpage/foxpage-core": "^0.5.3",
     "@foxpage/foxpage-plugin-function-parse": "^0.4.2",
     "@foxpage/foxpage-shared": "^0.5.3",

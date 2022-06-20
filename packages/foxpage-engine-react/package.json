@@ -1,14 +1,13 @@
 {
   "name": "@foxpage/foxpage-engine-react",
-  "version": "0.5.2",
+  "version": "0.5.5",
   "description": "foxpage react render engine",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc --project tsconfig.prod.json",
     "build:npm": "npm run build -- --skipLibCheck",
-    "clean": "rimraf lib",
-    "prepublishOnly": "npm install && npm run build:npm"
+    "clean": "rimraf lib"
   },
   "dependencies": {
     "loadsh": "^0.0.4",

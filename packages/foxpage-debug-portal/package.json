@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-debug-portal",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "foxpage debug portal on live",
   "keywords": [
     "foxpage",
@@ -18,10 +18,6 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@git.dev.sh.ctripcorp.com:fox-open/foxpage-sdk-js.git"
   },
   "scripts": {
     "start": "webpack-dev-server --disableHostCheck=true --config config/webpack.dev.config.js --progress --inline --colors",
@@ -68,7 +64,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
-    "@foxpage/foxpage-browser-loader": "^0.3.3",
+    "@foxpage/foxpage-browser-loader": "^0.3.4",
     "@foxpage/foxpage-types": "^0.5.2",
     "antd": "^4.1.0",
     "core-js": "^3.6.4",

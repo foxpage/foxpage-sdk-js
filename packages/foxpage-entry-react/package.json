@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-entry-react",
-  "version": "0.5.3",
+  "version": "0.5.5",
   "description": "foxpage csr react entry",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -12,7 +12,6 @@
     "build:es": "tsc --project tsconfig.prod.json",
     "build:npm": "npm run build -- --skipLibCheck",
     "clean": "rimraf lib & rimraf dist",
-    "prepublishOnly": "npm install && npm run build:npm",
     "babel": "babel src/ --out-dir lib --extensions .js,.ts,.tsx",
     "analyze": "ANALYZE=1 webpack",
     "lint:type": "tsc --noEmit",
@@ -61,7 +60,7 @@
     "webpack-cli": "^3.3.9"
   },
   "dependencies": {
-    "@foxpage/foxpage-browser-loader": "^0.3.3",
+    "@foxpage/foxpage-browser-loader": "^0.3.4",
     "antd": "^4.1.0",
     "core-js": "^3.6.4",
     "react": "^17.0.2",

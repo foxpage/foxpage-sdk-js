@@ -14,7 +14,7 @@ function extname(filename: string) {
   return filename.substr(filename.lastIndexOf('.') + 1);
 }
 
-function findComponentDeps(meta: BrowserModule['meta'], { ignoreStyleAsset = false }: ConfigComponentOptions = {}) {
+function findComponentDeps(meta: BrowserModule['meta'], opt: ConfigComponentOptions = { ignoreStyleAsset: false }) {
   const { assets, softDeps = [] } = meta;
   const deps: string[] = [].concat(softDeps);
 
@@ -26,7 +26,7 @@ function findComponentDeps(meta: BrowserModule['meta'], { ignoreStyleAsset = fal
         const type = asset.type || extname(url);
         switch (type) {
           case 'css':
-            if (!ignoreStyleAsset) {
+            if (!opt.ignoreStyleAsset) {
               const name = `css_${url}`;
               addModule(name, { type: 'css', url });
               deps.push(name);
