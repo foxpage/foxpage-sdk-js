@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.2](https://github.com/foxpage/foxpage-sdk-js/compare/v0.4.1...v0.4.2) (2022-07-07)
+
+
+### Features
+
+* 🎸 add config SSR & CSR, update koa & styled component ([00361c6](https://github.com/foxpage/foxpage-sdk-js/commit/00361c69a681a16524e685720c3a8b9ab45e06a3))
+
 ### [0.4.1](https://github.com/foxpage/foxpage-sdk-js/compare/v0.4.0...v0.4.1) (2022-06-20)
 
 
