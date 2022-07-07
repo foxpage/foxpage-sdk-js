@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-plugin-parse-page",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "foxpage parse page plugin",
   "keywords": [
     "foxpage",
@@ -24,8 +24,7 @@
   "scripts": {
     "build": "tsc --project tsconfig.prod.json",
     "build:npm": "npm run build -- --skipLibCheck",
-    "clean": "rimraf lib",
-    "prepublishOnly": "npm install && npm run build:npm"
+    "clean": "rimraf lib"
   },
   "devDependencies": {
     "@foxpage/foxpage-plugin": "^0.2.5",

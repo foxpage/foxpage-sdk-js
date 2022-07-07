@@ -26,8 +26,6 @@ export const createElements = (ctx: Context, elements: ReactElement[]) => {
     ctx.sheet.seal();
     ctx.logger?.warn('create elements with styled components fail.', error);
     throw error;
-  } finally {
-    ctx.sheet.seal();
   }
 };
 

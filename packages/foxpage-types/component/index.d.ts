@@ -28,6 +28,8 @@ export interface FoxpageComponentMeta {
   isHead?: boolean;
   isBody?: boolean;
 
+  isCSREntry?: boolean;
+
   [key: string]: any;
 }
 

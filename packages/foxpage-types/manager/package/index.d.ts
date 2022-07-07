@@ -58,6 +58,7 @@ export interface FPPackageMeta {
   isMountNode?: boolean;
   isHead?: boolean;
   isBody?: boolean;
+  csrEntry?: boolean;
   // will remove
   [key: string]: any;
 }

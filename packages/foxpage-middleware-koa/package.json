@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-middleware-koa",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "description": "foxpage koa middleware",
   "keywords": [
     "foxpage",
@@ -22,8 +22,7 @@
   "scripts": {
     "build": "tsc --project tsconfig.prod.json",
     "build:npm": "npm run build -- --skipLibCheck",
-    "clean": "rimraf lib",
-    "prepublishOnly": "npm install && npm run build:npm"
+    "clean": "rimraf lib"
   },
   "peerDependencies": {
     "@foxpage/foxpage-node-sdk": "^0.4.10",

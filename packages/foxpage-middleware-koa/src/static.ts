@@ -13,15 +13,17 @@ const LIBRARY_MANIFEST = join(LIBRARY_PATH, 'manifest.json');
 export type FoxpageStaticOptions = {
   enable?: boolean;
   path?: string;
+  prefix?: string;
 };
 
 /**
  * foxpage static serve handler
  * @param app koa app
  */
-export const foxpageStaticHandler = (app: Koa, opt: FoxpageStaticOptions = { path: PATH }) => {
-  const path = opt.path || PATH;
+export const foxpageStaticHandler = (app: Koa, opt: FoxpageStaticOptions = { path: PATH, prefix: '' }) => {
+  const path = opt.path || (opt.prefix ? `${opt.prefix}${PATH}` : PATH);
   const library = serve(join(process.cwd(), 'library'), {
+    prefix: opt.prefix || '/',
     maxAge: 10 * 24 * 60 * 60,
   });
   // init static server
@@ -36,7 +38,7 @@ export const foxpageStaticHandler = (app: Koa, opt: FoxpageStaticOptions = { pat
         [`${path}/(.*).js`]: {
           changeOrigin: true,
           pathRewrite: (requestPath: string) => {
-            return libraries[requestPath.replace(`${path}/`, '')] || '/404';
+            return (opt.prefix ? opt.prefix + '/' : '') + libraries[requestPath.replace(`${path}/`, '')] || '/404';
           },
         },
       },

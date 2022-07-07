@@ -19,6 +19,10 @@
     "registry": "https://registry.npmjs.org",
     "access": "public"
   },
+  "repository": {
+    "type": "git",
+    "url": "git@git.dev.sh.ctripcorp.com:fox-open/foxpage-sdk-js.git"
+  },
   "scripts": {
     "start": "webpack-dev-server --disableHostCheck=true --config config/webpack.dev.config.js --progress --inline --colors",
     "build": "npm run build:es & npm run build:dist",

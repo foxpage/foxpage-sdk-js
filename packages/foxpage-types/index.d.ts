@@ -16,3 +16,4 @@ export * from './hook';
 export * from './cache';
 export * from './plugin';
 export * from './request';
+export * from './ssr';

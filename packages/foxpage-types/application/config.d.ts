@@ -1,3 +1,5 @@
+import { SSRConfig } from "../ssr";
+
 export interface AppConfig {
   // source update schedule
   'schedule.enable'?: boolean;
@@ -13,4 +15,5 @@ export interface AppConfig {
     enable?: boolean;
     url?: string | ((req: any) => string);
   };
+  ssr?: SSRConfig;
 }

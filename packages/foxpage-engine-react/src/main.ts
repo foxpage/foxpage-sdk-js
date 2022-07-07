@@ -46,24 +46,41 @@ const initInjectProps = (node: StructureNode, ctx: Context): ComponentNodeInject
   };
 };
 
-async function creator(node: StructureNode, ctx: Context) {
+type BuildOptions = {
+  ssrEnable?: boolean;
+};
+
+async function creator(node: StructureNode, ctx: Context, opt: BuildOptions) {
   try {
-    const { id, show = true, name, type, version, children = [] } = node;
+    const { id, show = true, name, type, version, children = [], props = {} } = node;
     if (!ctx.disableConditionRender && !show) {
       return null;
     }
 
     const component = ctx.componentMap?.get(id);
     if (component) {
-      const { factory } = component;
+      const { factory, meta } = component;
+
       if (!factory) {
         ctx.logger?.warn(`render node ${name}@${id} failed, factory is undefined.`);
         return null;
       }
 
-      const childrenElements: ElementType[] =
-        children.length > 0 ? await Promise.all(children.map(item => creator(item, ctx))) : [];
+      // create children elements
+      let childrenElements: ElementType[] = [];
+      if (children.length > 0) {
+        const { enable = true } = ctx.appConfigs?.ssr || {};
+        const { ssrEnable: cusSSREnable = true } = props;
+        const { ssrEnable = true } = opt;
 
+        // isCSREntry: mark the csr entry component
+        // ssr no enable will not create children elements
+        if (!(meta.isCSREntry && (!enable || !cusSSREnable || !ssrEnable))) {
+          childrenElements = await Promise.all(children.map(item => creator(item, ctx, opt)));
+        }
+      }
+
+      // do getInitialProps hook
       let buildHookProps;
       if (typeof factory.beforeNodeBuild === 'function') {
         try {
@@ -86,7 +103,7 @@ async function creator(node: StructureNode, ctx: Context) {
       const finalProps = {
         $injector: injector,
         ...initInjectProps(node, ctx),
-        ...node.props,
+        ...props,
         ...(cloneDeep(buildHookProps) || {}),
       };
 
@@ -102,13 +119,13 @@ async function creator(node: StructureNode, ctx: Context) {
       return element;
     }
   } catch (e) {
-    ctx.logger?.error('render node %c failed.', node, e);
-    return null;
+    ctx.logger?.error('create element %c failed.', node, e);
+    throw new Error('create element');
   }
 }
 
-async function build(schemas: StructureNode[], ctx: Context) {
-  const elements = await Promise.all(schemas.map(item => creator(item, ctx)));
+async function build(schemas: StructureNode[], ctx: Context, opt: BuildOptions) {
+  const elements = await Promise.all(schemas.map(item => creator(item, ctx, opt)));
   return elements;
 }
 
@@ -119,7 +136,11 @@ async function build(schemas: StructureNode[], ctx: Context) {
  * @param opt render options
  * @returns html
  */
-export const renderToHtml = async (dsl: ParsedDSL['schemas'] = [], ctx: Context, _opt?: PageRenderOption) => {
+export const renderToHtml = async (
+  dsl: ParsedDSL['schemas'] = [],
+  ctx: Context,
+  _opt: PageRenderOption & { reRender?: boolean } = {},
+): Promise<string> => {
   try {
     if (dsl.length === 0) {
       ctx.logger?.debug('parsed schemas is empty');
@@ -131,8 +152,13 @@ export const renderToHtml = async (dsl: ParsedDSL['schemas'] = [], ctx: Context,
       await beforePageBuild(ctx);
     }
 
+    const opt: BuildOptions = {};
+    if (_opt.reRender) {
+      opt.ssrEnable = false;
+    }
+
     // build
-    const elements = await build(dsl, ctx);
+    const elements = await build(dsl, ctx, opt);
     if (elements.length === 0) {
       ctx.logger?.debug('build elements is empty');
       return '';
@@ -151,6 +177,14 @@ export const renderToHtml = async (dsl: ParsedDSL['schemas'] = [], ctx: Context,
     return html;
   } catch (e) {
     ctx.logger?.error('render page failed:', e);
+    if (!_opt.reRender) {
+      const csr = Array.from(ctx.componentMap?.values() || [])?.find(item => !!item.meta?.isCSREntry);
+      if (csr) {
+        ctx.logger?.info('change ssr to csr:');
+        _opt.reRender = true;
+        return await renderToHtml(dsl, ctx, _opt);
+      }
+    }
     return '';
   }
 };

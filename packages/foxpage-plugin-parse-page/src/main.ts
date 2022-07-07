@@ -17,7 +17,8 @@ export const handleParsePage = async () => {
         opt: ParsePageOptions;
       };
       try {
-        ctx.locale = params.opt.locale;
+        ctx.logger?.info('parse-page params:', JSON.stringify(params));
+        ctx.locale = params.opt?.locale;
         const result = await parsePage(params.page, {
           ...params.opt,
           ctx,
@@ -27,6 +28,7 @@ export const handleParsePage = async () => {
           result,
         };
       } catch (e) {
+        ctx.logger?.error('parse page failed', e);
         return {
           status: false,
           result: `parse page failed: ${(e as Error).message}`,
