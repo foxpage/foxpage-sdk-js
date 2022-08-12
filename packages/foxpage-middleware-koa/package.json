@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-middleware-koa",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "foxpage koa middleware",
   "keywords": [
     "foxpage",
@@ -25,7 +25,7 @@
     "clean": "rimraf lib"
   },
   "peerDependencies": {
-    "@foxpage/foxpage-node-sdk": "^0.4.10",
+    "@foxpage/foxpage-node-sdk": "^0.5.0",
     "@koa/cors": "^3.1.0",
     "koa": "^2.7.0"
   },

@@ -179,6 +179,16 @@ export const mergeTask = async (page: Page | null, app: Application, ctx: Contex
     const base = await app.pageManager.getPage(extendId);
     if (base) {
       ctx.updateOriginByKey('extendPage', base);
+      const relations = await app.getContentRelationInfo(base);
+      if (relations) {
+        // update base page relations
+        Object.keys(relations).forEach(key => {
+          const keyStr = key as keyof RelationInfo;
+          if (relations[keyStr]) {
+            ctx.updateOriginByKey(keyStr, (relations[keyStr] || []).concat(ctx.origin[keyStr] || []));
+          }
+        });
+      }
       const merged = merger.merge(base, page, { strategy: merger.MergeStrategy.COMBINE_BY_EXTEND });
       return merged;
     }
