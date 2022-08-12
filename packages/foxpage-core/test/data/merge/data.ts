@@ -74,7 +74,7 @@ const parent: Page = {
               ],
               id: 'stru_mnqaep7OGra5XAK',
               label: 'csr-entry',
-              name: '@ctrip/cloud-flight-seo-csr-entry',
+              name: '@foxpage/cloud-flight-seo-csr-entry',
               props: {
                 resource: {},
                 entryLink: {},
@@ -165,7 +165,7 @@ const child: Page = {
     {
       id: 'stru_mnqaep7OGra5XAK-1',
       label: 'csr-entry-1',
-      name: '@ctrip/cloud-flight-seo-csr-entry',
+      name: '@foxpage/cloud-flight-seo-csr-entry',
       props: {
         resource: {
           requirejsLink: 'https://xxx/modules/ibu/cloud-foxpage/library/requirejs.min.3e9a0d.js',

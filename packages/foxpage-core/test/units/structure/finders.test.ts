@@ -3,7 +3,7 @@ import { findStructureById, findStructureByName } from '@/structure/finders';
 describe('structure/finders', () => {
   it('findStructureByName test', () => {
     const structures = require('@@/data/structure/structures');
-    const name = '@ctrip/cloud-flight-seo-csr-entry';
+    const name = '@foxpage/cloud-flight-seo-csr-entry';
     const result = findStructureByName(structures, name);
     expect(result).toBeDefined();
     expect(result.name).toBe(name);

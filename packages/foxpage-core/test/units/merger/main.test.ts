@@ -140,9 +140,7 @@ describe('merger/main', () => {
               id: 'stru_rftvzjtCstudkwC',
               label: '@fox-design/react-image',
               name: '@fox-design/react-image',
-              props: {
-                src: 'https://ak-d.tripcdn.com/images/0a15u120008yx4834A845.jpg',
-              },
+              props: {},
             },
             {
               id: 'stru_wwhkobWBDryUAil',
