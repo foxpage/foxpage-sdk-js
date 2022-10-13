@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.5.2](https://github.com/foxpage/foxpage-sdk-js/compare/v0.5.1...v0.5.2) (2022-10-13)
+
+
+### Features
+
+* 🎸 update ts version & fixed some problem ([8f405b2](https://github.com/foxpage/foxpage-sdk-js/commit/8f405b2236276d5a347ef4ee11447045d3559c3d))
+
 ### [0.5.1](https://github.com/foxpage/foxpage-sdk-js/compare/v0.4.2...v0.5.1) (2022-08-12)
 
 
