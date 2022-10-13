@@ -22,7 +22,7 @@ export class TemplateManagerImpl extends ManagerBaseImpl<Template> implements Te
    * @param {Template} template
    */
   public addTemplate(template: Template) {
-    this.logger.debug(`add template@${template.id}, detail:`, JSON.stringify(template));
+    this.logger.info(`add template@${template.id}, detail:`, JSON.stringify(template));
 
     const newTpl = this.newTemplate(template);
     this.addOne(template.id, template, newTpl);

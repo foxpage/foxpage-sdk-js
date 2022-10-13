@@ -12,10 +12,16 @@ import { RenderContextInstance } from './render';
  */
 export const createContext = async (app: Application, opt: FoxpageRequestOptions) => {
   const ctx = new RenderContextInstance(app) as unknown as Context;
+  const { isDebug, isMock, isPreview } = opt.mode || {};
 
   ctx.request = opt.request;
   ctx.response = opt.response;
   ctx.cookies = opt.cookies;
+
+  ctx.isMock = isMock;
+  ctx.isPreviewMode = isPreview;
+  ctx.isDebugMode = isDebug;
+
   ctx.URL = opt.request.URL;
   ctx.url = ctx.URL.href || '';
   ctx.host = ctx.URL.host || '';

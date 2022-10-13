@@ -81,7 +81,7 @@ export class FPPm2 extends EventEmitter {
 
       if (String(pm2Id) === String(this.id)) {
         if (typeof fn === 'function') {
-          this.logger.debug('worker received message from master:', data);
+          this.logger.info('worker received message from master:', data);
           fn(data);
         }
       }

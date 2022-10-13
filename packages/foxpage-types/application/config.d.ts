@@ -16,4 +16,5 @@ export interface AppConfig {
     url?: string | ((req: any) => string);
   };
   ssr?: SSRConfig;
+  locale?: string;
 }

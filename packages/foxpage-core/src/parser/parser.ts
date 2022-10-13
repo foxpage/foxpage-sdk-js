@@ -1,10 +1,11 @@
-import { Messages } from '@foxpage/foxpage-shared';
-import { Context, Page, PageParser, Parser, ParserOption, TemplateParser } from '@foxpage/foxpage-types';
+import { ContentType } from '@foxpage/foxpage-shared';
+import { ConditionParser, Context, Page, Parser, ParserOption, VariableParser } from '@foxpage/foxpage-types';
 
-import { ConditionParser } from './condition';
-import { PageParserImpl } from './page';
-import { TemplateParserImpl } from './template';
-import { VariableParser } from './variable';
+import { withVariableMock } from '../mocker';
+
+import { ConditionParserImpl } from './condition';
+import { MainParser } from './main';
+import { VariableParserImpl } from './variable';
 
 /**
  * parser implements
@@ -15,42 +16,23 @@ import { VariableParser } from './variable';
  */
 export class ParserImpl implements Parser {
   /**
-   * render context
-   *
-   * @type {Context}
-   */
-  ctx?: Context;
-  /**
-   * page parser
-   *
-   * @type {PageParser}
-   */
-  pageParser?: PageParser;
-  /**
-   * template parser
-   *
-   * @type {TemplateParser}
-   */
-  templateParser?: TemplateParser;
-  /**
    * variable parser
    *
-   * @type {VariableParser}
+   * @type {VariableParserImpl}
    */
   variableParser?: VariableParser;
   /**
    * condition parser
    *
-   * @type {ConditionParser}
+   * @type {ConditionParserImpl}
    */
   conditionParser?: ConditionParser;
 
-  messages: Messages;
+  mainParsers: Record<string, MainParser> = {};
 
   constructor() {
-    this.variableParser = new VariableParser();
-    this.conditionParser = new ConditionParser();
-    this.messages = new Messages();
+    this.variableParser = new VariableParserImpl();
+    this.conditionParser = new ConditionParserImpl();
   }
 
   /**
@@ -67,14 +49,9 @@ export class ParserImpl implements Parser {
    * first step: preParse page
    * second step: preParse template
    */
-  public preParse(page: Page, ctx: Context) {
-    this.ctx = ctx;
-    this.templateParser = new TemplateParserImpl();
-    this.pageParser = new PageParserImpl(page);
-    this.pageParser?.preParse(this.ctx);
-    this.templateParser?.preParse(this.ctx, {
-      containerGetter: templateId => this.pageParser?.getTemplateSchemas(templateId),
-    });
+  public preParse(page: Page, ctx: Context, opt: { sessionId: string }) {
+    this.mainParsers[opt.sessionId] = new MainParser({ page }, ctx);
+    this.variableParser?.preParse();
   }
 
   /**
@@ -83,32 +60,20 @@ export class ParserImpl implements Parser {
    * second: condition
    * last: page
    */
-  public async parse() {
-    if (!this.ctx) {
-      throw new Error('render context is invalid.');
-    }
-    if (!this.pageParser) {
-      throw new Error('page parser instance is invalid.');
-    }
-    this.ctx.logger?.debug('start parse');
-
-    await this.variableParser?.parse(this.ctx, {});
-    this.conditionParser?.parse(this.ctx);
-    this.templateParser?.parse(this.ctx);
-
-    const parsedPageSchemas = this.pageParser.parse(this.ctx);
-    if (this.pageParser.messages.hasError) {
-      this.messages.push(this.pageParser.messages.toString());
-      return;
+  public async parse(sessionId: string, ctx: Context) {
+    if (!this.mainParsers[sessionId]) {
+      throw new Error('parser instance is invalid.');
     }
 
-    this.ctx.updatePage({
-      id: this.pageParser.page.id,
-      schemas: parsedPageSchemas,
-      relation: this.pageParser.page.relation,
-    });
-    this.ctx.logger?.info(`page@${this.ctx.page.id} parsed success.`);
-    return this.ctx.page.schemas;
+    await this.variableParser?.parse(ctx, {});
+    this.conditionParser?.parse(ctx);
+
+    // with variable mock
+    if (ctx.isMock) {
+      withVariableMock(ctx.getOrigin(ContentType.VARIABLE), ctx);
+    }
+
+    return this.mainParsers[sessionId]?.parse(ctx);
   }
 
   /**
@@ -124,10 +89,7 @@ export class ParserImpl implements Parser {
    * clear instance
    *
    */
-  public reset() {
-    this.ctx = undefined;
-    this.pageParser = undefined;
-    this.templateParser = undefined;
-    this.messages = new Messages();
+  public reset(opt: { sessionId: string }) {
+    delete this.mainParsers[opt.sessionId];
   }
 }

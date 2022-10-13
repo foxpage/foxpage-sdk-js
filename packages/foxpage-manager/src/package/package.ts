@@ -13,7 +13,6 @@ import {
 } from '@foxpage/foxpage-types';
 
 import { locker } from '../cache';
-import { createLogger } from '../common';
 
 import { PackageFetcher } from './fetcher';
 import { resolvePackageJSPath } from './resolver';
@@ -22,6 +21,7 @@ import { wrapCode } from './wrapper';
 
 export interface PackageInstanceOption {
   resource?: ApplicationOption['resources'];
+  logger?: Logger;
 }
 
 /**
@@ -59,7 +59,7 @@ export class PackageInstance implements Package {
 
   appId: string;
 
-  readonly logger: Logger;
+  readonly logger?: Logger;
 
   private _exported?: any;
   private _loaded = false;
@@ -78,7 +78,7 @@ export class PackageInstance implements Package {
     this.dependencies = info.resource.dependencies || [];
     this.deps = this.dependencies.map(item => item.name);
 
-    this.logger = createLogger('Package');
+    this.logger = opt?.logger;
     this.meta = info.meta;
     this.filePath = resolvePackageJSPath(this.appId, this.name, this.version);
     this.supportNode = true;
@@ -87,6 +87,7 @@ export class PackageInstance implements Package {
 
   get exported() {
     if (!this.supportNode || !this.filePath) {
+      this.logger?.info(`package ${this.name}@${this.version} not support node or not exist the file path`);
       return undefined;
     }
     if (!this._loaded) {
@@ -95,6 +96,7 @@ export class PackageInstance implements Package {
         this._loaded = true;
       } catch (error) {
         this.messages.push(error as Error);
+        this.logger?.error(`package ${this.name}@${this.version} get exported failed:`, error);
       }
     }
     return this._exported;
@@ -123,6 +125,7 @@ export class PackageInstance implements Package {
 
   private async fetchCode({ inspect = false, wrap = true }: PackageInstallOption) {
     if (this.filePath && (await pathExists(this.filePath))) {
+      this.logger?.info(`package ${this.name}@${this.version} path ${this.filePath} exist.`);
       return;
     }
 
@@ -178,7 +181,7 @@ export class PackageInstance implements Package {
             encoding: 'utf-8',
             flag: 'wx',
           });
-          this.logger.info('install package %s@%j succeed', this.name, this.version);
+          this.logger?.info('install package %s@%j succeed', this.name, this.version);
         });
       }
     } catch (err) {
@@ -193,7 +196,7 @@ export class PackageInstance implements Package {
     this.available = false;
     this.messages.push(message);
     this.status = 'fail';
-    this.logger.warn('install package %s@%j failed:', this.name, this.version, message);
+    this.logger?.warn('install package %s@%j failed:', this.name, this.version, message);
   }
 
   private initResource<T extends keyof FPPackageEntrySource>(
@@ -219,7 +222,7 @@ export class PackageInstance implements Package {
         }
       }
     } catch (e) {
-      this.logger.error('replace package download host failed,', e);
+      this.logger?.error('replace package download host failed,', e);
     }
     return resource;
   }

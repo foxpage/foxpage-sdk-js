@@ -1,4 +1,5 @@
 # Foxpage SDK JS
+
 [![Minimum node.js version](https://img.shields.io/badge/node-%3E%3D12.14.1-brightgreen)](https://img.shields.io/badge/node-%3E%3D12.14.1-brightgreen)
 [![typescript version](https://img.shields.io/badge/typescript-%3E%3D4.0.0-brightgreen)](https://img.shields.io/badge/typescript-%3E%3D4.0.0-brightgreen)
 [![yarn](https://img.shields.io/badge/yarn-1.22.5-blue)](https://img.shields.io/badge/yarn-1.22.5-blue)
@@ -6,11 +7,14 @@
 
 <h2>Foxpage SDK for JavaScript in the browser and node.js.</h2>
 
-## 🖥  Introduction
+## 🖥 Introduction
 
 ### Foxpage Node SDK
+
 It is the core part of the Foxpage framework and a development kit provided for node applications. Developers can quickly access and use the Foxpage framework by using the SDK.
+
 #### Features
+
 Provide a series of features such as resource management, page parse, page rendering and plug-in for application services.
 
 - **Resource Management**. Responsible for all dependent resource management, synchronize resource information between processes through multi-process communication, cache resources locally to improve performance, and create a scheduler to open timed tasks to update local resources.
@@ -19,6 +23,7 @@ Provide a series of features such as resource management, page parse, page rende
 - **Plug-in**. In order to improve scalability, support plug-in, and enhance the expansion ability of business fields through plug-ins.
 
 ### Foxpage JS SDK
+
 Foxpage JS SDK is for browser use. Currently, provides browser-side parsing and component loading.
 
 ## ✨ Project
@@ -38,7 +43,6 @@ Foxpage JS SDK is for browser use. Currently, provides browser-side parsing and 
   │   ├─foxpage-middleware-koa      // koa middleware for foxpage node sdk
   │   ├─foxpage-node-sdk            // nodejs sdk
   │   ├─foxpage-plugin              // foxpage plugin core
-  │   ├─foxpage-plugin-*            // foxpage sys plugin
   │   ├─foxpage-shared              // common utils
   │   ├─foxpage-transformer         // DSL transformer
   │   └─foxpage-types               // common types

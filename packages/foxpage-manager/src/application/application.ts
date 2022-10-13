@@ -259,7 +259,7 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
 
     // schedule
     if (this.enableSchedule()) {
-      this.logger.debug('start process schedule');
+      this.logger.info('start process schedule');
       this.onScheduled();
       this.schedule?.start();
     }

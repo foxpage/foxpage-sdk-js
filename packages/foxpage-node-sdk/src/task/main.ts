@@ -65,18 +65,31 @@ export const routerTask = async (app: Application, ctx: Context) => {
   try {
     const { pathname, searchParams } = ctx.URL;
     const pathnameStr = app.slug ? pathname.replace(`/${app.slug}`, '') : pathname;
-
+    // sys default routers
     const route = app.routeManager.getRoute(pathnameStr);
     if (route) {
       return route;
     }
 
-    const searchStr = searchParams.toString();
-    const tags = searchStr ? tag.generateTagByQuerystring(searchStr) : [];
+    let searchStr = searchParams.toString();
 
-    const file = await app.fileManager.getFileByPathname(pathnameStr);
+    // set default locale
+    const { locale: defaultLocale } = app.configs || {};
+    if (defaultLocale && !searchStr.includes('locale=')) {
+      searchStr = searchStr ? `${searchStr}&locale=${defaultLocale}` : `locale=${defaultLocale}`;
+    }
+    if (!searchStr.includes('locale=') && !!ctx.locale) {
+      searchStr = searchStr ? `${searchStr}&locale=${ctx.locale}` : `locale=${ctx.locale}`;
+    }
+
+    let _pathname = pathnameStr.toLowerCase();
+    if (!pathnameStr.endsWith('.html') && !pathnameStr.endsWith('/')) {
+      _pathname = `${_pathname}/`;
+    }
+    const tags = searchStr ? tag.generateTagByQuerystring(searchStr) : [];
+    const file = await app.fileManager.getFileByPathname(_pathname);
     const result = await app.tagManager.matchTag(tags, {
-      pathname: pathnameStr,
+      pathname: _pathname,
       fileId: file?.id || '',
       withContentInfo: !ctx.isPreviewMode,
     });
@@ -101,6 +114,18 @@ export const initRelationsTask = (contents: RelationInfo & { page: Page[] }, ctx
   });
   ctx.updateOriginPage(contentInstances.page[0]);
   return contentInstances;
+};
+
+/**
+ * file task
+ * get file & set to context
+ * @param fileId
+ * @param app
+ * @param ctx
+ */
+export const fileTask = async (fileId: string, app: Application, ctx: Context) => {
+  const file = await app.fileManager.getFileById(fileId);
+  ctx.file = file || undefined;
 };
 
 /**
@@ -145,16 +170,26 @@ export const pageTask = async (pageId: string, app: Application, ctx: Context) =
   // update context
   if (page) {
     page = new PageInstance(page);
-    if (ctx.isPreviewMode) {
-      ctx.updateOriginPage(page);
-    } else {
-      await updateContextWithPage(ctx, { app, page });
+    if (page) {
+      if (ctx.isPreviewMode) {
+        ctx.updateOriginPage(page);
+      } else {
+        await updateContextWithPage(ctx, { app, page });
+      }
     }
   }
 
   // with mock
   if (ctx.isMock) {
     page = await mockTask(page, app, ctx);
+  }
+
+  if (page) {
+    ctx.updatePage(page);
+    // get file
+    if (page.fileId) {
+      await fileTask(page.fileId, app, ctx);
+    }
   }
 
   return page;
@@ -185,6 +220,7 @@ export const mergeTask = async (page: Page | null, app: Application, ctx: Contex
         Object.keys(relations).forEach(key => {
           const keyStr = key as keyof RelationInfo;
           if (relations[keyStr]) {
+            // @ts-ignore
             ctx.updateOriginByKey(keyStr, (relations[keyStr] || []).concat(ctx.origin[keyStr] || []));
           }
         });
@@ -268,6 +304,8 @@ export const mockTask = async (page: Page | null, app: Application, ctx: Context
     // final relations
     const relationInfo = relationsMerge(templateRelationInfos, pageRelationInfo);
     if (relationInfo) {
+      // // mock variables
+      // const variables = mocker.mockVariable(relationInfo.variables, mocks, ctx);
       ctx.updateOrigin({ ...relationInfo, mocks });
     }
 
@@ -315,6 +353,8 @@ export const renderTask = async (parsed: ParsedDSL, ctx: Context) => {
     const { onRenderError } = ctx.hooks || {};
     if (typeof onRenderError === 'function') {
       await onRenderError(ctx, e as Error);
+    } else {
+      throw e;
     }
   }
 };

@@ -102,12 +102,12 @@ export class PageParserImpl implements PageParser {
       if (tplVar && typeof tplVar === 'string') {
         if (tplVar.startsWith('{{') && tplVar.indexOf('}}') === tplVar.length - 2) {
           const expression = tplVar.substring(2, tplVar.length - 2);
-          ctx.logger?.debug(`${expression} to match template id`);
+          ctx.logger?.info(`${expression} to match template id`);
           const templateId = this.page.relation ? this.page.relation[expression]?.id : '';
 
           if (templateId) {
             this.templateSchemasMap.set(templateId, item);
-            ctx.logger?.debug(`${expression} matched template id@${templateId} succeed`);
+            ctx.logger?.info(`${expression} matched template id@${templateId} succeed`);
           }
         }
       }

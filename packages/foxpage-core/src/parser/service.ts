@@ -36,19 +36,31 @@ export const parse = async (page: Page, ctx: Context) => {
     throw new Error('msg');
   }
 
-  parser.preParse(page, ctx);
-  const parsed = await parser.parse();
+  const sessionId = Symbol(new Date().getTime()) as unknown as string;
 
-  const result = {
-    messages: parser.messages,
-    page: {
-      id: page.id,
-      schemas: parsed,
-    },
-    ctx: parser.ctx || ctx,
-  };
+  try {
+    parser.preParse(page, ctx, { sessionId });
 
-  parser.reset();
+    const result = await parser.parse(sessionId, ctx);
+    const { parsed, messages } = result || {};
 
-  return result;
+    parser.reset({ sessionId });
+
+    return {
+      messages,
+      page: {
+        id: page.id,
+        schemas: parsed,
+      },
+      ctx,
+    };
+  } catch (e) {
+    ctx.logger?.error('parse failed:', e);
+    parser.reset({ sessionId });
+    return {
+      messages: [],
+      page: {},
+      ctx,
+    };
+  }
 };

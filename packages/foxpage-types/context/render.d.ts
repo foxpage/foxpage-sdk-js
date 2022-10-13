@@ -1,6 +1,6 @@
 import * as url from 'url';
 import { FoxpageComponent } from '../component';
-import { Package, Tag, Page, Template, Variable, Condition, FPFunction, RelationInfo, Mock } from '../manager';
+import { Package, Tag, Page, Template, Variable, Condition, FPFunction, RelationInfo, Mock, FPFile } from '../manager';
 import { Logger } from '../logger';
 import { BrowserInitialStateOption, BrowserResource } from '../browser';
 import { FoxpageHooks } from '../hook';
@@ -10,8 +10,8 @@ import { AppConfig } from '../application';
 
 type ContentType = Template | Variable | Condition | FPFunction;
 
-export interface FrameworkResource extends BrowserResource { }
-export interface RenderOption extends BrowserInitialStateOption { }
+export interface FrameworkResource extends BrowserResource {}
+export interface RenderOption extends BrowserInitialStateOption {}
 
 export interface ParsedContent<T = ContentType, P = any> {
   content: T;
@@ -49,7 +49,7 @@ export interface ContextOrigin {
  * @export
  * @interface Context
  */
-export interface Context {
+export interface Context extends RequestMode {
   URL?: url.URL;
   url: string;
   host: string;
@@ -61,6 +61,7 @@ export interface Context {
   readonly appConfigs?: AppConfig;
 
   page: Page;
+  file?: FPFile;
   tags?: Tag[];
   packages?: Package[];
   /**
@@ -74,10 +75,7 @@ export interface Context {
    */
   dependencies?: Map<string, FoxpageComponent>;
 
-  structureMap?: Map<
-    string,
-    StructureNode & { childrenIds: string[] }
-  >;
+  structureMap?: Map<string, StructureNode & { childrenIds: string[] }>;
 
   // getters
   templates: Record<string, Template>;
@@ -108,6 +106,7 @@ export interface Context {
   updateOriginByKey<K extends keyof ContextOrigin>(key: K, value: ContextOrigin[K]): void;
   updateOriginPage(page: Page): void;
   getOrigin<K extends keyof ContextOrigin>(key: K): ContextOrigin[K];
+  updatePage(page: Page): void;
   updatePage(page: Page): void;
   updateResource<K extends keyof ContextResource, T extends RenderContent>(target: K, key: string, value: T): void;
 

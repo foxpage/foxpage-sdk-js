@@ -1,13 +1,13 @@
 import { DiskCache, DiskCacheOption } from './disk';
-import { LRUCache } from './lru';
+import { LRUCache, LRUCacheOptions } from './lru';
 
 /**
  * create lru cache
  * @param maxSize max size
  * @returns lru cache instance
  */
-export const createLRUCache = <T = any>(maxSize?: number) => {
-  const lruCache = new LRUCache<T>(maxSize);
+export const createLRUCache = <T = any>(maxSize?: number, opt?: LRUCacheOptions) => {
+  const lruCache = new LRUCache<T>(maxSize, opt);
   return lruCache;
 };
 

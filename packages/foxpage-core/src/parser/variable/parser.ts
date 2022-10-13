@@ -5,6 +5,7 @@ import {
   Variable,
   VariableItem,
   VariableParseEntity,
+  VariableParser,
   VariableType,
 } from '@foxpage/foxpage-types';
 
@@ -17,13 +18,15 @@ export type VariableParserOption = {
   hooks?: FoxpageHooks;
 };
 
+const MAX_LOOP_COUNT = 20;
+
 /**
  * variable parser
  *
  * @export
  * @class VariableParser
  */
-export class VariableParser {
+export class VariableParserImpl implements VariableParser {
   /**
    * parser maps
    *
@@ -38,12 +41,15 @@ export class VariableParser {
    */
   private functionParser?: FunctionParser;
 
+  private maxLoopCount: number;
+
   constructor() {
     this.functionParser = new FunctionParser();
 
     // register default variable parser
     this.register(sysVariableParseEntity);
     this.register(staticVariableParseEntity);
+    this.maxLoopCount = 0;
   }
 
   /**
@@ -98,6 +104,13 @@ export class VariableParser {
   }
 
   /**
+   * pre parse
+   */
+  public preParse() {
+    this.maxLoopCount = 0;
+  }
+
+  /**
    * parse variable
    *
    * @param {Context} ctx
@@ -149,10 +162,17 @@ export class VariableParser {
       }
 
       if (nextLoop) {
-        await this.parse(ctx, { parsedVarSet, parsedFnSet });
+        if (this.maxLoopCount < MAX_LOOP_COUNT) {
+          this.maxLoopCount = this.maxLoopCount + 1;
+          await this.parse(ctx, { parsedVarSet, parsedFnSet });
+        } else {
+          throw new Error(
+            'the variable loop parse failed: Maybe the variable is wrong or the variable dependency chain is too long',
+          );
+        }
       }
     } catch (e) {
-      ctx.logger?.error((e as Error).message);
+      ctx.logger?.error('variable parse failed:', e);
     }
 
     return;

@@ -29,7 +29,7 @@ export class PageManagerImpl extends ManagerBaseImpl<Page> implements PageManage
    * @param {Page} page
    */
   public addPage(page: Page) {
-    this.logger.debug(`add page@${page.id}, detail:`, JSON.stringify(page));
+    this.logger.info(`add page@${page.id}, detail:`, JSON.stringify(page));
 
     const newPage = this.newPage(page);
     this.addOne(page.id, page, newPage);
@@ -98,7 +98,7 @@ export class PageManagerImpl extends ManagerBaseImpl<Page> implements PageManage
   protected async onFetch(pageIds: string[]) {
     // return await this.freshPages(list);
     const results = await foxpageDataService.fetchContentRelationInfos(this.appId, { contentIds: pageIds });
-    this.logger.debug('fetched content infos:', JSON.stringify(results));
+    this.logger.info('fetched content infos:', JSON.stringify(results));
 
     return results.map(item => {
       // emit event: cache user request data
@@ -108,7 +108,7 @@ export class PageManagerImpl extends ManagerBaseImpl<Page> implements PageManage
   }
 
   protected async onPull(data: ResourceUpdateInfo): Promise<void> {
-    this.logger.debug('get pull, detail:', data);
+    this.logger.info('get pull, detail:', data);
     const { updates, removes } = data.page || {};
 
     if (updates && updates.length > 0) {

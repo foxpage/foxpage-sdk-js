@@ -12,7 +12,6 @@ export interface Relation {
   }
 }
 
-export interface RelationInfo extends Pick<ContentInfo, 'templates' | 'variables' | 'conditions' | 'functions'> {
+export interface RelationInfo extends Pick<ContentInfo, 'templates' | 'variables' | 'conditions' | 'functions' | 'mocks'> {
   sysVariables?: string[];
-  mocks?: Mock[];
 }

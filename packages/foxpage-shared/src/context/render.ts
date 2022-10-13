@@ -5,6 +5,7 @@ import {
   Context,
   ContextOrigin,
   ContextResource,
+  FPFile,
   Page,
   RelationInfo,
   RenderAppInfo,
@@ -34,6 +35,7 @@ export abstract class ContextInstance implements Context {
 
   private innerPage?: Page;
 
+  file?: FPFile = undefined;
   url = '';
   host = '';
 
@@ -119,6 +121,14 @@ export abstract class ContextInstance implements Context {
    */
   public updatePage(page: Page) {
     this.innerPage = page;
+  }
+
+  /**
+   * update file
+   * @param file file
+   */
+  public updateFile(file: FPFile) {
+    this.file = file;
   }
 
   /**

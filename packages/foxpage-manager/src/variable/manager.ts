@@ -23,8 +23,7 @@ export class VariableManagerImpl extends ManagerBaseImpl<Variable> implements Va
    * @param {Variable} variable
    */
   public addVariable(variable: Variable) {
-    this.logger.debug(`add variable@${variable.id}, detail:`, JSON.stringify(variable));
-
+    this.logger.info(`add variable@${variable.id}, detail:`, JSON.stringify(variable));
     const newVar = this.newVariable(variable);
     this.addOne(variable.id, variable, newVar);
     return newVar;

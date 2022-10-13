@@ -31,7 +31,7 @@ export class TagManagerImpl extends ManagerBaseImpl<Content> implements TagManag
    * @param {ContentTag} content
    */
   public addTag(content: Content) {
-    this.logger.debug(`add tag content:`, JSON.stringify(content));
+    this.logger.info(`add tag content:`, JSON.stringify(content));
 
     const { id: pageId, fileId } = content || {};
     this.addOne(pageId, content, content);

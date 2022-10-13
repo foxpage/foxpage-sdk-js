@@ -54,73 +54,77 @@ async function creator(node: StructureNode, ctx: Context, opt: BuildOptions) {
   try {
     const { id, show = true, name, type, version, children = [], props = {} } = node;
     if (!ctx.disableConditionRender && !show) {
+      ctx.logger?.info(`node ${name}@${id} not show`);
       return null;
     }
 
     const component = ctx.componentMap?.get(id);
-    if (component) {
-      const { factory, meta } = component;
-
-      if (!factory) {
-        ctx.logger?.warn(`render node ${name}@${id} failed, factory is undefined.`);
-        return null;
-      }
-
-      // create children elements
-      let childrenElements: ElementType[] = [];
-      if (children.length > 0) {
-        const { enable = true } = ctx.appConfigs?.ssr || {};
-        const { ssrEnable: cusSSREnable = true } = props;
-        const { ssrEnable = true } = opt;
-
-        // isCSREntry: mark the csr entry component
-        // ssr no enable will not create children elements
-        if (!(meta.isCSREntry && (!enable || !cusSSREnable || !ssrEnable))) {
-          childrenElements = await Promise.all(children.map(item => creator(item, ctx, opt)));
-        }
-      }
-
-      // do getInitialProps hook
-      let buildHookProps;
-      if (typeof factory.beforeNodeBuild === 'function') {
-        try {
-          buildHookProps = await factory.beforeNodeBuild(ctx, node);
-          ctx.logger?.info(`Hook [ buildHookProps ][ ${name} ] success.`);
-        } catch (e) {
-          ctx.logger?.error(`Hook [ buildHookProps ][ ${name} ] run failed,`, e);
-        }
-      }
-
-      // injector
-      const injector = {
-        id,
-        type,
-        name,
-        version,
-      };
-
-      // merge props
-      const finalProps = {
-        $injector: injector,
-        ...initInjectProps(node, ctx),
-        ...props,
-        ...(cloneDeep(buildHookProps) || {}),
-      };
-
-      // important
-      // for update final props to component
-      // for csr render get the right data
-      const structure = ctx.structureMap?.get(id);
-      if (structure) {
-        structure.props = Object.assign({}, finalProps);
-      }
-
-      const element = createElement(factory, finalProps, ...childrenElements);
-      return element;
+    if (!component) {
+      ctx.logger?.warn(`render node ${name}@${id} component is empty`);
+      return null;
     }
+
+    const { factory, meta } = component;
+
+    if (!factory) {
+      ctx.logger?.warn(`render node ${name}@${id} failed, factory is undefined.`);
+      return null;
+    }
+
+    // create children elements
+    let childrenElements: ElementType[] = [];
+    if (children.length > 0) {
+      const { enable = true } = ctx.appConfigs?.ssr || {};
+      const { ssrEnable: cusSSREnable = true } = props;
+      const { ssrEnable = true } = opt;
+
+      // isCSREntry: mark the csr entry component
+      // ssr no enable will not create children elements
+      if (!(meta.isCSREntry && (!enable || !cusSSREnable || !ssrEnable))) {
+        childrenElements = await Promise.all(children.map(item => creator(item, ctx, opt)));
+      }
+    }
+
+    // do getInitialProps hook
+    let buildHookProps;
+    if (typeof factory.beforeNodeBuild === 'function') {
+      try {
+        buildHookProps = await factory.beforeNodeBuild(ctx, node);
+        ctx.logger?.info(`Hook [ buildHookProps ][ ${name} ] success.`);
+      } catch (e) {
+        ctx.logger?.warn(`Hook [ buildHookProps ][ ${name} ] run failed,`, e);
+      }
+    }
+
+    // injector
+    const injector = {
+      id,
+      type,
+      name,
+      version,
+    };
+
+    // merge props
+    const finalProps = {
+      $injector: injector,
+      ...initInjectProps(node, ctx),
+      ...props,
+      ...(cloneDeep(buildHookProps) || {}),
+    };
+
+    // important
+    // for update final props to component
+    // for csr render get the right data
+    const structure = ctx.structureMap?.get(id);
+    if (structure) {
+      structure.props = Object.assign({}, finalProps);
+    }
+
+    const element = createElement(factory, finalProps, ...childrenElements);
+    return element;
   } catch (e) {
     ctx.logger?.error('create element %c failed.', node, e);
-    throw new Error('create element');
+    throw e;
   }
 }
 
@@ -143,7 +147,7 @@ export const renderToHtml = async (
 ): Promise<string> => {
   try {
     if (dsl.length === 0) {
-      ctx.logger?.debug('parsed schemas is empty');
+      ctx.logger?.info('parsed schemas is empty');
       return '';
     }
 
@@ -160,7 +164,7 @@ export const renderToHtml = async (
     // build
     const elements = await build(dsl, ctx, opt);
     if (elements.length === 0) {
-      ctx.logger?.debug('build elements is empty');
+      ctx.logger?.info('build elements is empty');
       return '';
     }
 
@@ -176,7 +180,7 @@ export const renderToHtml = async (
 
     return html;
   } catch (e) {
-    ctx.logger?.error('render page failed:', e);
+    ctx.logger?.warn('render page failed:', e);
     if (!_opt.reRender) {
       const csr = Array.from(ctx.componentMap?.values() || [])?.find(item => !!item.meta?.isCSREntry);
       if (csr) {
@@ -185,6 +189,6 @@ export const renderToHtml = async (
         return await renderToHtml(dsl, ctx, _opt);
       }
     }
-    return '';
+    throw e;
   }
 };

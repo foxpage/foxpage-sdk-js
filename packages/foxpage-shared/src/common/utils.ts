@@ -1,3 +1,4 @@
+// @ts-nocheck
 import _, { isEqual } from 'lodash';
 
 type GetRecordType<T, D = unknown> = T extends { [key: string]: infer R } ? R : D;

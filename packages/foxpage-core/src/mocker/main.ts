@@ -1,31 +1,8 @@
-import { Context, Mock, MockItem, Page, StructureNode, Template } from '@foxpage/foxpage-types';
+import { Context, Mock, Page, StructureNode, Template } from '@foxpage/foxpage-types';
+
+import { getUsedMocks, mergeProps, preMock } from './utils';
 
 export interface MockOptions {}
-
-export type MockMap = Record<string, MockItem>;
-
-/**
- * merge props with mock
- * @param props
- * @param mockProps
- * @returns
- */
-export const mergeProps = (props: StructureNode['props'] = {}, mockProps: MockItem['props'] = {}) => {
-  return { ...props, ...mockProps } as StructureNode['props'];
-};
-
-export const preMock = (mock: Mock) => {
-  const idMockMap: MockMap = {};
-  const typeMockMap: MockMap = {};
-  mock?.schemas?.forEach(item => {
-    if (item.id) {
-      idMockMap[item.id] = item;
-    } else if (item.name) {
-      typeMockMap[item.name] = item;
-    }
-  });
-  return { idMockMap, typeMockMap };
-};
 
 /**
  * parse page with mock
@@ -53,7 +30,7 @@ export const mockPage = (page: Page, mock: Mock | null, extendMock: Mock | null)
         mock = extendTypeMockMap[item.name]; //extend name
       }
       if (mock) {
-        item.props = mergeProps(item.props, mock.props);
+        item.props = mergeProps<StructureNode['props']>(item.props, mock.props);
       }
       if (item.children?.length) {
         dfs(item.children);
@@ -112,15 +89,7 @@ export const withMock = (mocks: Mock[], ctx: Context, _opt?: MockOptions) => {
   let page = ctx.getOrigin('page');
   // deal with page (extend) mock
   if (page) {
-    const { mockId = '', extendId = '' } = page.extension || {};
-    const pageMock = mockMap[mockId];
-    let extendMock: Mock | null = null;
-    if (extendId) {
-      const extendMockId = ctx.getOrigin('extendPage')?.extension?.mockId;
-      if (extendMockId) {
-        extendMock = mockMap[extendMockId];
-      }
-    }
+    const { pageMock, extendMock } = getUsedMocks(mocks, ctx);
     if (pageMock || extendMock) {
       page = mockPage(page, pageMock, extendMock);
     }

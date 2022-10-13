@@ -34,9 +34,6 @@ export class TemplateParserImpl implements TemplateParser {
     this.templates.forEach(template => {
       const tplContainer = opt?.containerGetter ? opt.containerGetter(template.id) : null;
       if (tplContainer) {
-        ctx.logger?.debug('template parse, template:', JSON.stringify(template));
-        ctx.logger?.debug('tpl node:', JSON.stringify(tplContainer));
-
         this.containerMap.set(template.id, tplContainer);
       }
     });
@@ -52,7 +49,6 @@ export class TemplateParserImpl implements TemplateParser {
       const parser = this.tplParser(tpl, ctx);
       const { parsed, messages } = parser(tpl.schemas);
       ctx.logger?.info(`template@${tpl.id} parsed`);
-      ctx.logger?.debug(`template@${tpl.id} parsed:`, JSON.stringify(parsed));
 
       ctx.updateResource(ContentType.TEMPLATE, tpl.id, {
         content: tpl,

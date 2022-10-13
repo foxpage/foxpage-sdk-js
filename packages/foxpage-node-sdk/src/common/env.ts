@@ -32,7 +32,7 @@ export const isMock = parseParams({ ctxKey: 'isMock', queryKey: 'mock' });
  * @param ctx context
  */
 export const initEnv = (ctx: Context) => {
-  ctx.isPreviewMode = isPreviewMode(ctx);
-  ctx.isDebugMode = isDebugMode(ctx);
-  ctx.isMock = ctx.isPreviewMode && isMock(ctx);
+  ctx.isPreviewMode = ctx.isPreviewMode || isPreviewMode(ctx);
+  ctx.isDebugMode = ctx.isDebugMode || isDebugMode(ctx);
+  ctx.isMock = ctx.isMock || isMock(ctx);
 };

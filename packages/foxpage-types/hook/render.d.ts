@@ -1,5 +1,5 @@
 import { Context } from '../context';
-import { StructureNode } from '../structure'
+import { StructureNode } from '../structure';
 
 export interface FoxpageRenderHooks {
   beforePageRender?: (ctx: Context) => Promise<Context['page']['schemas']>;

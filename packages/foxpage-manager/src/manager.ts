@@ -89,7 +89,7 @@ export class ManagerImpl implements Manager {
       this.settings = opt.settings;
     }
     // init logger: for bind logger hook
-    await initLogger(this.hooks);
+    await initLogger(this.hooks, this.options?.loggerConfig);
     // create foxpage data service
     if (this.options) {
       createFoxpageDataService(this.options.dataService);
@@ -109,7 +109,7 @@ export class ManagerImpl implements Manager {
 
     try {
       const apps = await foxpageDataService.fetchAppDetails(appIds);
-      this.logger?.debug('get apps:', JSON.stringify(apps));
+      this.logger?.info('get apps:', JSON.stringify(apps));
 
       const appMateMap = new Map<string, ManagerAppMeta>();
       appMates.forEach(item => {

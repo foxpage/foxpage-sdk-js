@@ -43,7 +43,7 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
   private resourceConfig: ApplicationOption['resources'];
 
   constructor(app: Application) {
-    super(app, { type: 'package', diskCache: { enable: true } });
+    super(app, { type: 'package', diskCache: { enable: true }, lruCache: { cloned: false } });
     this.resourceConfig = app.resources;
   }
 
@@ -54,7 +54,7 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
    */
   public addPackage(pkg: FPPackage) {
     const { id, name, version } = pkg;
-    this.logger.debug(`add package content ${name}@${version}`);
+    this.logger.info(`add package content ${name}@${version}`);
 
     if (!version) {
       this.logger.warn('package version is invalid');
@@ -152,7 +152,7 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
     }
 
     if (version && versions.indexOf(version) === -1) {
-      this.logger.debug(`get local package: ${name}@${version} is empty.`);
+      this.logger.warn(`get local package: ${name}@${version} is empty.`);
       return null;
     }
 
@@ -163,7 +163,7 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
       curVersion = version;
     }
     if (!curVersion) {
-      this.logger.debug('the version is invalid');
+      this.logger.warn(`package ${name} version is invalid`);
       return null;
     }
 
@@ -174,7 +174,7 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
       return null;
     }
 
-    this.logger.debug(`get local package: ${key} succeed.`);
+    // this.logger.info(`get local package: ${key} succeed.`);
     return pkg;
   }
 
@@ -192,7 +192,7 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
     }
 
     if (version && versions.indexOf(version) === -1) {
-      this.logger.debug(`get local package: ${name}@${version} is empty.`);
+      this.logger.warn(`get local package: ${name}@${version} is empty.`);
       return null;
     }
 
@@ -203,7 +203,7 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
       curVersion = version;
     }
     if (!curVersion) {
-      this.logger.debug('the version is invalid');
+      this.logger.warn(`package ${name} version is invalid`);
       return null;
     }
 
@@ -214,7 +214,7 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
       return null;
     }
 
-    this.logger.debug(`get local package: ${key} succeed.`);
+    // this.logger.info(`get local package: ${key} succeed.`);
     return pkg;
   }
 
@@ -229,7 +229,6 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
       ? this.resolvePackage(await this.fetchPackagesByNamedVersions(params.namedVersions))
       : await this.fetchPackages(params?.packageIds);
 
-    this.logger.debug('fetched packages %j', packages);
     return await this.install(packages, { cache: true });
   }
 
@@ -313,7 +312,7 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
   }
 
   private newPackage(data: FPPackage) {
-    return new PackageInstance(data, this.appId, { resource: this.resourceConfig });
+    return new PackageInstance(data, this.appId, { resource: this.resourceConfig, logger: this.logger });
   }
 
   private resolvePackage(packageInfos: FPPackageResponse[]) {
@@ -378,7 +377,7 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
     names.forEach(name => {
       const { versions } = this.packageVersionsMap.get(name) || {};
       if (!versions) {
-        this.logger.debug(`not exist the package@${name} in packageMap`);
+        this.logger.warn(`not exist the package@${name} in packageMap`);
         versionInfo[name] = null;
       } else {
         versionInfo[name] = versions;

@@ -42,7 +42,8 @@ export type ManagerBaseOptions = {
    *   }}
    */
   lruCache?: {
-    size: number;
+    size?: number;
+    cloned?: boolean;
   };
 };
 
@@ -109,7 +110,7 @@ export abstract class ManagerBaseImpl<T> extends FPEventEmitterInstance<ManagerE
       }
     });
     // cache
-    this.hotResources = createLRUCache(opt?.lruCache?.size);
+    this.hotResources = createLRUCache(opt?.lruCache?.size, { cloned: opt?.lruCache?.cloned });
     if (opt?.diskCache?.enable) {
       this.diskResources = createDiskCache({
         appId: this.appId,

@@ -36,7 +36,7 @@ export const foxpageRequestHandler = (
         ctx.body = body;
       }
     } catch (e) {
-      ctx.body = `request failed: ${JSON.stringify(e)}`;
+      ctx.body = `request failed: ${(e as Error).message} \nstack: ${(e as Error).stack}`;
       ctx.status = 400;
     }
 

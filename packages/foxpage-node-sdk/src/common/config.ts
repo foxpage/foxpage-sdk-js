@@ -46,7 +46,7 @@ const config = {
       const result = await (await Promise.all(tasks)).find(item => item.exist);
       if (result && result.exist) {
         const defineC = require(result.path);
-        logger.debug('app provider config:', JSON.stringify(defineC));
+        logger.info('app provider config:', JSON.stringify(defineC));
         configs = merge(configs, defineC);
         return;
       }

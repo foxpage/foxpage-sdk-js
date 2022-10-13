@@ -74,9 +74,9 @@ export class ComponentLoaderImpl implements ComponentLoader {
 
   private logger: Logger;
 
-  constructor(appId: string, opt: ComponentLoadOption = { autoDownloadComponent: true, useStructureVersion: false }) {
+  constructor(appId: string, opt: ComponentLoadOption) {
     this.app = getApplication(appId);
-    this.opt = opt;
+    this.opt = { autoDownloadComponent: true, useStructureVersion: false, ...opt };
     this.logger = loggerCreate('ComponentLoader');
   }
 
@@ -243,9 +243,7 @@ export class ComponentLoaderImpl implements ComponentLoader {
           this.loadedMap.set(id, this.componentFormatter(item, pkg, messages));
           this.setResolveVersion(item, pkg.version);
         } else {
-          this.logger.debug(
-            `component@${item.id} -> package ${key} local not exist available version, try to download`,
-          );
+          this.logger.warn(`component@${item.id} -> package ${key} local not exist available version, try to download`);
 
           this.missLoadMap.set(id, item);
           this.setResolveVersion(item, '');

@@ -8,6 +8,8 @@ export type LocaleTag = {
 }
 export type QueryTag = Partial<Record<'query', Record<string, unknown>>>;
 
+export type IsBaseTag = Partial<Record<'isBase', Record<string, unknown>>>;
+
 export type WeightTag = Record<'weight', number>;
 
 export type FileTag = PathnameTag | Record<string, unknown>;

@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-manager",
-  "version": "0.5.9",
+  "version": "0.5.15",
   "description": "foxpage resource manager",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -35,7 +35,7 @@
     "@types/lru-cache": "^5.1.1",
     "jest-mock-axios": "^4.5.0",
     "rimraf": "^2.6.3",
-    "typescript": "^3.9.0"
+    "typescript": "^4.5.5"
   },
   "files": [
     "lib/**"

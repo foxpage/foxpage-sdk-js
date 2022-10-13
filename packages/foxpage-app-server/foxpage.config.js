@@ -8,10 +8,11 @@ module.exports = {
   apps: [
     {
       appId: 'appl_O6Rj7weDnMQ5y5o',
-      config: {
+      configs: {
         ssr: {
           enable: false,
-        }
+        },
+        locale: 'zh-CN'
       },
       // app plugins
       plugins: [...appPlugins],

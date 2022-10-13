@@ -34,55 +34,59 @@ export const loadComponents = async (schemas: StructureNode[], appId: string, op
  * @returns html string
  */
 export const renderToHTML = async (dsl: ParsedDSL['schemas'], ctx: Context, opt: RenderToHTMLOptions) => {
-  try {
-    ctx.logger?.info('render DSL:', JSON.stringify(dsl));
+  ctx.logger?.info('render DSL:', JSON.stringify(dsl));
 
-    if (dsl && dsl.length > 0) {
-      const { dsl: newDSL, structureMap } = prepareDSL(dsl);
-      let preparedDSL = newDSL;
+  if (dsl && dsl.length > 0) {
+    const { dsl: newDSL, structureMap } = prepareDSL(dsl);
+    let preparedDSL = newDSL;
 
-      ctx.logger?.info('preparedDSL:', JSON.stringify(preparedDSL));
+    ctx.page.schemas = preparedDSL;
+    ctx.structureMap = structureMap;
 
-      ctx.page.schemas = preparedDSL;
-      ctx.structureMap = structureMap;
+    // load components
+    const [components, dependencies] = await loadComponents(preparedDSL, ctx.appId, opt);
 
-      // load components
-      const [components, dependencies] = await loadComponents(preparedDSL, ctx.appId, opt);
+    ctx.componentMap = components;
+    ctx.dependencies = dependencies;
 
-      ctx.componentMap = components;
-      ctx.dependencies = dependencies;
+    ctx.logger?.info(
+      'loaded components: ',
+      Array.from(components?.values()).map(item => item.name),
+    );
 
-      ctx.logger?.info('components load completed.', JSON.stringify(Array.from(components?.values())));
+    let html = '';
 
-      let html = '';
-
-      const { beforePageRender, onPageRender, afterPageRender } = ctx.hooks || {};
-      if (typeof beforePageRender === 'function') {
-        preparedDSL = await beforePageRender(ctx);
-      }
-
-      // render
-      if (typeof onPageRender === 'function') {
-        html = await onPageRender(ctx, preparedDSL);
-      } else if (typeof ctx.render === 'function') {
-        html = await ctx.render(preparedDSL, ctx);
-      } else {
-        ctx.logger?.error('render is invalid.');
-      }
-
-      if (typeof afterPageRender === 'function') {
-        html = await afterPageRender(ctx, html);
-      }
-
-      ctx.logger?.debug('render html result:', html);
-      ctx.logger?.info('render html ' + (html ? 'succeed.' : 'empty.'));
-      return html ? DOCTYPE + html : '';
+    const { beforePageRender, onPageRender, afterPageRender } = ctx.hooks || {};
+    if (typeof beforePageRender === 'function') {
+      preparedDSL = await beforePageRender(ctx);
+      ctx.logger?.info('beforePageRender hook get the dsl: ', JSON.stringify(preparedDSL));
     }
-    return '';
-  } catch (e) {
-    throw new Error(`render error: ${(e as Error).message} `);
+
+    // render
+    if (typeof onPageRender === 'function') {
+      html = await onPageRender(ctx, preparedDSL);
+      ctx.logger?.info(`onPageRender hook get the html ${htmlStatus(html)}`);
+    } else if (typeof ctx.render === 'function') {
+      html = await ctx.render(preparedDSL, ctx);
+      ctx.logger?.info(`render html ${htmlStatus(html)}`);
+    } else {
+      ctx.logger?.error('render is invalid.');
+    }
+
+    if (typeof afterPageRender === 'function') {
+      html = await afterPageRender(ctx, html);
+      ctx.logger?.info(`afterPageRender hook get the html ${htmlStatus(html)}`);
+    }
+
+    ctx.logger?.info(`rendered html ${htmlStatus(html)}`);
+    return html ? DOCTYPE + html : '';
   }
+  return '';
 };
+
+function htmlStatus(html: string) {
+  return html ? 'succeed' : 'empty';
+}
 
 /**
  * filter no show node & generate structureMap

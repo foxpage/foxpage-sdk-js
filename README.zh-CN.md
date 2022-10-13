@@ -1,4 +1,5 @@
 # Foxpage SDK JS
+
 [![Minimum node.js version](https://img.shields.io/badge/node-%3E%3D12.14.1-brightgreen)](https://img.shields.io/badge/node-%3E%3D12.14.1-brightgreen)
 [![typescript version](https://img.shields.io/badge/typescript-%3E%3D4.0.0-brightgreen)](https://img.shields.io/badge/typescript-%3E%3D4.0.0-brightgreen)
 [![yarn](https://img.shields.io/badge/yarn-1.22.5-blue)](https://img.shields.io/badge/yarn-1.22.5-blue)
@@ -6,12 +7,14 @@
 
 <h2>为浏览器端和node.js端提供核心能力扩展与支持。</h2>
 
-## 🖥  介绍
+## 🖥 介绍
 
 ### Foxpage Node SDK
-是Foxpage框架的核心部分，也是为节点应用程序提供的开发工具包。开发人员可以通过使用SDK快速接入和使用Foxpage框架。
+
+是 Foxpage 框架的核心部分，也是为节点应用程序提供的开发工具包。开发人员可以通过使用 SDK 快速接入和使用 Foxpage 框架。
 
 #### 特性
+
 为应用服务提供资源管理、页面解析、页面渲染和插件化等一系列功能。
 
 - **资源管理**. 负责所有依赖的 资源管理。通过 多进程间通讯 方式来同步各个进程间的资源信息，并将资源进行本地 缓存 来提升性能，同时会建立调度器开启 定时任务 来更新本地资源。为了提高扩展性，我们接入了 插件 系统，通过插件来增强相关能力。
@@ -20,6 +23,7 @@
 - **插件化**. 为了提高扩展性，支持插件化，通过插件来增强业务领域扩展能力。
 
 ### Foxpage JS SDK
+
 Foxpage JS SDK 是供浏览器端使用的，目前提供浏览器端解析和组件加载等工作。
 
 ## ✨ 项目结构
@@ -39,7 +43,6 @@ Foxpage JS SDK 是供浏览器端使用的，目前提供浏览器端解析和�
   │   ├─foxpage-middleware-koa      // koa middleware for foxpage node sdk
   │   ├─foxpage-node-sdk            // nodejs sdk
   │   ├─foxpage-plugin              // foxpage plugin core
-  │   ├─foxpage-plugin-*            // foxpage sys plugin
   │   ├─foxpage-shared              // common utils
   │   ├─foxpage-transformer         // DSL transformer
   │   └─foxpage-types               // common types
@@ -64,10 +67,10 @@ npm run commit
 npx git-cz
 ```
 
-## 🌍 NPM包发布 & 版本发布
+## 🌍 NPM 包发布 & 版本发布
 
 1. 在发布之前执行`npm run boot`.
-2. `lerna publish --ignore-scripts --no-push` 发布NPM包
+2. `lerna publish --ignore-scripts --no-push` 发布 NPM 包
 3. `npm run release -- --release-as patch` or `npm run release -- --release-as minor` 生成新版本: [standard-version](https://github.com/conventional-changelog/standard-version#readme).
 
 ## ⏳ 贡献

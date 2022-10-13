@@ -105,4 +105,9 @@ export interface FoxpageRequestOptions {
   response: FoxpageDelegatedResponse;
   cookies: FoxpageDelegatedCookie;
   ctx?: Context;
+  mode?: {
+    isMock?: boolean;
+    isPreview?: boolean;
+    isDebug?: boolean;
+  };
 }

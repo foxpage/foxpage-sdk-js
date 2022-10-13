@@ -23,7 +23,7 @@ export class MockManagerImpl extends ManagerBaseImpl<Mock> implements MockManage
    * @param {Mock} mock
    */
   public addMock(mock: Mock) {
-    this.logger.debug(`add mock@${mock.id}, detail:`, JSON.stringify(mock));
+    this.logger.info(`add mock@${mock.id}, detail:`, JSON.stringify(mock));
 
     const newVar = this.newMock(mock);
     this.addOne(mock.id, mock, newVar);

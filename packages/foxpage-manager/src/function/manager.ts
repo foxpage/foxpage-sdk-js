@@ -30,7 +30,7 @@ export class FunctionManagerImpl extends ManagerBaseImpl<FPFunction> implements 
    * @param {FPFunction} content
    */
   public addFunction(content: FPFunction) {
-    this.logger.debug(`add function@${content.id}, detail:`, JSON.stringify(content));
+    this.logger.info(`add function@${content.id}, detail:`, JSON.stringify(content));
 
     const newFunc = this.newFunction(content);
     this.addOne(content.id, content, newFunc);

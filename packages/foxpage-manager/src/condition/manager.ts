@@ -23,7 +23,7 @@ export class ConditionManagerImpl extends ManagerBaseImpl<Condition> implements 
    * @param {Condition} condition
    */
   public addCondition(condition: Condition) {
-    this.logger.debug(`add condition@${condition.id}, detail:`, JSON.stringify(condition));
+    this.logger.info(`add condition@${condition.id}, detail:`, JSON.stringify(condition));
 
     const instance = this.newCondition(condition);
     this.addOne(condition.id, condition, instance);

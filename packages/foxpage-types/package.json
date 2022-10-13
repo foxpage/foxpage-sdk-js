@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-types",
-  "version": "0.5.7",
+  "version": "0.5.14",
   "description": "foxpage sdk types",
   "main": "index.js",
   "type": "module",

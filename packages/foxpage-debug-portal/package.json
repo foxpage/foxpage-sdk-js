@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-debug-portal",
-  "version": "0.2.4",
+  "version": "0.2.6",
   "description": "foxpage debug portal on live",
   "keywords": [
     "foxpage",
@@ -19,10 +19,6 @@
     "registry": "https://registry.npmjs.org",
     "access": "public"
   },
-  "repository": {
-    "type": "git",
-    "url": "git@git.dev.sh.ctripcorp.com:fox-open/foxpage-sdk-js.git"
-  },
   "scripts": {
     "start": "webpack-dev-server --disableHostCheck=true --config config/webpack.dev.config.js --progress --inline --colors",
     "build": "npm run build:es & npm run build:dist",
@@ -31,7 +27,6 @@
     "build:es": "tsc --project tsconfig.prod.json",
     "build:npm": "npm run build -- --skipLibCheck",
     "clean": "rimraf lib & rimraf dist",
-    "prepublishOnly": "npm install && npm run build:npm",
     "babel": "babel src/ --out-dir lib --extensions .js,.ts,.tsx",
     "analyze": "ANALYZE=1 webpack",
     "lint:type": "tsc --noEmit",
@@ -47,7 +42,7 @@
     "@babel/preset-env": "^7.7.5",
     "@babel/preset-react": "^7.7.4",
     "@babel/preset-typescript": "^7.7.4",
-    "@foxpage/foxpage-types": "^0.4.3",
+    "@foxpage/foxpage-types": "^0.5.0",
     "@types/react": "^16.9.1",
     "@types/react-dom": "^16.8.5",
     "babel-loader": "^8.0.6",
@@ -72,8 +67,8 @@
     "@foxpage/foxpage-types": "^0.5.2",
     "antd": "^4.1.0",
     "core-js": "^3.6.4",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "react-json-view": "^1.21.3"
   }
 }

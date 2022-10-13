@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { Content, LocaleTag, PathnameTag, QueryTag, Tag, WeightTag } from '@foxpage/foxpage-types';
+import { Content, IsBaseTag, LocaleTag, PathnameTag, QueryTag, Tag, WeightTag } from '@foxpage/foxpage-types';
 
 /**
  * generate tag with url info
@@ -85,11 +85,15 @@ export const matchContent = (contents: Content[], tags: Tag[] = []) => {
   const filtered =
     tags && tags.length > 0
       ? contents.filter(content => {
-          const { generals: contentGenerals, locales: contentLocales } = tagsToStrings(content.tags);
+          const { generals: contentGenerals, locales: contentLocales, isBase } = tagsToStrings(content.tags);
+          if (isBase) {
+            return false;
+          }
+
           const { generals, locales } = tagsToStrings(tags);
           const result =
             contentGenerals.findIndex(cTag => generals.indexOf(cTag) === -1) === -1 &&
-            (contentLocales.length > 0 ? contentLocales.indexOf(locales[0]) > -1 : true);
+            contentLocales.indexOf(locales[0]) > -1;
           return result;
         })
       : contents;
@@ -119,6 +123,7 @@ export const matchContent = (contents: Content[], tags: Tag[] = []) => {
 function tagsToStrings(tags: Tag[]) {
   let strings: string[] = [];
   const locales: string[] = [];
+  let isBase = false;
   tags.forEach(tag => {
     // pathname tag
     if ((tag as PathnameTag).pathname) {
@@ -132,11 +137,16 @@ function tagsToStrings(tags: Tag[]) {
     if ((tag as QueryTag).query) {
       strings = strings.concat(queryTagToString(tag as QueryTag));
     }
+    // isBase tag
+    if ((tag as IsBaseTag).isBase) {
+      isBase = !!(tag as IsBaseTag).isBase;
+    }
   });
 
   return {
     generals: strings.filter(item => !!item),
     locales: locales.filter(item => !!item),
+    isBase,
   };
 }
 
@@ -146,7 +156,7 @@ function pathnameTagToString(tag: PathnameTag, lowerCase = true) {
 }
 
 function localeTagToString(tag: LocaleTag, lowerCase = true) {
-  const { locale } = tag;
+  const locale = tag.locale.replace('_', '-');
   return `locale=${lowerCase ? lowerCaseString(locale) : locale}`;
 }
 

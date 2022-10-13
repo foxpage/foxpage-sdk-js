@@ -9,6 +9,7 @@ export interface FPFile {
   name: string;
   applicationId: string;
   type: 'page' | 'template';
+  extension?: Record<string, any>;
 }
 
 export interface FileManager<T = FPFile> extends ManagerBase<T> {

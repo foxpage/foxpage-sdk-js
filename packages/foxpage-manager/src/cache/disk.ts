@@ -1,4 +1,5 @@
 import { readJSON } from 'fs-extra';
+import _ from 'lodash';
 
 import { Logger, ResourceCache } from '@foxpage/foxpage-types';
 
@@ -38,7 +39,7 @@ export class DiskCache<T> implements ResourceCache<T> {
       const dirs = this.generateDirs(id);
       const filePath = resolveContentPath(this.appId, dirs);
       this.diskCache.set(id, filePath);
-      await storeContent(filePath, resource);
+      await storeContent(filePath, _.cloneDeep(resource));
     } catch (e) {
       const msg = (e as Error).message;
       if (msg.indexOf('EEXIST') === -1) {
@@ -62,7 +63,7 @@ export class DiskCache<T> implements ResourceCache<T> {
           // the deleted content will return null;
           return null;
         }
-        return result;
+        return _.cloneDeep(result);
       } catch (error) {
         return null;
       }

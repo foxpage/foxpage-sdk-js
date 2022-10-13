@@ -1,14 +1,13 @@
 {
   "name": "@foxpage/foxpage-core",
-  "version": "0.5.3",
+  "version": "0.5.10",
   "description": "foxpage core ",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc --project tsconfig.prod.json",
     "build:npm": "npm run build -- --skipLibCheck",
-    "clean": "rimraf lib",
-    "prepublishOnly": "npm install && npm run build:npm"
+    "clean": "rimraf lib"
   },
   "dependencies": {
     "@foxpage/foxpage-shared": "^0.5.3",
@@ -22,7 +21,7 @@
     "@types/lodash": "^4.14.145",
     "@types/semver": "^7.3.8",
     "rimraf": "^2.6.3",
-    "typescript": "^3.9.0"
+    "typescript": "^4.5.5"
   },
   "keywords": [
     "foxpage",

@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-js-sdk",
-  "version": "0.5.6",
+  "version": "0.5.8",
   "description": "foxpage js sdk",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

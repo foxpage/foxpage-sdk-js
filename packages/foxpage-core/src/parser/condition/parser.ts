@@ -1,7 +1,14 @@
 import { isString } from 'lodash';
 
 import { ContentType } from '@foxpage/foxpage-shared';
-import { Condition, ConditionExpression, Context, ExpressionOperation, ParsedContent } from '@foxpage/foxpage-types';
+import {
+  Condition,
+  ConditionExpression,
+  ConditionParser,
+  Context,
+  ExpressionOperation,
+  ParsedContent,
+} from '@foxpage/foxpage-types';
 
 import { executeString } from '../sandbox';
 
@@ -9,7 +16,7 @@ import { supportConditionTypes, supportOperations } from './config';
 import { ConditionType } from './types';
 import { isIncludesAble, transformRightTypeByLeft } from './utils';
 
-export class ConditionParser {
+export class ConditionParserImpl implements ConditionParser {
   /**
    * parse
    *
