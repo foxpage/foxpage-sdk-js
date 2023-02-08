@@ -18,7 +18,7 @@ export interface Logger {
 
   timeStart(label: string, msg?: string, ...params: any[]): void;
 
-  timeEnd(label: string, msg?: string, ...params: any[]): void;
+  timeEnd(label: string, msg?: string, ...params: any[]): number;
 
   log(level: LOGGER_USE_LEVEL, msg: string, params: any[]): void;
 }

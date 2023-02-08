@@ -31,13 +31,18 @@ export const foxpageRequestHandler = (
     }
 
     try {
-      const body = await handler({ request: ctx.request, response: ctx.response, cookies: ctx.cookies });
-      if (body) {
-        ctx.body = body;
+      const result = await handler({ request: ctx.request, response: ctx.response, cookies: ctx.cookies });
+      if (typeof result === 'string') {
+        ctx.body = result;
+      } else if (result?.html) {
+        ctx.body = result?.html || 'render empty!';
+        ctx.foxpageRendered = result;
+      } else {
+        ctx.body = result;
       }
     } catch (e) {
       ctx.body = `request failed: ${(e as Error).message} \nstack: ${(e as Error).stack}`;
-      ctx.status = 400;
+      ctx.status = (e as any).status || 400;
     }
 
     await _next();

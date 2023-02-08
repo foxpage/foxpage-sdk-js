@@ -15,6 +15,6 @@ app.use(routes);
 
 app.use(bodyParser());
 
-app.use(foxpageMiddleWare(app));
+app.use(foxpageMiddleWare(app, { staticServer: { enable: true } }));
 
 export default app;

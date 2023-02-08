@@ -16,6 +16,8 @@ import { Container } from './components';
 
 type ElementType = ReactElement<StructureNodeProps<any>, string | React.JSXElementConstructor<any>> | null | undefined;
 
+const TIMEOUT_ERROR = 'timeout';
+
 const initInjectProps = (node: StructureNode, ctx: Context): ComponentNodeInjectProps => {
   const comp = node && ctx.componentMap?.get(node.name);
   return {
@@ -52,12 +54,7 @@ type BuildOptions = {
 
 async function creator(node: StructureNode, ctx: Context, opt: BuildOptions) {
   try {
-    const { id, show = true, name, type, version, children = [], props = {} } = node;
-    if (!ctx.disableConditionRender && !show) {
-      ctx.logger?.info(`node ${name}@${id} not show`);
-      return null;
-    }
-
+    const { id, name, type, version, children = [], props = {} } = node;
     const component = ctx.componentMap?.get(id);
     if (!component) {
       ctx.logger?.warn(`render node ${name}@${id} component is empty`);
@@ -71,10 +68,10 @@ async function creator(node: StructureNode, ctx: Context, opt: BuildOptions) {
       return null;
     }
 
+    const { enable = true, nodeBuildHookTimeout = 0 } = ctx.appConfigs?.ssr || {};
     // create children elements
     let childrenElements: ElementType[] = [];
     if (children.length > 0) {
-      const { enable = true } = ctx.appConfigs?.ssr || {};
       const { ssrEnable: cusSSREnable = true } = props;
       const { ssrEnable = true } = opt;
 
@@ -89,10 +86,22 @@ async function creator(node: StructureNode, ctx: Context, opt: BuildOptions) {
     let buildHookProps;
     if (typeof factory.beforeNodeBuild === 'function') {
       try {
-        buildHookProps = await factory.beforeNodeBuild(ctx, node);
+        const hookCost = ctx.performanceLogger('nodePerformance', node);
+
+        if (nodeBuildHookTimeout > 0) {
+          buildHookProps = await timeout(factory.beforeNodeBuild(ctx, node), nodeBuildHookTimeout);
+        } else {
+          buildHookProps = await factory.beforeNodeBuild(ctx, node);
+        }
+
+        hookCost();
         ctx.logger?.info(`Hook [ buildHookProps ][ ${name} ] success.`);
       } catch (e) {
+        // if ((e as Error).message?.includes(TIMEOUT_ERROR)) {
+        //   ctx.logger?.error(`Hook [ buildHookProps ][ ${name} ] run failed,`, e);
+        // } else {
         ctx.logger?.warn(`Hook [ buildHookProps ][ ${name} ] run failed,`, e);
+        // }
       }
     }
 
@@ -123,7 +132,7 @@ async function creator(node: StructureNode, ctx: Context, opt: BuildOptions) {
     const element = createElement(factory, finalProps, ...childrenElements);
     return element;
   } catch (e) {
-    ctx.logger?.error('create element %c failed.', node, e);
+    ctx.logger?.error(`create element ${node.name}@${node.id} failed.`, e);
     throw e;
   }
 }
@@ -192,3 +201,14 @@ export const renderToHtml = async (
     throw e;
   }
 };
+
+export function timeout(promise: Promise<any>, time: number) {
+  return Promise.race([
+    promise,
+    new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject(new Error(TIMEOUT_ERROR + `(${time})`));
+      }, time);
+    }),
+  ]);
+}

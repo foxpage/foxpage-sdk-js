@@ -62,12 +62,12 @@ export class FileManagerImpl extends ManagerBaseImpl<FPFile> implements FileMana
     if (!fileId) {
       return null;
     }
-    const file = await this.findOneFromLocal(fileId);
-    if (!file) {
+    const files = await this.find([fileId]);
+    if (!files[0]) {
       this.removePathname(pathname, fileId);
       return null;
     }
-    return file;
+    return files[0];
   }
 
   /**
@@ -76,8 +76,8 @@ export class FileManagerImpl extends ManagerBaseImpl<FPFile> implements FileMana
    * @returns file
    */
   public async getFileById(fileId: string): Promise<FPFile | null> {
-    const file = await this.findOneFromLocal(fileId);
-    return file || null;
+    const files = await this.find([fileId]);
+    return files[0] || null;
   }
 
   /**
@@ -87,11 +87,11 @@ export class FileManagerImpl extends ManagerBaseImpl<FPFile> implements FileMana
    * @return {Promise<string>}
    */
   public async getPathnameByFileId(fileId: string): Promise<string> {
-    const file = await this.findOneFromLocal(fileId);
-    if (!file) {
+    const files = await this.find([fileId]);
+    if (!files[0]) {
       return '';
     }
-    return this.getPathname(file);
+    return this.getPathname(files[0]);
   }
 
   protected async onPull(data: ResourceUpdateInfo): Promise<void> {

@@ -9,8 +9,8 @@
     "build": "tsc --project tsconfig.prod.json",
     "clear": "rimraf .foxpage",
     "clean": "rimraf lib",
-    "deploy": "rimraf library && webpack --config ../../node_modules/@foxpage/foxpage-node-sdk/webpack/webpack.config.library.js",
-    "postdeploy": "node ../../node_modules/@foxpage/foxpage-node-sdk/scripts/manifest.js"
+    "deploy": "rimraf library && webpack --config ./node_modules/@foxpage/foxpage-node-sdk/webpack/webpack.config.library.js",
+    "postdeploy": "node ./node_modules/@foxpage/foxpage-node-sdk/scripts/manifest.js"
   },
   "dependencies": {
     "@foxpage/foxpage-middleware-koa": "^0.2.0",

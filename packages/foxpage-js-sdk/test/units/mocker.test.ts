@@ -1,6 +1,6 @@
 import { Mock, Page } from '@foxpage/foxpage-types';
 
-import { MockOption, withMock } from '../../src/index';
+import { MockOption, withMock } from '../../src/mocker';
 
 describe('Mocker test', () => {
   it('with mock test', () => {

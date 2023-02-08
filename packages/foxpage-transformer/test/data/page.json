@@ -1,0 +1,52 @@
+{
+  "id": "pag_njVpAMj3GYKxr",
+  "schemas": [
+    {
+      "id": "0",
+      "name": "page",
+      "type": "react.component",
+      "props": {
+        "width": 1048,
+        "height": "100%",
+        "locale": "en_US"
+      },
+      "directive": {
+        "tpl": "{{__templates:xn7Ko6gfcV00:schemas}}"
+      },
+      "children": [
+        {
+          "id": "1",
+          "name": "foxpage.dynamic-mount-node",
+          "type": "react.component",
+          "props": {}
+        },
+        {
+          "id": "3",
+          "name": "footer",
+          "type": "react.component",
+          "props": {},
+          "directive": {
+            "if": [
+              "{{__conditions:con_1b652910e89b}}",
+              "{{__conditions:con_1b652910e891}}"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "relation": {
+    "__templates:xn7Ko6gfcV00:schemas": {
+      "id": "xn7Ko6gfcV00",
+      "type": "template"
+    },
+    "__conditions:con_1b652910e89b": {
+      "id": "con_1b652910e89b",
+      "type": "condition"
+    },
+    "__conditions:con_1b652910e891": {
+      "id": "con_1b652910e89b",
+      "type": "condition"
+    }
+  }
+}

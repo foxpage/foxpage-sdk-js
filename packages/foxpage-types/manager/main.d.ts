@@ -47,6 +47,12 @@ export interface DataServiceOption {
    * @type {string}
    */
   path: string;
+  /**
+   * response timeout
+   * 
+   * @type {number}
+   */
+  timeout?: number;
 }
 
 /**
@@ -126,6 +132,7 @@ export interface Manager {
   existApplicationBySlug(appName: string): boolean
   getApplication(appId: string): Application | undefined;
   getApplicationBySlug(name: string): Application | undefined;
+  getApplicationByPath(path: string): { app: Application; matchedRoute?: FoxRoute } | undefined;
   getApplications(appIds?: string[]): Application[];
   clear(): void;
 }

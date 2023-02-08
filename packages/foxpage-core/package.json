@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-core",
-  "version": "0.5.10",
+  "version": "0.5.17",
   "description": "foxpage core ",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

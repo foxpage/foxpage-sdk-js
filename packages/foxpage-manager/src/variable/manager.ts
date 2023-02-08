@@ -77,8 +77,10 @@ export class VariableManagerImpl extends ManagerBaseImpl<Variable> implements Va
     if (updates && updates.length > 0) {
       const contentIds = await this.filterExists(updates);
 
-      this.markNeedUpdates(contentIds);
-      await this.freshVariables(contentIds);
+      if (contentIds.length > 0) {
+        this.markNeedUpdates(contentIds);
+        await this.freshVariables(contentIds);
+      }
     }
     if (removes && removes.length > 0) {
       this.removeVariables(removes);

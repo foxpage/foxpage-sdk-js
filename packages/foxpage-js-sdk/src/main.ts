@@ -1,12 +1,12 @@
 import Axios from 'axios';
 
 import { createContentInstance, variable } from '@foxpage/foxpage-shared';
-import { ContentDetail, Context, Page, RelationInfo, RenderAppInfo } from '@foxpage/foxpage-types';
+import { ContentDetail, Context, FPFile, Page, RelationInfo, RenderAppInfo } from '@foxpage/foxpage-types';
 
 import { createRenderContext } from './context';
 import { parse } from './parser';
 
-export type PageParseOption = { appInfo: RenderAppInfo; relationInfo: RelationInfo; locale?: string };
+export type PageParseOption = { appInfo: RenderAppInfo; relationInfo: RelationInfo; locale?: string; file: FPFile };
 export type PageParseInServerOption = PageParseOption & {
   // not set, will redirect to the site host
   host?: string;
@@ -30,6 +30,7 @@ export const parsePage = async (page: Page, opt: PageParseOption) => {
     sysVariables: variable.getSysVariables(contentInstances as unknown as Record<string, ContentDetail[]>),
   });
   ctx.updateOriginPage(contentInstances.page[0]);
+  ctx.file = opt.file;
   // parse
   const parsed = await parse(page, ctx);
   return parsed;
@@ -48,6 +49,7 @@ export const parsePageInServer = async (page: Page, opt: PageParseInServerOption
       appId: opt.appInfo.appId,
       relationInfo: opt.relationInfo,
       locale: opt.locale,
+      file: opt.file,
     },
   });
   return result;

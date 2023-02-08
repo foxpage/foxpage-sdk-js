@@ -6,6 +6,8 @@ import { DOCTYPE } from '../common';
 
 import { ComponentLoaderImpl } from './loader';
 
+const BLANK_NODE = 'system.inherit-blank-node'; // blank node
+
 /**
  * load page component
  * @param schemas page schemas
@@ -37,21 +39,26 @@ export const renderToHTML = async (dsl: ParsedDSL['schemas'], ctx: Context, opt:
   ctx.logger?.info('render DSL:', JSON.stringify(dsl));
 
   if (dsl && dsl.length > 0) {
-    const { dsl: newDSL, structureMap } = prepareDSL(dsl);
+    const { dsl: newDSL, structureMap } = prepareDSL(dsl, ctx);
     let preparedDSL = newDSL;
 
     ctx.page.schemas = preparedDSL;
     ctx.structureMap = structureMap;
 
     // load components
-    const [components, dependencies] = await loadComponents(preparedDSL, ctx.appId, opt);
+    const loadCost = ctx.performanceLogger('componentLoadTime');
+    const [components, dependencies] = await loadComponents(preparedDSL, ctx.appId, {
+      ...opt,
+      isPreviewMode: ctx.isPreviewMode,
+    });
+    loadCost();
 
     ctx.componentMap = components;
     ctx.dependencies = dependencies;
 
     ctx.logger?.info(
       'loaded components: ',
-      Array.from(components?.values()).map(item => item.name),
+      Array.from(new Set(Array.from(components?.values()).map(item => item.name))),
     );
 
     let html = '';
@@ -95,7 +102,7 @@ function htmlStatus(html: string) {
  * @return {*}
  */
 
-function prepareDSL(schemas: StructureNode[]) {
+function prepareDSL(schemas: StructureNode[], ctx: Context) {
   const structureMap: Context['structureMap'] = new Map();
 
   function doPrepare(dsl: StructureNode[]) {
@@ -103,7 +110,9 @@ function prepareDSL(schemas: StructureNode[]) {
 
     dsl.forEach(item => {
       const { id, name, label, type, version, props, show, children = [] } = item;
-      if (show) {
+      if ((!ctx.disableConditionRender && !show) || name === BLANK_NODE) {
+        ctx.logger?.info(`node ${name}@${id} not show`);
+      } else {
         const childList = children.length > 0 ? doPrepare(children) : [];
         // push new dsl nodes
         newDSL.push({ ...item, children: childList });

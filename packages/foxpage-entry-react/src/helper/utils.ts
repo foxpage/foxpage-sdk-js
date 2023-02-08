@@ -17,13 +17,19 @@ export function indexArray<T, K extends PickKeyByValue<T>>(
   return map;
 }
 
-export function eachObject<S, U>(source: S, cb: (val: GetRecordType<S>, key: string) => U): void {
+export function eachObject<S extends Record<string, any>, U = any>(
+  source: S,
+  cb: (val: GetRecordType<S>, key: string) => U,
+): void {
   Object.keys(source).forEach(key => {
     cb((source as any)[key], key);
   });
 }
 
-export function mapObject<S, U>(source: S, cb: (val: GetRecordType<S>) => U): { [P in keyof S]: U } {
+export function mapObject<S extends Record<string, any>, U = any>(
+  source: S,
+  cb: (val: GetRecordType<S>) => U,
+): { [P in keyof S]: U } {
   const target: any = {};
   Object.keys(source).forEach(key => {
     const res = cb((source as any)[key]);

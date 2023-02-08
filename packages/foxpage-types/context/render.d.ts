@@ -6,7 +6,8 @@ import { BrowserInitialStateOption, BrowserResource } from '../browser';
 import { FoxpageHooks } from '../hook';
 import { RequestMode } from '../request';
 import { StructureNode } from '../structure';
-import { AppConfig } from '../application';
+import { AppConfig, FoxRoute } from '../application';
+import { RenderPerformance, PerformanceLogger } from '../performance';
 
 type ContentType = Template | Variable | Condition | FPFunction;
 
@@ -55,11 +56,14 @@ export interface Context extends RequestMode {
   host: string;
   locale?: string;
 
+  _foxpage_preview_time?: string;
+
   // app base
   readonly appId: string;
   readonly appSlug: string;
   readonly appConfigs?: AppConfig;
 
+  matchedRoute?: FoxRoute;
   page: Page;
   file?: FPFile;
   tags?: Tag[];
@@ -95,12 +99,16 @@ export interface Context extends RequestMode {
   // origin source: immutable
   readonly origin: ContextOrigin;
 
+  // common configs
   frameworkResource?: FrameworkResource;
   options?: RenderOption;
   disableConditionRender?: boolean;
 
+  // logger
   logger?: Logger;
+
   // performance
+  performance: RenderPerformance;
 
   updateOrigin(relation: RelationInfo): void;
   updateOriginByKey<K extends keyof ContextOrigin>(key: K, value: ContextOrigin[K]): void;
@@ -109,6 +117,6 @@ export interface Context extends RequestMode {
   updatePage(page: Page): void;
   updatePage(page: Page): void;
   updateResource<K extends keyof ContextResource, T extends RenderContent>(target: K, key: string, value: T): void;
-
   render?: (dsl: Page['schemas'], ctx: Context) => Promise<string>;
+  performanceLogger: PerformanceLogger;
 }

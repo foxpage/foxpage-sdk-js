@@ -44,7 +44,7 @@ export class ComponentLoaderImpl implements ComponentLoader {
    *
    * @private
    */
-  private resolvedVersionMap = new Map<string, string>();
+  private resolvedVersionMap = new Map<string, string[]>();
   /**
    * all dependencies
    * "name":"version" list
@@ -154,7 +154,7 @@ export class ComponentLoaderImpl implements ComponentLoader {
       });
 
       // install
-      const installed = await this.app?.packageManager.install(packages, { cache: true });
+      const installed = await this.app?.packageManager.install(packages, { cache: !this.opt.isPreviewMode });
       installed?.forEach(item => {
         loadedMap.set(this.generateKey(item.name, item.version), item);
       });
@@ -246,7 +246,7 @@ export class ComponentLoaderImpl implements ComponentLoader {
           this.logger.warn(`component@${item.id} -> package ${key} local not exist available version, try to download`);
 
           this.missLoadMap.set(id, item);
-          this.setResolveVersion(item, '');
+          this.setResolveVersion(item, item.version || '');
         }
       }
 
@@ -289,16 +289,18 @@ export class ComponentLoaderImpl implements ComponentLoader {
    */
   private getMissedPackages() {
     const missComponents = Array.from(this.missLoadMap.values());
-    const missList = missComponents
-      .map(item => {
-        const pkgInfo = {
+    let missList: PackageNamedVersion[] = [];
+    missComponents.forEach(item => {
+      const versions = this.resolvedVersionMap.get(item.id) || [];
+      versions.forEach(version => {
+        missList.push({
           name: item.name,
-          version: this.resolvedVersionMap.get(item.id),
-        } as PackageNamedVersion;
-        return pkgInfo;
-      })
-      .concat(Array.from(this.missLoadDependencyMap.values()) as PackageNamedVersion[]);
+          version,
+        });
+      });
+    });
 
+    missList = missList.concat(Array.from(this.missLoadDependencyMap.values()) as PackageNamedVersion[]);
     const namedVersions = _.uniqWith(missList, _.isEqual);
     return namedVersions;
   }
@@ -344,7 +346,7 @@ export class ComponentLoaderImpl implements ComponentLoader {
       name: node.name,
       version: node.version,
       messages: newMsg.hasError ? newMsg : undefined,
-    } as FoxpageComponent;
+    } as unknown as FoxpageComponent;
   }
 
   private generateStructureNode(key: string, name: string, version: string) {
@@ -352,9 +354,15 @@ export class ComponentLoaderImpl implements ComponentLoader {
   }
 
   private setResolveVersion(structureNode: StructureNode, version: string) {
-    if (!this.resolvedVersionMap.has(structureNode.id)) {
-      this.resolvedVersionMap.set(structureNode.id, version);
+    const nodeId = structureNode.id;
+    if (!this.resolvedVersionMap.has(nodeId)) {
+      this.resolvedVersionMap.set(nodeId, []);
     }
+    const list = this.resolvedVersionMap.get(nodeId) || [];
+    if (list.indexOf(version) === -1) {
+      list.push(version);
+    }
+    this.resolvedVersionMap.set(nodeId, list);
   }
 
   private isComponent(structureNode: StructureNode) {

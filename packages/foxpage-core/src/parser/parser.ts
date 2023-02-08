@@ -65,15 +65,27 @@ export class ParserImpl implements Parser {
       throw new Error('parser instance is invalid.');
     }
 
+    // variable
+    const variableCost = ctx.performanceLogger('variableTime');
     await this.variableParser?.parse(ctx, {});
+    variableCost();
+
+    // condition
+    const conditionCost = ctx.performanceLogger('conditionTime');
     this.conditionParser?.parse(ctx);
+    conditionCost();
 
     // with variable mock
     if (ctx.isMock) {
       withVariableMock(ctx.getOrigin(ContentType.VARIABLE), ctx);
     }
 
-    return this.mainParsers[sessionId]?.parse(ctx);
+    // page
+    const structureCost = ctx.performanceLogger('structureTime');
+    const result = this.mainParsers[sessionId]?.parse(ctx);
+    structureCost();
+
+    return result;
   }
 
   /**

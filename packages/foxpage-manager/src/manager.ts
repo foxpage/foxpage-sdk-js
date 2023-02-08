@@ -3,6 +3,7 @@ import { Messages } from '@foxpage/foxpage-shared';
 import {
   Application,
   ApplicationOption,
+  FoxRoute,
   FPApplication,
   Logger,
   Manager,
@@ -17,6 +18,11 @@ import { ApplicationImpl } from './application';
 import { createLogger, initLogger } from './common';
 import { PluginManagerImpl } from './plugin';
 
+type RouteSlugData = {
+  route: FoxRoute;
+  slug: string;
+};
+
 /**
  * manager
  *
@@ -29,14 +35,21 @@ export class ManagerImpl implements Manager {
    *
    * @type {Map<string, Application>}
    */
-  private applicationMap: Map<string, Application> = new Map<string, Application>();
+  private applicationMap: Map<string, Application> = new Map();
   /**
    * application slug map
    * for get app by name fast
    * @private
    * @type {Map<string, string>}
    */
-  private applicationSlugMap: Map<string, string> = new Map<string, string>();
+  private applicationSlugMap: Map<string, string> = new Map();
+  /**
+   * application route & slug maps
+   * for get app slug by routes
+   * @private
+   * @type {Map<string, RouteSlugData[]>}
+   */
+  private appRouteSlugMap: Map<string, Array<RouteSlugData>> = new Map();
   /**
    * message
    *
@@ -142,7 +155,7 @@ export class ManagerImpl implements Manager {
       if (app) {
         app.destroy();
         this.applicationMap.delete(appId);
-        this.applicationSlugMap.delete(app?.slug);
+        this.applicationSlugMap.delete(app.slug);
       }
     });
   }
@@ -153,11 +166,7 @@ export class ManagerImpl implements Manager {
    * @param {string[]} [appIds=[]]
    */
   public removeApplications(appIds: string[] = []) {
-    const apps = this.getApplications(appIds);
-    apps.forEach(app => {
-      app.destroy();
-      this.applicationMap.delete(app.appId);
-    });
+    this.unRegisterApplications(appIds);
   }
 
   /**
@@ -202,7 +211,33 @@ export class ManagerImpl implements Manager {
     if (!appId) {
       return undefined;
     }
-    return this.applicationMap.get(appId);
+    return this.getApplication(appId);
+  }
+
+  /**
+   * get application via path
+   * @param {string} pathname
+   * @return {*}  {(Application | undefined)}
+   */
+  public getApplicationByPath(pathname: string): { app: Application; matchedRoute?: FoxRoute } | undefined {
+    let matches: RouteSlugData[] = [];
+    Array.from(this.appRouteSlugMap.keys()).forEach(item => {
+      if (pathname.startsWith(item)) {
+        matches = matches.concat(this.appRouteSlugMap.get(item) || []);
+      }
+    });
+    matches
+      .filter(item => !item.route.exact || (item.route.exact && item.route.path === pathname))
+      .sort((pre, next) => (next.route.weight || 100) - (pre.route.weight || 100));
+    const matched = matches[0];
+    if (matched) {
+      const app = this.getApplicationBySlug(matched.slug);
+      return app ? { app, matchedRoute: matched.route } : undefined;
+    }
+
+    const slug = pathname.split('/')[1];
+    const app = this.getApplicationBySlug(slug);
+    return app ? { app } : undefined;
   }
 
   /**
@@ -230,25 +265,18 @@ export class ManagerImpl implements Manager {
     const { id: appId } = app;
     if (!this.existApplication(app.id) && !this.existApplicationBySlug(app.slug)) {
       const { plugins, hooks, configs = {}, resources = [] } = metaData || {};
-      const appInstance = new ApplicationImpl(
-        app,
-        this.generateAppConfig(app, { plugins, pluginDir: this.pluginDir, hooks, configs, resources }),
-      );
+      const appConfig = this.generateAppConfig(app, { plugins, pluginDir: this.pluginDir, hooks, configs, resources });
+      const appInstance = new ApplicationImpl(app, appConfig);
 
-      this.applicationMap.set(appId, appInstance);
-      this.applicationSlugMap.set(appInstance.slug, appInstance.appId);
+      this.cache(appInstance);
 
       try {
         // application prepare
         await appInstance.prepare();
-
         this.logger?.info(`application@${appId} init succeed`);
         return true;
       } catch (e) {
-        appInstance.destroy();
-        this.applicationMap.delete(appId);
-        this.applicationSlugMap.delete(appInstance.slug);
-
+        this.unRegisterApplications([appId]);
         this.logger?.warn(`application@${appId} init failed`, e);
         return false;
       }
@@ -280,5 +308,22 @@ export class ManagerImpl implements Manager {
     appSettings.hooks.sourceUpdateHook = this.settings.sourceUpdateHook;
 
     return appSettings;
+  }
+
+  private cache(app: ApplicationImpl) {
+    this.applicationMap.set(app.appId, app);
+    this.applicationSlugMap.set(app.slug, app.appId);
+
+    // cached by customize routes
+    const { routes = [] } = app.configs;
+    routes.forEach(route => {
+      const { path, enable = true } = route || {};
+      if (path && enable) {
+        if (!this.appRouteSlugMap.get(path)) {
+          this.appRouteSlugMap.set(path, []);
+        }
+        this.appRouteSlugMap.get(path)?.push({ route, slug: app.slug });
+      }
+    });
   }
 }

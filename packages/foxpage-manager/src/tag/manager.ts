@@ -111,12 +111,14 @@ export class TagManagerImpl extends ManagerBaseImpl<Content> implements TagManag
     const { updates, removes } = data.tag || {};
     if (updates?.length) {
       const contentIds = await this.filterExists(updates);
-      this.markNeedUpdates(contentIds);
 
-      const contents = await foxpageDataService.fetchAppContents(this.appId, { contentIds });
-      contents.forEach(content => {
-        this.addOne(content.id, content, content);
-      });
+      if (contentIds.length > 0) {
+        this.markNeedUpdates(contentIds);
+        const contents = await foxpageDataService.fetchAppContents(this.appId, { contentIds });
+        contents.forEach(content => {
+          this.addOne(content.id, content, content);
+        });
+      }
     }
     if (removes?.length) {
       this.removeTags(removes);

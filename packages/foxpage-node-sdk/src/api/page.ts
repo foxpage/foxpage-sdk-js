@@ -1,5 +1,5 @@
 import { getApplication } from '@foxpage/foxpage-manager';
-import { Context, Page, RelationInfo } from '@foxpage/foxpage-types';
+import { Context, FPFile, Page, RelationInfo } from '@foxpage/foxpage-types';
 
 import { NotFoundAppError, NotFoundDSLError, ParseDSLError } from '../errors';
 import { contextTask, initRelationsTask, parseTask } from '../task';
@@ -12,6 +12,7 @@ export interface ParsePageOptions {
   req: FoxpageRequestOptions;
   ctx?: Context;
   locale?: string;
+  file: FPFile;
 }
 
 /**

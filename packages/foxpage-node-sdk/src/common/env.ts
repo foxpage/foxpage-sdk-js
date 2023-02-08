@@ -36,3 +36,12 @@ export const initEnv = (ctx: Context) => {
   ctx.isDebugMode = ctx.isDebugMode || isDebugMode(ctx);
   ctx.isMock = ctx.isMock || isMock(ctx);
 };
+
+/**
+ * get foxpage preview time
+ * @param ctx context
+ * @returns preview time
+ */
+export function getFoxpagePreviewTime(ctx: Context): string | undefined {
+  return ctx?.URL?.searchParams?.get('_foxpage_preview_time') || undefined;
+}

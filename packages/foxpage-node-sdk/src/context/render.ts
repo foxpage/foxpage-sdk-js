@@ -1,11 +1,12 @@
 import _ from 'lodash';
 
-import { ContextInstance, Logger } from '@foxpage/foxpage-shared';
+import { ContextInstance, createPerformanceLogger, Logger } from '@foxpage/foxpage-shared';
 import {
   FoxpageComponent,
   FoxpageHooks,
   FrameworkResource,
   Package,
+  PerformanceLogger,
   RenderAppInfo,
   RenderOption,
   StructureNode,
@@ -40,6 +41,10 @@ export class RenderContextInstance extends ContextInstance {
 
   plugins: string[];
 
+  performanceLogger: PerformanceLogger;
+
+  matchedRoute?: string;
+
   private getHooks: () => FoxpageHooks | undefined;
 
   constructor(app: RenderAppInfo) {
@@ -53,6 +58,8 @@ export class RenderContextInstance extends ContextInstance {
     this.getHooks = () => app.pluginManager?.getHooks();
 
     this.logger = loggerCreate('render process');
+
+    this.performanceLogger = createPerformanceLogger(this.logger, this.performance);
   }
 
   get hooks() {

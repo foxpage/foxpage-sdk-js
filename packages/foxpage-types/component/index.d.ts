@@ -7,6 +7,7 @@ import { FPPackageEntrySource } from '../manager';
 export interface ComponentLoadOption {
   autoDownloadComponent?: boolean;
   useStructureVersion?: boolean;
+  isPreviewMode?: boolean;
 }
 
 export interface ComponentLoader {

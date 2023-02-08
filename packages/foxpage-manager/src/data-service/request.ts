@@ -2,10 +2,6 @@ import Axios from 'axios';
 
 import { ManagerOption } from '@foxpage/foxpage-types';
 
-// TODO: will remove it
-const TOKEN =
-  'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzZXItZHZiZlcxcXNsOHFrejM5IiwiYWNjb3VudCI6ImZveC11c2VyIiwiaWF0IjoxNjM4MzI2OTE4LCJleHAiOjE2NDY5NjY5MTh9.Hzcq8sjZn7SiZ1FBf4HKBdebMH5A922w-q_SCqSR9qTYYVNArmcoevjIYFPTz0FwowDu899xplO72v1zNpwo6Gjxx1ynMRcjziTUUXYhmLKEuIuhimt5lVbc5byrOPRSkHatgtkDPF7PtC390a9BYzlmCg11BTNM_bAMI5MkCZYduTw2ZW0CK8R_aoz-Hj8i0NlW9vJt6KPC7vsBQBdiv92Z0Gerz7n0V-5RhTYZVJyIQFzuddNmrdMg_YrQH46ESm5ZJ-cKzYac8Pfi6YU-5FfHd3XqnUfGTgfaxnL7WhtgrEkDHkg1CINynBALPkEUNTCMvINMNhbso-IVd5mmEcqheNzLiHFLXI8dAQjHXoBq6xycBicp-P6D1sjFrPSJHkqvPngqUP1wXendHPEcT8zChj0Jf0-GET986bAZLWowpaRvDvS_EkOBfu1GJ5vWXasPcWvheFXX490OT8zuaWidJdfE-l1CgGYhjhxzWEZBwZ9EWVgUcpH2NYsodpaiiCXANRqyL3AwNyUnCr6XM2dYy8SEuNm0XV4T8Us968EUOaKldTjXGBNSX_e1IH7eegSdV2LiFSg2F0VYXatdClIIPo2c4S5TIyTJpdCfJFraLvZC6EvFqb5d_OmzLFbpnoJvFjDVm9TpzLLiY3HdcM_icKpHxIlFHJmiYbsxObg';
-
 interface WebApiResponse<T> {
   data?: T;
   code: 200 | 400 | 401 | 403 | 404 | 500;
@@ -53,9 +49,7 @@ export const createRequest = (opt: ManagerOption['dataService']): FoxpageRequest
         url,
         params: method === 'get' ? params : undefined,
         data: method !== 'get' ? params : undefined,
-        headers: {
-          token: TOKEN,
-        },
+        timeout: opt.timeout || 10 * 1000,
       });
 
       const { data } = result;

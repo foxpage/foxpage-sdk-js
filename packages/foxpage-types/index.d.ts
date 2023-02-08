@@ -14,6 +14,7 @@ export * from './browser';
 export * from './listener';
 export * from './hook';
 export * from './cache';
+export * from './performance';
 export * from './plugin';
 export * from './request';
 export * from './ssr';

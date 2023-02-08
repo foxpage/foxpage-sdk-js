@@ -5,7 +5,7 @@ import { FOXPAGE_ROOT } from '../common';
 export const FOXPAGE_PACKAGE = 'modules';
 export const PACKAGE_JSON_FILENAME = 'package';
 
-export function resolvePackageDir(appId: string, packageName: string, version?: string) {
+export function resolvePackageDir(appId: string, packageName = '', version?: string) {
   return version
     ? join(FOXPAGE_ROOT, appId, FOXPAGE_PACKAGE, packageName, version)
     : join(FOXPAGE_ROOT, appId, FOXPAGE_PACKAGE, packageName);

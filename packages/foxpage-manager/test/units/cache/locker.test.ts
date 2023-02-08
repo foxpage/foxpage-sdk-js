@@ -7,6 +7,6 @@ describe('cache/locker test', () => {
     const dir = join(__dirname, `demo.${new Date().getTime()}.js`);
     await locker.lock(dir, () => {});
     await locker.lock(dir, () => {});
-    await locker.unlock(dir, () => {});
+    await locker.unlock(dir);
   });
 });

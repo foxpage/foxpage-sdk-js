@@ -1,6 +1,7 @@
 import { createProxyMiddleware, Options } from 'http-proxy-middleware';
 import { Middleware } from 'koa';
 import kc from 'koa-connect';
+//@ts-ignore
 import pathToRegexp from 'path-to-regexp';
 
 export type Koa2ProxyMiddlewareConfig = {
@@ -19,6 +20,7 @@ const proxy = (options: Koa2ProxyMiddlewareConfig): Middleware => {
     const { targets = {} } = options;
     const { path } = ctx;
     for (const route of Object.keys(targets)) {
+      //@ts-ignore
       if (pathToRegexp(route).test(path)) {
         const opt: Options = Object.assign({}, targets[route], { target: ctx.request.origin }, { logLevel: 'error' });
         const httpProxy = createProxyMiddleware(opt);

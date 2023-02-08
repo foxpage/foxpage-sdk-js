@@ -1,9 +1,12 @@
-import { readJSON } from 'fs-extra';
+import crypto from 'crypto';
+
+import { readJSON, remove } from 'fs-extra';
+import globby from 'globby';
 import _ from 'lodash';
 
 import { Logger, ResourceCache } from '@foxpage/foxpage-types';
 
-import { resolveContentPath, storeContent } from './local';
+import { resolveContentDir, resolveContentPath, storeContent } from './local';
 
 export type DiskCacheOption = { appId: string; type: string; logger?: Logger };
 
@@ -16,7 +19,7 @@ export type DiskCacheOption = { appId: string; type: string; logger?: Logger };
  * @template T
  */
 export class DiskCache<T> implements ResourceCache<T> {
-  diskCache = new Map<string, string>();
+  diskCache = new Map<string, { filePath: string; hash: string }>();
   private appId: string;
   private type: string;
   private logger?: Logger;
@@ -36,14 +39,17 @@ export class DiskCache<T> implements ResourceCache<T> {
    */
   async set(id: string, resource: T): Promise<void> {
     try {
-      const dirs = this.generateDirs(id);
-      const filePath = resolveContentPath(this.appId, dirs);
-      this.diskCache.set(id, filePath);
+      const hash = this.computeMD5Hash(JSON.stringify(resource));
+      const filePath = this.generateFilePath(id, hash);
+      this.diskCache.set(id, { filePath, hash });
+
       await storeContent(filePath, _.cloneDeep(resource));
+
+      await this.delete(id, false);
     } catch (e) {
       const msg = (e as Error).message;
       if (msg.indexOf('EEXIST') === -1) {
-        this.logger?.error('store content failed,' + e);
+        this.logger?.error('store content failed: ' + e);
       }
     }
   }
@@ -55,20 +61,25 @@ export class DiskCache<T> implements ResourceCache<T> {
    * @return {*}  {(Promise<T | null | undefined>)}
    */
   async get(id: string): Promise<T | null | undefined> {
-    const filePath = resolveContentPath(this.appId, this.generateDirs(id));
-    if (filePath) {
-      try {
-        const result = await readJSON(filePath);
-        if (result && result.delete) {
-          // the deleted content will return null;
-          return null;
-        }
-        return _.cloneDeep(result);
-      } catch (error) {
-        return null;
+    const cached = this.diskCache.get(id);
+    try {
+      let filePath = '';
+      if (cached) {
+        filePath = cached.filePath;
+      } else {
+        const rootDir = this.getRootDir(id);
+        const files = await this.getFiles(rootDir);
+        filePath = files[0];
       }
+      if (filePath) {
+        const result = await readJSON(filePath);
+        return result ? _.cloneDeep(result) : null;
+      }
+      return null;
+    } catch (e) {
+      // this.logger?.info('get content failed: ' + e);
+      return null;
     }
-    return null;
   }
 
   /**
@@ -85,20 +96,62 @@ export class DiskCache<T> implements ResourceCache<T> {
    * update delete status for delete action
    *
    * @param {string} id
+   * @param {boolean} all true: remove all files of the dir, false: only remove the invalid files
    * @return {*}  {Promise<void>}
    * @memberof DiskCache
    */
-  async delete(id: string): Promise<void> {
-    const result = (await this.get(id)) as any;
-    if (result) {
-      // update delete status: true
-      result.delete = true;
-      await this.set(id, result);
+  async delete(id: string, all = true): Promise<void> {
+    const cached = this.diskCache.get(id);
+    if (cached) {
+      try {
+        const rootDir = this.getRootDir(id);
+        if (all) {
+          await remove(rootDir);
+          this.diskCache.delete(id);
+        } else {
+          const files = await this.getFiles(rootDir);
+          const doRemove = async (list: string[]) => {
+            for (const fileName of list) {
+              if (!fileName.includes(cached.hash)) {
+                // only remove the invalid files
+                await remove(fileName);
+              }
+            }
+          };
+          await doRemove(files);
+        }
+      } catch (_e) {
+        // this.logger?.warn('remove content failed,' + e);
+      }
     }
   }
 
-  private generateDirs(id: string) {
-    return [this.type, id];
+  private getRootDir(id: string) {
+    const dirs = [this.type, id];
+    const rootDir = resolveContentDir(this.appId, dirs);
+    return rootDir;
+  }
+
+  private generateFilePath(id: string, hash: string) {
+    const dirs = [this.type, id, hash];
+    const filePath = resolveContentPath(this.appId, dirs);
+    return filePath;
+  }
+
+  private computeMD5Hash(code: string, len = 8) {
+    const md5 = crypto.createHash('md5');
+    md5.update(code);
+    const hash = md5.digest('hex');
+    return hash.substring(0, len);
+  }
+
+  private async getFiles(root: string) {
+    const files = await globby('**/*', {
+      absolute: true,
+      onlyFiles: true,
+      cwd: root,
+    });
+    return files;
   }
 
   /**

@@ -56,13 +56,14 @@ export const postMerge = <T extends MergeStructureNode>(record: Record<string, T
 
   function dfs(list: T[]) {
     list.forEach(item => {
-      const childIds = item.childIds || [];
-      if (childIds.length > 0) {
-        const children = childIds
+      const { childIds = [], children = [] } = item || {};
+      if (childIds.length > 0 || children.length > 0) {
+        const _children = childIds
           ?.map(id => record[id])
           .filter(isNotNill)
+          .concat(children as unknown as T)
           .sort((one, two) => (one.extension?.sort || 0) - (two.extension?.sort || 0));
-        item.children = children.length > 0 ? dfs(children) : [];
+        item.children = _children.length > 0 ? dfs(_children) : [];
       }
       // avoid the extension data
       delete item.childIds;

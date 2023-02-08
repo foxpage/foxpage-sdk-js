@@ -54,6 +54,7 @@ const webpackConfig = (isBuildProd, {
     optimization: {
       sideEffects: true,
       minimize: isLocal ? false : !!isBuildProd,
+      // moduleIds: "named",
     },
     module: {
       rules: [
@@ -83,7 +84,7 @@ const webpackConfig = (isBuildProd, {
         __APP_VERSION__: JSON.stringify(pkg.version),
         'process.env.NODE_ENV': JSON.stringify(isBuildProd ? 'production' : 'development'),
       }),
-      !isBuildProd && new webpack.NamedModulesPlugin(),
+      // !isBuildProd && new webpack.NamedModulesPlugin(),
     ].filter(Boolean),
   };
   return config;

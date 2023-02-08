@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-middleware-koa",
-  "version": "0.2.5",
+  "version": "0.2.8",
   "description": "foxpage koa middleware",
   "keywords": [
     "foxpage",

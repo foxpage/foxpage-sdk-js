@@ -361,7 +361,11 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
       }
     };
 
-    await create(packages, { initDependencies: true });
+    try {
+      await create(packages, { initDependencies: true });
+    } catch (e) {
+      this.logger?.error(`install packages failed: `, e);
+    }
     return Array.from(installMap.values());
   }
 
@@ -377,7 +381,7 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
     names.forEach(name => {
       const { versions } = this.packageVersionsMap.get(name) || {};
       if (!versions) {
-        this.logger.warn(`not exist the package@${name} in packageMap`);
+        // this.logger.warn(`not exist the package@${name} in packageMap`);
         versionInfo[name] = null;
       } else {
         versionInfo[name] = versions;

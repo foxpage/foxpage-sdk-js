@@ -1,5 +1,5 @@
 import { merger, mocker, parser } from '@foxpage/foxpage-core';
-import { getApplicationBySlug, PageInstance } from '@foxpage/foxpage-manager';
+import { getApplicationByPath, PageInstance } from '@foxpage/foxpage-manager';
 import { createContentInstance, relationsMerge, tag, variable } from '@foxpage/foxpage-shared';
 import {
   Application,
@@ -12,11 +12,12 @@ import {
 } from '@foxpage/foxpage-types';
 
 import { FoxpageRequestOptions } from '../api';
-import { initEnv } from '../common';
+import { getFoxpagePreviewTime, initEnv } from '../common';
 import { createContext, updateContextWithPage } from '../context';
 import { renderToHTML } from '../render/main';
 
 import { getRelations, getRelationsBatch } from './../manager/main';
+import { getPathname } from './route';
 
 /**
  * get user request application task
@@ -24,11 +25,7 @@ import { getRelations, getRelationsBatch } from './../manager/main';
  * @returns Application | null |undefined
  */
 export const appTask = (pathname: string) => {
-  const appSlug = pathname.split('/')[1];
-  if (!appSlug) {
-    return null;
-  }
-  return getApplicationBySlug(appSlug);
+  return getApplicationByPath(pathname);
 };
 
 /**
@@ -38,8 +35,9 @@ export const appTask = (pathname: string) => {
  * @returns Context
  */
 export const contextTask = async (app: Application, opt: FoxpageRequestOptions) => {
-  const ctx = await createContext(app, opt);
+  const startTime = new Date().getTime();
 
+  const ctx = await createContext(app, opt);
   // init env: debug,preview,...
   initEnv(ctx);
 
@@ -48,6 +46,7 @@ export const contextTask = async (app: Application, opt: FoxpageRequestOptions) 
     await afterContextCreate(ctx);
   }
 
+  ctx.performance.start = startTime;
   return ctx;
 };
 
@@ -63,8 +62,12 @@ export const routerTask = async (app: Application, ctx: Context) => {
   }
 
   try {
-    const { pathname, searchParams } = ctx.URL;
-    const pathnameStr = app.slug ? pathname.replace(`/${app.slug}`, '') : pathname;
+    const routeCost = ctx.performanceLogger('routerTime');
+    const { searchParams } = ctx.URL;
+    const pathnameStr = getPathname(app.slug, ctx);
+    if (!pathnameStr) {
+      return null;
+    }
     // sys default routers
     const route = app.routeManager.getRoute(pathnameStr);
     if (route) {
@@ -72,8 +75,7 @@ export const routerTask = async (app: Application, ctx: Context) => {
     }
 
     let searchStr = searchParams.toString();
-
-    // set default locale
+    // set default locale & format pathname
     const { locale: defaultLocale } = app.configs || {};
     if (defaultLocale && !searchStr.includes('locale=')) {
       searchStr = searchStr ? `${searchStr}&locale=${defaultLocale}` : `locale=${defaultLocale}`;
@@ -81,11 +83,12 @@ export const routerTask = async (app: Application, ctx: Context) => {
     if (!searchStr.includes('locale=') && !!ctx.locale) {
       searchStr = searchStr ? `${searchStr}&locale=${ctx.locale}` : `locale=${ctx.locale}`;
     }
-
     let _pathname = pathnameStr.toLowerCase();
     if (!pathnameStr.endsWith('.html') && !pathnameStr.endsWith('/')) {
       _pathname = `${_pathname}/`;
     }
+
+    // get content by tags
     const tags = searchStr ? tag.generateTagByQuerystring(searchStr) : [];
     const file = await app.fileManager.getFileByPathname(_pathname);
     const result = await app.tagManager.matchTag(tags, {
@@ -93,6 +96,8 @@ export const routerTask = async (app: Application, ctx: Context) => {
       fileId: file?.id || '',
       withContentInfo: !ctx.isPreviewMode,
     });
+
+    routeCost();
     return result;
   } catch (e) {
     ctx.logger?.warn(`get route failed: ${(e as Error).message}`);
@@ -135,16 +140,22 @@ export const fileTask = async (fileId: string, app: Application, ctx: Context) =
  * @returns Promise<Application|null|undefined>
  */
 export const pageTask = async (pageId: string, app: Application, ctx: Context) => {
+  let _pageId = pageId;
   let page: Page | null = null;
+
+  const getDSLCost = ctx.performanceLogger('getDSLTime');
 
   const { beforeDSLFetch, afterDSLFetch } = ctx.hooks || {};
   if (typeof beforeDSLFetch === 'function') {
-    await beforeDSLFetch(ctx);
+    const result = await beforeDSLFetch(ctx);
+    if (result.pageId) {
+      _pageId = result.pageId;
+    }
   }
 
   // get page dsl with mode
   if (ctx.isPreviewMode) {
-    const contents = await app.pageManager.getDraftPages([pageId]);
+    const contents = await app.pageManager.getDraftPages([_pageId]);
     if (contents) {
       const { content, relations, mock } = contents[0];
       page = content as Page;
@@ -155,16 +166,18 @@ export const pageTask = async (pageId: string, app: Application, ctx: Context) =
         }
       }
     }
+    // set preview time
+    ctx._foxpage_preview_time = getFoxpagePreviewTime(ctx);
   } else {
-    page = (await app.pageManager.getPage(pageId)) || null;
-  }
-
-  if (typeof afterDSLFetch === 'function') {
-    page = await afterDSLFetch(ctx, page);
+    page = (await app.pageManager.getPage(_pageId)) || null;
   }
 
   // with merge
   page = await mergeTask(page, app, ctx);
+
+  if (typeof afterDSLFetch === 'function') {
+    page = await afterDSLFetch(ctx, page);
+  }
 
   // create instance by page content
   // update context
@@ -192,6 +205,7 @@ export const pageTask = async (pageId: string, app: Application, ctx: Context) =
     }
   }
 
+  getDSLCost();
   return page;
 };
 
@@ -323,6 +337,7 @@ export const mockTask = async (page: Page | null, app: Application, ctx: Context
  */
 export const parseTask = async (page: Page, ctx: Context) => {
   const { beforeDSLParse, afterDSLParse } = ctx.hooks || {};
+  const parseCost = ctx.performanceLogger('parseTime');
 
   if (typeof beforeDSLParse === 'function') {
     await beforeDSLParse(ctx);
@@ -334,6 +349,7 @@ export const parseTask = async (page: Page, ctx: Context) => {
     parsed = (await afterDSLParse(ctx)) || parsed;
   }
 
+  parseCost();
   return parsed;
 };
 
@@ -345,10 +361,15 @@ export const parseTask = async (page: Page, ctx: Context) => {
  */
 export const renderTask = async (parsed: ParsedDSL, ctx: Context) => {
   try {
+    const renderCost = ctx.performanceLogger('renderTime');
     const opt: RenderToHTMLOptions = {
       useStructureVersion: ctx.isPreviewMode,
     };
-    return await renderToHTML(parsed.schemas, ctx, opt);
+
+    const html = await renderToHTML(parsed.schemas, ctx, opt);
+
+    renderCost();
+    return html;
   } catch (e) {
     const { onRenderError } = ctx.hooks || {};
     if (typeof onRenderError === 'function') {

@@ -13,7 +13,7 @@ export class NotMatchRouterError extends Error implements IFoxpageErrorType {
   status = FoxpageStatus.NOT_MATCH_ROUTER;
   detail: NotMatchRouterErrorDetail;
   constructor(path: string, url?: string) {
-    super(`can't match router by path: "${url || path}"`);
+    super(`can't match router by ${url ? 'url' : 'path'}: "${url || path}"`);
     this.detail = {
       path,
       url,

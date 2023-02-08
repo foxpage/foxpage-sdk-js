@@ -1,6 +1,6 @@
 import { Content, Route } from '@foxpage/foxpage-types';
 
-import { NotFoundAppError, NotFoundDSLError, ParseDSLError } from '../errors';
+import { NotFoundAppError, NotFoundDSLError, NotMatchRouterError, ParseDSLError } from '../errors';
 import { appTask, contextTask, pageTask, parseTask, renderTask, routerTask } from '../task';
 
 import { FoxpageRequestOptions } from './interface';
@@ -14,20 +14,29 @@ export const routerHandler = () => async (opt: FoxpageRequestOptions) => {
     return;
   }
   const { URL } = opt.request;
+  const { pathname = '' } = URL;
+
+  // ignore assets
+  if (/\.(js|css|json|svg|png|webp|jpe?g|woff)$/.test(pathname)) {
+    return null;
+  }
 
   // get app
-  const app = appTask(URL.pathname);
-  if (!app) {
-    throw new NotFoundAppError(URL.pathname);
+  const appInfo = appTask(pathname);
+  if (!appInfo) {
+    throw new NotFoundAppError(pathname);
   }
+
+  const { app, matchedRoute } = appInfo;
 
   // init renderContext task
   const ctx = await contextTask(app, opt);
+  ctx.matchedRoute = matchedRoute;
 
   // get content
   const content = await routerTask(app, ctx);
   if (!content) {
-    return null;
+    throw new NotMatchRouterError(pathname, URL.href);
   }
 
   const pageId = (content as Content).id;
@@ -52,5 +61,5 @@ export const routerHandler = () => async (opt: FoxpageRequestOptions) => {
 
   // render task
   const html = await renderTask(parsedPage, context);
-  return html;
+  return { html, contextValue: context };
 };

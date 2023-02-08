@@ -41,7 +41,7 @@ describe('data-service/service', () => {
 
   it('FetchAppContent', async () => {
     try {
-      await dataService.fetchAppContentByTags(appId, '/demo', [{ key: 'lcoale', value: 'en_US' }]);
+      await dataService.fetchAppContentByTags(appId, '1', '/demo', [{ key: 'lcoale', value: 'en_US' }]);
     } catch (e) {
       expect(e).toBeDefined();
     }

@@ -9,6 +9,8 @@ import { withLock } from './locker';
 export const FOXPAGE_CONTENT = 'contents';
 export const FOXPAGE_CONTENT_FILE = '.json';
 
+const DIR_MARK = `${process.platform === 'win32' ? '\\' : '/'}`;
+
 export function resolveContentDir(appId: string, dirs: string[]) {
   return join(FOXPAGE_ROOT, appId, FOXPAGE_CONTENT, ...dirs);
 }
@@ -32,11 +34,16 @@ export async function storeContent<T>(filePath: string, content?: T) {
   let lockStr = filePath.replace('.json', '-locked');
 
   // TODO:
-  const pkgMark = `contents${process.platform === 'win32' ? '\\' : '/'}packages`;
+  const pkgMark = `contents${DIR_MARK}packages`;
   const [dir, value] = lockStr.split(pkgMark);
   if (value) {
-    lockStr = dir + pkgMark + value.replace(':', '_').replace(/\./g, '-');
+    const layers = Array.from(value.split(DIR_MARK));
+    const last = layers.pop();
+    lockStr = dir + pkgMark + (layers.join(DIR_MARK) + '-' + last).replace(':', '_').replace(/\./g, '-');
   }
 
+  // for record cache time
+  //@ts-ignore
+  content._lastModified = new Date().getTime();
   await withLock(lockStr, () => outputJSON(filePath, content, { spaces: 2, flag: 'wx' }));
 }

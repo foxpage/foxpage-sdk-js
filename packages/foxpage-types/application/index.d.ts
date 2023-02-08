@@ -23,6 +23,7 @@ import { AppConfig } from './config';
 import { ResourceUpdateInfo } from '../ws';
 
 export * from './config';
+export * from './route';
 
 export interface ApplicationHooks {
   sourceUpdateHook?: (data: unknown) => void;

@@ -3,7 +3,11 @@ import { Context, SystemVariableProvider } from '@foxpage/foxpage-types';
 
 export const sysLocalTime: SystemVariableProvider = {
   name: 'localTime',
-  get: () => {
+  get: (ctx: Context) => {
+    const _foxpage_preview_time = ctx?._foxpage_preview_time;
+    if (_foxpage_preview_time) {
+      return new DateTime(_foxpage_preview_time, true);
+    }
     return DateTime.now();
   },
 };

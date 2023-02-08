@@ -1,4 +1,4 @@
-import { Application, ManagerOption } from '@foxpage/foxpage-types';
+import { Application, FoxRoute, ManagerOption } from '@foxpage/foxpage-types';
 
 import { ManagerImpl } from './manager';
 
@@ -80,4 +80,17 @@ export const getApplicationBySlug = (slug: string): Application | undefined => {
   if (manager) {
     return manager.getApplicationBySlug(slug);
   }
+  return undefined;
+};
+
+/**
+ * get application via path
+ * @param path user request path
+ * @returns Application|undefined
+ */
+export const getApplicationByPath = (path: string): { app: Application; matchedRoute?: FoxRoute } | undefined => {
+  if (manager) {
+    return manager.getApplicationByPath(path);
+  }
+  return undefined;
 };

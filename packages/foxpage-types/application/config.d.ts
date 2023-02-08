@@ -1,4 +1,5 @@
 import { SSRConfig } from "../ssr";
+import { FoxRoute } from "./route";
 
 export interface AppConfig {
   // source update schedule
@@ -9,12 +10,15 @@ export interface AppConfig {
   virtualPath?: string;
   debugger?: {
     enable?: boolean;
+    host?: string;
     url?: string | ((req: any) => string);
   };
   visualEditor?: {
     enable?: boolean;
+    host?: string;
     url?: string | ((req: any) => string);
   };
   ssr?: SSRConfig;
   locale?: string;
+  routes?: FoxRoute[];
 }

@@ -74,13 +74,13 @@ export class PackageInstance implements Package {
     this.version = info.version;
     this.key = packager.generateKey(info.name, info.version);
     this.source = this.initResource(info.resource.entry, opt?.resource);
-    this.downloadUrl = this.source.node.downloadHost + this.source.node.path;
+    this.downloadUrl = this.source.node ? this.source.node.downloadHost + this.source.node.path : '';
     this.dependencies = info.resource.dependencies || [];
     this.deps = this.dependencies.map(item => item.name);
 
     this.logger = opt?.logger;
     this.meta = info.meta;
-    this.filePath = resolvePackageJSPath(this.appId, this.name, this.version);
+    this.filePath = this.name ? resolvePackageJSPath(this.appId, this.name, this.version) : '';
     this.supportNode = true;
     this.messages = new Messages();
   }
@@ -162,6 +162,10 @@ export class PackageInstance implements Package {
       return optional.fail('miss source');
     }
 
+    if (!this.downloadUrl) {
+      return optional.fail('miss downloadUrl');
+    }
+
     const fetcher = new PackageFetcher(this.downloadUrl, {
       maxRetryTime: 5,
       downloadTimeout: 3000,
@@ -171,9 +175,9 @@ export class PackageInstance implements Package {
   }
 
   public async processJSCode(jsContent: string) {
-    const targetJsPath = resolvePackageJSPath(this.appId, this.name, this.version);
-    const lockedStr = targetJsPath.replace('.js', '-locked');
     try {
+      const targetJsPath = resolvePackageJSPath(this.appId, this.name, this.version);
+      const lockedStr = targetJsPath.replace('.js', '-locked');
       const exist = await pathExists(targetJsPath);
       if (!exist) {
         await locker.withLock(lockedStr, async () => {

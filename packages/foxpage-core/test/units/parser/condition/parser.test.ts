@@ -1,7 +1,7 @@
 import { Condition, ParsedContent, Variable } from '@foxpage/foxpage-types';
 
-import { ConditionParser } from '@/parser/condition';
-import { VariableParser } from '@/parser/variable';
+import { ConditionParserImpl } from '@/parser/condition';
+import { VariableParserImpl } from '@/parser/variable';
 
 import {
   ConditionParsed,
@@ -12,10 +12,10 @@ import {
 } from '@@/helper';
 
 describe('parser/condition/parser', () => {
-  let parser: ConditionParser;
+  let parser: ConditionParserImpl;
 
   beforeEach(() => {
-    parser = new ConditionParser();
+    parser = new ConditionParserImpl();
   });
 
   it('parse or return true', () => {
@@ -52,12 +52,12 @@ describe('parser/condition/parser', () => {
     const variable: Variable = require('../../../data/variable/variable.json');
     const opt = { conParsed: {}, varParsed: {} } as { conParsed: ConditionParsed; varParsed: VariableParsed };
     const ctx = mockRenderContextWithConAndVariable(condition, variable, opt);
-    const variableParser = new VariableParser();
+    const variableParser = new VariableParserImpl();
     await variableParser.parse(ctx, {});
     const parsedCtx = mockRenderContextWithParsedContent(ctx, 'variables', opt.varParsed);
     parser.parse(parsedCtx);
     expect(opt.varParsed).toBeDefined();
     expect(opt.conParsed).toBeDefined();
-    expect(opt.conParsed.con_1b652910e89b).toBeTruthy();
+    expect(opt.conParsed.con_1b652910e89b).not.toBeTruthy();
   });
 });

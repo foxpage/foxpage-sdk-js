@@ -113,5 +113,5 @@ export const renderToHtmlByFileIdAndLocale = async (
 
   // render task
   const html = (await renderTask(parsedPage, context)) || null;
-  return { html, dsl: context.origin.page, vars: context.variables };
+  return { html, dsl: context.origin.page, vars: context.variables, contextValue: context };
 };

@@ -1,3 +1,5 @@
+import { chunk } from 'lodash';
+
 import {
   Application,
   ContentInfo,
@@ -11,6 +13,8 @@ import { ManagerBaseImpl } from '../common';
 import { foxpageDataService } from '../data-service';
 
 import { PageInstance } from './page';
+
+const CHUNK_SIZE = 5;
 
 /**
  * page manager
@@ -81,8 +85,16 @@ export class PageManagerImpl extends ManagerBaseImpl<Page> implements PageManage
    *
    * @return {*}  {Promise<Page[]>}
    */
-  public async freshPages(pageIds?: string[]): Promise<Page[]> {
-    const pages = await foxpageDataService.fetchAppPages(this.appId, { pageIds });
+  public async freshPages(pageIds: string[] = []): Promise<Page[]> {
+    const chunks = chunk(pageIds, CHUNK_SIZE);
+    let pages: Page[] = [];
+    const fetcher = async (list: string[][]) => {
+      for (const _pageIds of list) {
+        const result = await foxpageDataService.fetchAppPages(this.appId, { pageIds: _pageIds });
+        pages = pages.concat(result);
+      }
+    };
+    await fetcher(chunks);
     // add & update
     return pages.map(page => {
       return this.addPage(page);
@@ -114,8 +126,10 @@ export class PageManagerImpl extends ManagerBaseImpl<Page> implements PageManage
     if (updates && updates.length > 0) {
       const contentIds = await this.filterExists(updates);
 
-      this.markNeedUpdates(contentIds);
-      await this.freshPages(contentIds);
+      if (contentIds.length > 0) {
+        this.markNeedUpdates(contentIds);
+        await this.freshPages(contentIds);
+      }
     }
     if (removes && removes.length > 0) {
       this.removePages(removes);

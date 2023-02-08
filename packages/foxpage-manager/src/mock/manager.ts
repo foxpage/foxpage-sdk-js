@@ -78,8 +78,10 @@ export class MockManagerImpl extends ManagerBaseImpl<Mock> implements MockManage
     if (updates && updates.length > 0) {
       const contentIds = await this.filterExists(updates);
 
-      this.markNeedUpdates(contentIds);
-      await this.freshMocks(contentIds);
+      if (contentIds.length > 0) {
+        this.markNeedUpdates(contentIds);
+        await this.freshMocks(contentIds);
+      }
     }
     if (removes && removes.length > 0) {
       this.removeMocks(removes);

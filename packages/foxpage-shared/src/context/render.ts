@@ -6,14 +6,20 @@ import {
   ContextOrigin,
   ContextResource,
   FPFile,
+  Logger,
   Page,
+  RecordPerformanceKey,
   RelationInfo,
   RenderAppInfo,
   RenderContent,
+  RenderPerformance,
+  StructureNode,
   Template,
+  Variable,
 } from '@foxpage/foxpage-types';
 
 import { ContentType } from '../content';
+import { createLogger } from '../logger';
 import { createSysVariable } from '../variable';
 
 import { CONTEXT_VARIABLE_MARK } from './constant';
@@ -52,6 +58,8 @@ export abstract class ContextInstance implements Context {
    * @type {ContextOrigin}
    */
   readonly origin: ContextOrigin = {};
+  performance: RenderPerformance = {};
+  performanceLogger = createPerformanceLogger(createLogger('default'), {});
 
   constructor(info: RenderAppInfo) {
     this.appId = info.appId;
@@ -211,3 +219,38 @@ export abstract class ContextInstance implements Context {
     return [sysVars, cusVars];
   }
 }
+
+// performance
+export const createPerformanceLogger =
+  (logger: Logger, perf: RenderPerformance) =>
+  (key: keyof Pick<RenderPerformance, RecordPerformanceKey>, value?: string | StructureNode | Variable) => {
+    if (typeof value === 'object') {
+      const { id, name } = value;
+      const nodeKey = `${name}@${id}`;
+      logger.timeStart(nodeKey);
+
+      if (!perf[key]) {
+        perf[key] = {} as never;
+      }
+      // @ts-ignore
+      if (!perf[key][nodeKey]) {
+        // @ts-ignore
+        perf[key][nodeKey] = {
+          id,
+          name,
+        };
+      }
+      // node performance
+      return (msg?: string) => {
+        // @ts-ignore
+        perf[key][nodeKey].initialPropsTime = logger.timeEnd(nodeKey, msg);
+      };
+    } else {
+      const label = value || key;
+      logger.timeStart(label);
+      return (msg?: string) => {
+        // @ts-ignore
+        perf[key] = logger.timeEnd(label, msg);
+      };
+    }
+  };

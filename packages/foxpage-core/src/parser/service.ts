@@ -1,3 +1,4 @@
+import { Messages } from '@foxpage/foxpage-shared';
 import { Context, Page, ParserOption } from '@foxpage/foxpage-types';
 
 import { ParserImpl } from './parser';
@@ -58,7 +59,7 @@ export const parse = async (page: Page, ctx: Context) => {
     ctx.logger?.error('parse failed:', e);
     parser.reset({ sessionId });
     return {
-      messages: [],
+      messages: [] as Messages[],
       page: {},
       ctx,
     };

@@ -81,8 +81,10 @@ export class ConditionManagerImpl extends ManagerBaseImpl<Condition> implements 
     if (updates && updates.length > 0) {
       const contentIds = await this.filterExists(updates);
 
-      this.markNeedUpdates(contentIds);
-      await this.freshConditions(contentIds);
+      if (contentIds.length > 0) {
+        this.markNeedUpdates(contentIds);
+        await this.freshConditions(contentIds);
+      }
     }
     if (removes && removes.length > 0) {
       this.removeConditions(removes);

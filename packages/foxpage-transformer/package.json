@@ -1,0 +1,32 @@
+{
+  "name": "@foxpage/foxpage-transformer",
+  "version": "0.4.2",
+  "description": "dsl transformer",
+  "author": "drxiao",
+  "homepage": "",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/**"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.prod.json",
+    "build:npm": "npm run build -- --skipLibCheck",
+    "clean": "rimraf lib",
+    "prepublishOnly": "npm install && npm run build:npm"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "shortid": "^2.2.16"
+  },
+  "devDependencies": {
+    "@foxpage/foxpage-types": "^0.5.2",
+    "rimraf": "^2.6.3",
+    "typescript": "^3.9.0"
+  }
+}

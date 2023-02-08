@@ -138,6 +138,8 @@ export class VariableParserImpl implements VariableParser {
         const existNoParsedVar = this.checkIn(parsedVarSet, item.variables);
         if (!existNoParsedFn && !existNoParsedVar) {
           const variable = item.schemas[0];
+          item.name = variable.name;
+          const hookCost = ctx.performanceLogger('variablePerformance', item);
           const parser = this.createParser(ctx);
           const { parsed, status, messages } = await parser(variable);
           ctx.updateResource(ContentType.VARIABLE, variable.name, {
@@ -147,6 +149,7 @@ export class VariableParserImpl implements VariableParser {
             parseMessages: messages,
           });
           parsedVarSet.add(item.id);
+          hookCost();
         } else {
           if (existNoParsedFn) {
             this.functionParser?.parse(ctx, { parsedVarSet, parsedFnSet });
@@ -172,7 +175,7 @@ export class VariableParserImpl implements VariableParser {
         }
       }
     } catch (e) {
-      ctx.logger?.error('variable parse failed:', e);
+      ctx.logger?.warn('variable parse failed:', e);
     }
 
     return;
@@ -192,11 +195,14 @@ export class VariableParserImpl implements VariableParser {
         content.props = resolvedProps;
 
         try {
-          const parsed = await parser.parse(content, ctx);
+          const { variableParseTimeout = 0 } = ctx.appConfigs?.ssr || {};
+          const parsed = variableParseTimeout
+            ? await timeout(parser.parse(content, ctx), variableParseTimeout)
+            : await parser.parse(content, ctx);
           return { parsed, status: true, messages };
         } catch (e) {
           const msg = `parse variable@${content.name} failed: ${(e as Error).message}`;
-          ctx.logger?.error(msg);
+          ctx.logger?.warn(msg);
           messages.push(msg);
           return { parsed: null, status: false, messages: messages };
         }
@@ -208,4 +214,15 @@ export class VariableParserImpl implements VariableParser {
       }
     };
   }
+}
+
+function timeout(promise: Promise<any>, time: number) {
+  return Promise.race([
+    promise,
+    new Promise((_resolve, reject) => {
+      setTimeout(() => {
+        reject(new Error('variable parse timeout' + `(${time})`));
+      }, time);
+    }),
+  ]);
 }
