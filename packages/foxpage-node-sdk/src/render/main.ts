@@ -50,6 +50,7 @@ export const renderToHTML = async (dsl: ParsedDSL['schemas'], ctx: Context, opt:
     const [components, dependencies] = await loadComponents(preparedDSL, ctx.appId, {
       ...opt,
       isPreviewMode: ctx.isPreviewMode,
+      isCanary: ctx.isCanary,
     });
     loadCost();
 
@@ -63,6 +64,7 @@ export const renderToHTML = async (dsl: ParsedDSL['schemas'], ctx: Context, opt:
 
     let html = '';
 
+    const renderHookCost = ctx.performanceLogger('renderHookTime');
     const { beforePageRender, onPageRender, afterPageRender } = ctx.hooks || {};
     if (typeof beforePageRender === 'function') {
       preparedDSL = await beforePageRender(ctx);
@@ -85,8 +87,9 @@ export const renderToHTML = async (dsl: ParsedDSL['schemas'], ctx: Context, opt:
       ctx.logger?.info(`afterPageRender hook get the html ${htmlStatus(html)}`);
     }
 
+    renderHookCost();
     ctx.logger?.info(`rendered html ${htmlStatus(html)}`);
-    return html ? DOCTYPE + html : '';
+    return html && html.startsWith('<html') ? DOCTYPE + html : html || '';
   }
   return '';
 };

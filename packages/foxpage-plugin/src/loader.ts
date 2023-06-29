@@ -3,7 +3,8 @@ import { join } from 'path';
 import fs from 'fs-extra';
 import resolve from 'resolve';
 
-import { FoxpageHooks } from './../../foxpage-types/hook/index.d';
+import { FoxpageHooks } from '@foxpage/foxpage-types';
+
 import { FoxpagePlugin, PluginLoader, PluginLoaderOptions } from './interfaces';
 import { Mode } from './mode';
 

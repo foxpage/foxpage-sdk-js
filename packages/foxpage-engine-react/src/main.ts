@@ -85,23 +85,18 @@ async function creator(node: StructureNode, ctx: Context, opt: BuildOptions) {
     // do getInitialProps hook
     let buildHookProps;
     if (typeof factory.beforeNodeBuild === 'function') {
+      const hookCost = ctx.performanceLogger?.('nodePerformance', node);
       try {
-        const hookCost = ctx.performanceLogger('nodePerformance', node);
-
         if (nodeBuildHookTimeout > 0) {
           buildHookProps = await timeout(factory.beforeNodeBuild(ctx, node), nodeBuildHookTimeout);
         } else {
           buildHookProps = await factory.beforeNodeBuild(ctx, node);
         }
-
-        hookCost();
         ctx.logger?.info(`Hook [ buildHookProps ][ ${name} ] success.`);
       } catch (e) {
-        // if ((e as Error).message?.includes(TIMEOUT_ERROR)) {
-        //   ctx.logger?.error(`Hook [ buildHookProps ][ ${name} ] run failed,`, e);
-        // } else {
         ctx.logger?.warn(`Hook [ buildHookProps ][ ${name} ] run failed,`, e);
-        // }
+      } finally {
+        hookCost();
       }
     }
 
@@ -154,12 +149,14 @@ export const renderToHtml = async (
   ctx: Context,
   _opt: PageRenderOption & { reRender?: boolean } = {},
 ): Promise<string> => {
+  const sessionId = new Date().getTime();
   try {
     if (dsl.length === 0) {
       ctx.logger?.info('parsed schemas is empty');
       return '';
     }
 
+    const buildCost = ctx.performanceLogger?.('buildTime' + `_${sessionId}`);
     const { beforePageBuild, afterPageBuild } = ctx.hooks || {};
     if (typeof beforePageBuild === 'function') {
       await beforePageBuild(ctx);
@@ -183,10 +180,12 @@ export const renderToHtml = async (
     if (typeof afterPageBuild === 'function') {
       rootElement = await afterPageBuild(ctx, rootElement);
     }
+    buildCost();
 
     // render
+    const mainRenderCost = ctx.performanceLogger?.('mainRenderTime' + `_${sessionId}`);
     const html: string = ReactDOMServer.renderToStaticMarkup(rootElement);
-
+    mainRenderCost();
     return html;
   } catch (e) {
     ctx.logger?.warn('render page failed:', e);

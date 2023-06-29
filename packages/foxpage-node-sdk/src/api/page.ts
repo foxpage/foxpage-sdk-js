@@ -1,10 +1,8 @@
 import { getApplication } from '@foxpage/foxpage-manager';
-import { Context, FPFile, Page, RelationInfo } from '@foxpage/foxpage-types';
+import { Context, FoxpageRequestOptions, FPFile, Page, RelationInfo } from '@foxpage/foxpage-types';
 
 import { NotFoundAppError, NotFoundDSLError, ParseDSLError } from '../errors';
 import { contextTask, initRelationsTask, parseTask } from '../task';
-
-import { FoxpageRequestOptions } from './interface';
 
 export interface ParsePageOptions {
   appId: string;
@@ -31,15 +29,15 @@ export const parsePage = async (page: Page, opt: ParsePageOptions) => {
 
   // init context & contents instance
   const ctx = opt.ctx ? opt.ctx : await contextTask(app, opt.req);
-  const instances = initRelationsTask({ ...opt.relationInfo, page: [page] }, ctx);
-  if (!instances.page || !instances.page[0]) {
+  const instances = initRelationsTask({ ...opt.relationInfo, pages: [page] }, ctx);
+  if (!instances.pages || !instances.pages[0]) {
     throw new NotFoundDSLError(page.id);
   }
 
-  const { page: parsedPage, ctx: context } = await parseTask(instances.page[0], ctx);
-  if (!parsedPage.schemas) {
-    throw new ParseDSLError(new Error('parsedPage.schemas is empty'), ctx.origin);
+  const { content, ctx: context } = await parseTask(instances.pages[0], ctx);
+  if (!content.schemas) {
+    throw new ParseDSLError(new Error('parsed.schemas is empty'), ctx.origin);
   }
 
-  return { parsedPage: parsedPage.schemas, variables: context.variables };
+  return { parsedPage: content.schemas, variables: context.variables };
 };

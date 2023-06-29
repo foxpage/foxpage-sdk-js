@@ -1,0 +1,50 @@
+{
+  "dslVersion": "1.0",
+  "extension": {
+    "extendId": "cont_9BYdADYswkB8h3t",
+    "mockId": ""
+  },
+  "fileId": "file_w2IQvQt3EIxuykB",
+  "id": "cont_YK9Zp7xzmN2hklr",
+  "relation": {
+    "__templates:cont_3FW5FimASJ5QRlc:schemas": {
+      "id": "cont_3FW5FimASJ5QRlc",
+      "type": "template"
+    }
+  },
+  "schemas": [
+    {
+      "directive": {
+        "tpl": "{{__templates:cont_3FW5FimASJ5QRlc:schemas}}"
+      },
+      "extension": {
+        "extendId": "stru_TCsMZtI2hkntYsF"
+      },
+      "id": "stru_BVbpRhgY6NnwO97",
+      "name": "page",
+      "props": {
+        "height": "100%",
+        "width": "100%"
+      },
+      "type": "page",
+      "version": ""
+    },
+    {
+      "directive": {
+      },
+      "extension": {
+        "extendId": "stru_pbvAhDK1Iiwmd93",
+        "parentId": "stru_LlqjBnwlLhsHmR4"
+      },
+      "id": "stru_dNPFhxa6rYlY7jr",
+      "label": "TDK & Share Info",
+      "name": "foxpage/cloud-component-trip-promo-head-pack",
+      "props": {
+        "title": "111111111111111111"
+      },
+      "type": "react.component",
+      "version": ""
+    }
+  ],
+  "version": "0.0.1"
+}

@@ -2,9 +2,23 @@ import { random } from 'faker';
 
 import { MessageArray } from '@foxpage/foxpage-types';
 
-import { executeString } from '@/parser/sandbox/string';
+import { executeString, getVars } from '@/parser/sandbox/string';
 
 describe('parser/sandbox/string', () => {
+  it('Get string replaces', () => {
+    const scopes = {
+      AA: {
+        BB: {
+          CC: 'cc',
+        },
+      },
+    };
+    const expression = 'function (){const a = {{AA:BB}};return a;}';
+    const result = getVars(expression, scopes);
+    expect(result).toBeDefined();
+    expect(JSON.stringify(result)).toContain(JSON.stringify(scopes.AA.BB));
+  });
+
   it('Keep origin type', () => {
     const obj = {
       foo: random.words(),
@@ -48,11 +62,10 @@ describe('parser/sandbox/string', () => {
       },
       fn,
     };
-    const res = executeString('bar is {{foo.bar}}', scope);
+    const res = executeString('bar is {{foo:bar}}', scope);
     expect(res).toBe(`bar is ${scope.foo.bar}`);
     executeString('{{fn()}}{{fn(1, 2, 3)}}', scope);
-    expect(fn.mock.calls.length).toBe(2);
-    expect(fn.mock.calls[1]).toEqual([1, 2, 3]);
+    expect(fn.mock.calls.length).toBe(0);
   });
 
   it('Return origin value if only have one expression', () => {
@@ -65,19 +78,8 @@ describe('parser/sandbox/string', () => {
       fn: jest.fn(),
     };
     expect(executeString('{{obj}}', scope)).toBe(scope.obj);
-    expect(executeString('{{obj.b}}', scope)).toBe(scope.obj.b);
+    expect(executeString('{{obj:b}}', scope)).toBe(scope.obj.b);
     expect(executeString('{{fn}}', scope)).toBe(scope.fn);
-    expect(typeof executeString('{{obj.a}}{{obj.b}}', scope) === 'string').toBeTruthy();
-  });
-
-  it('Parse array', () => {
-    const res = executeString('{{[1, 2, 3]}}', {});
-    expect(res).toEqual([1, 2, 3]);
-  });
-
-  it('Parse primitive value', () => {
-    expect(executeString('{{true}}', {})).toBeTruthy();
-    expect(executeString('{{1}}', {})).toBe(1);
-    expect(executeString('{{`1`}}', {})).toBe('1');
+    expect(typeof executeString('{{obj:a}}{{obj:b}}', scope) === 'string').toBeTruthy();
   });
 });

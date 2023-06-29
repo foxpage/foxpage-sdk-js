@@ -1,6 +1,7 @@
 import { Messages } from '@foxpage/foxpage-shared';
-import { Context, Page, ParserOption } from '@foxpage/foxpage-types';
+import { Context, ContextPage, ParserOption } from '@foxpage/foxpage-types';
 
+import { MainParser } from './main';
 import { ParserImpl } from './parser';
 
 let parser: ParserImpl;
@@ -25,22 +26,22 @@ export const getParser = () => {
 };
 
 /**
- * parse
- * @param page page content
+ * parse content
+ * @param content content
  * @param ctx Context
  * @returns parsed
  */
-export const parse = async (page: Page, ctx: Context) => {
+export const parse = async <T extends ContextPage>(content: T, ctx: Context) => {
   if (!parser) {
     const msg = 'parser instance is invalid.';
     ctx.logger?.error(msg);
-    throw new Error('msg');
+    throw new Error(msg);
   }
 
   const sessionId = Symbol(new Date().getTime()) as unknown as string;
 
   try {
-    parser.preParse(page, ctx, { sessionId });
+    parser.preParse(content, ctx, { sessionId });
 
     const result = await parser.parse(sessionId, ctx);
     const { parsed, messages } = result || {};
@@ -49,10 +50,10 @@ export const parse = async (page: Page, ctx: Context) => {
 
     return {
       messages,
-      page: {
-        id: page.id,
-        schemas: parsed,
-      },
+      content: {
+        id: content.id,
+        ...parsed,
+      } as T,
       ctx,
     };
   } catch (e) {
@@ -60,7 +61,37 @@ export const parse = async (page: Page, ctx: Context) => {
     parser.reset({ sessionId });
     return {
       messages: [] as Messages[],
-      page: {},
+      content: {} as T,
+      ctx,
+    };
+  }
+};
+
+/**
+ * only parse structure
+ * template,block and page structure merge
+ * @param content
+ * @param ctx
+ * @returns
+ */
+export const parseStructure = async <T extends ContextPage>(content: T, ctx: Context) => {
+  try {
+    const mainParser = new MainParser({ content }, ctx);
+    const result = await mainParser.parse(ctx);
+    const { parsed, messages } = result || {};
+    return {
+      messages,
+      content: {
+        id: content.id,
+        ...parsed,
+      } as T,
+      ctx,
+    };
+  } catch (e) {
+    ctx.logger?.error('parse failed:', e);
+    return {
+      messages: [] as Messages[],
+      content: {} as T,
       ctx,
     };
   }

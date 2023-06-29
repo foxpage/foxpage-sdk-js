@@ -1,0 +1,45 @@
+{
+  "id": "cont_eybqnuEadWL9HHf",
+  "enable": true,
+  "schemas": [
+    {
+      "id": "stru_Q2zMPT93zU9RLSL",
+      "name": "@fox-design/react-image",
+      "props": {
+        "src": "111111111111"
+      }
+    },
+    {
+      "id": "cont_92j16ONvNPTkmsD",
+      "props": {
+        "type": "json",
+        "value": {
+          "a": "variable mock"
+        }
+      },
+      "name": "_tvar"
+    },
+    {
+      "id": "stru_hSgm4zd7fTHh4QI",
+      "name": "@fox-design/react-html",
+      "label": "Html",
+      "props": {
+        "a": "mock template node"
+      }
+    },
+    {
+      "id": "stru_ZIvJEUi9M58cHx7",
+      "name": "@fox-design/react-listen-button",
+      "label": "listen-button",
+      "props": {
+        "a": "mock block node"
+      }
+    }
+  ],
+  "relation": {},
+  "version": "0.0.1",
+  "name": "mock_cont_YQvJCoVUjdx1VhG",
+  "fileId": "file_e9k0mqJARBqEv9F",
+  "_lastModified": 1681547994269,
+  "type": "mock"
+}

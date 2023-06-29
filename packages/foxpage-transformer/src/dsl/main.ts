@@ -98,6 +98,7 @@ export const transformToNewDSL = (pageDSL: PageDSL, schemaMap?: SchemaRecord): P
     id,
     schemas,
     relation: {},
+    type: 'page',
   };
 
   return page;

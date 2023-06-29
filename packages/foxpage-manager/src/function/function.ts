@@ -10,6 +10,8 @@ import { ContentDetailInstance } from '../common';
  * @extends {ContentDetailInstance<FPFunctionItem>}
  */
 export class FPFunctionInstance extends ContentDetailInstance<FPFunctionItem> implements FPFunction {
+  readonly type = 'function';
+
   /**
    * function item map
    *

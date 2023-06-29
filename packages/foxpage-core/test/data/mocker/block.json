@@ -1,0 +1,127 @@
+{
+  "relation": {
+    "_tvar:a": {
+      "id": "cont_92j16ONvNPTkmsD",
+      "type": "variable"
+    },
+    "__conditions:cont_jPrvCAjzPifoyUf": {
+      "id": "cont_jPrvCAjzPifoyUf",
+      "type": "condition"
+    }
+  },
+  "id": "cont_yYp8KTMkc716Hdi",
+  "schemas": [
+    {
+      "id": "stru_PAzRy7p3u25SoXa",
+      "name": "@fox-design/react-block",
+      "label": "Block",
+      "props": {},
+      "version": "",
+      "type": "react.component",
+      "extension": {
+        "sort": 100,
+        "parentId": ""
+      },
+      "children": [
+        {
+          "id": "stru_M6rvyXGfNx7he6u",
+          "name": "@fox-design/react-text",
+          "label": "Text",
+          "props": {
+            "text": "This is block title{{_tvar:a}}\r\n{{_tvar:a}}",
+            "textAlign": "center",
+            "lineHeight": 30
+          },
+          "version": "",
+          "type": "react.component",
+          "extension": {
+            "sort": 100,
+            "parentId": "stru_PAzRy7p3u25SoXa"
+          },
+          "directive": {}
+        },
+        {
+          "id": "stru_ZIvJEUi9M58cHx7",
+          "name": "@fox-design/react-listen-button",
+          "label": "listen-button",
+          "props": {
+            "__listeners": {
+              "onClick": [
+                {
+                  "id": "cxigNqRXp",
+                  "type": "action.component.call",
+                  "children": [
+                    {
+                      "id": "WF9He4_VL",
+                      "props": {}
+                    }
+                  ]
+                },
+                {
+                  "id": "irhUrI_On",
+                  "type": "action.component.call",
+                  "children": []
+                }
+              ]
+            },
+            "text": "the block test value"
+          },
+          "version": "",
+          "type": "react.component",
+          "extension": {
+            "sort": 100,
+            "parentId": "stru_PAzRy7p3u25SoXa"
+          },
+          "directive": {}
+        },
+        {
+          "id": "stru_BsBpupbMLG6IwYy",
+          "name": "@fox-design/react-image",
+          "label": "Image",
+          "props": {
+          },
+          "version": "",
+          "type": "react.component",
+          "extension": {
+            "sort": 200,
+            "parentId": "stru_PAzRy7p3u25SoXa"
+          }
+        },
+        {
+          "id": "stru_VxjIgNsqe3tY7r8",
+          "name": "@fox-design/react-button",
+          "label": "Button",
+          "props": {
+            "margin": {
+              "position": "center"
+            },
+            "style": {
+              "backgroundColor": "#5cce8e"
+            }
+          },
+          "version": "",
+          "type": "react.component",
+          "extension": {
+            "sort": 300,
+            "parentId": "stru_PAzRy7p3u25SoXa"
+          },
+          "directive": {
+            "if": [
+              "{{__conditions:cont_jPrvCAjzPifoyUf}}"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "version": "0.0.13",
+  "dslVersion": "1.0",
+  "name": "block content",
+  "versionNumber": 13,
+  "fileId": "file_3yuPzVwtVqc3ETC",
+  "extension": {
+    "mockId": ""
+  },
+  "_lastModified": 1681547989844,
+  "type": "block"
+}

@@ -1,6 +1,6 @@
 import { Context, FoxpageComponentMeta, StructureNode } from '@foxpage/foxpage-types';
 
-type DSL = Context['page']['schemas'];
+type DSL = StructureNode[];
 
 const createSelector =
   <K extends keyof StructureNode>(key: K, val: StructureNode[K]) =>
@@ -51,7 +51,7 @@ export function findStructureByMeta(dsl: StructureNode[], ctx: Context, tag: key
       const component = ctx.componentMap?.get(item.id);
       if (component) {
         // useStyledComponents: the meta of package provide
-        return !!component.meta[tag];
+        return !!component.meta?.[tag];
       }
     }
     return false;

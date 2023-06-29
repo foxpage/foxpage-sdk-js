@@ -115,12 +115,15 @@ export class PackageInstance implements Package {
     this.status = 'installing';
     try {
       await this.fetchCode(opt);
+      this.available = true;
+      this.status = 'installed';
     } catch (error) {
-      this.ignore(error as Error);
+      this.available = false;
+      this.status = 'fail';
+      this.messages.push(error as Error);
+      this.logger?.error(`install package ${this.name}@${this.version}@${this.downloadUrl} failed:`, error as Error);
       return;
     }
-    this.available = true;
-    this.status = 'installed';
   }
 
   private async fetchCode({ inspect = false, wrap = true }: PackageInstallOption) {
@@ -194,13 +197,6 @@ export class PackageInstance implements Package {
         throw err;
       }
     }
-  }
-
-  protected ignore(message: string | Error) {
-    this.available = false;
-    this.messages.push(message);
-    this.status = 'fail';
-    this.logger?.warn('install package %s@%j failed:', this.name, this.version, message);
   }
 
   private initResource<T extends keyof FPPackageEntrySource>(

@@ -13,7 +13,7 @@ const config = {
   },
   globals: {
     'ts-jest': {
-      tsConfig: join(__dirname, 'tsconfig.test.json')
+      tsconfig: join(__dirname, 'tsconfig.test.json')
     }
   },
   moduleNameMapper: {

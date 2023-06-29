@@ -24,12 +24,14 @@ export const PARSE_PAGE_PATH = '/_foxpage/parse-page';
 export const parsePage = async (page: Page, opt: PageParseOption) => {
   // init ctx
   const ctx: Context = createRenderContext(opt.appInfo);
-  const contentInstances = createContentInstance({ ...opt.relationInfo, page: [page] });
+  const contentInstances = createContentInstance({ ...opt.relationInfo, pages: [page] });
   ctx.updateOrigin({
     ...contentInstances,
     sysVariables: variable.getSysVariables(contentInstances as unknown as Record<string, ContentDetail[]>),
   });
-  ctx.updateOriginPage(contentInstances.page[0]);
+  if (contentInstances.pages) {
+    ctx.updateOriginPage(contentInstances.pages[0]);
+  }
   ctx.file = opt.file;
   // parse
   const parsed = await parse(page, ctx);

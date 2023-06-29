@@ -1,5 +1,5 @@
 import { isNotNill } from '@foxpage/foxpage-shared';
-import { Page } from '@foxpage/foxpage-types';
+import { ContentDetail, StructureNode } from '@foxpage/foxpage-types';
 
 import { MergeStructureNode } from './interface';
 import { MergeStrategy, strategyMerge } from './strategy';
@@ -80,21 +80,25 @@ export const postMerge = <T extends MergeStructureNode>(record: Record<string, T
  *
  * preMerge:transform the default schemas to record for get easy
  * doMerge: merge every node
- * postMerge:collect the merged node & transform to the tree(page structure)
+ * postMerge:collect the merged node & transform to the tree(structure)
  *
- * @param base base page content
- * @param current current page content
+ * @param base base content
+ * @param current current content
  * @param options merge options
- * @returns merge page content
+ * @returns merge content
  */
-export const merge = (base: Page, current: Page, options = { strategy: MergeStrategy.COMBINE }) => {
+export const merge = <T extends ContentDetail<StructureNode>>(
+  base: T,
+  current: T,
+  options = { strategy: MergeStrategy.COMBINE },
+) => {
   const baseRecord = preMerge(base.schemas);
 
   strategyMerge(baseRecord, current.schemas, options.strategy);
 
   const newSchemas = postMerge(baseRecord);
 
-  const result: Page = {
+  const result: T = {
     ...current,
     schemas: newSchemas,
     relation: mergeObject(base.relation || {}, current.relation || {}),

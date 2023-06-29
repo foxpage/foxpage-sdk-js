@@ -1,4 +1,5 @@
 import {
+  Block,
   Condition,
   Content,
   ContentInfo,
@@ -10,11 +11,13 @@ import {
   FPPackageResponse,
   ManagerOption,
   Mock,
+  PackageFreshOption,
   PackageNamedVersion,
   Page,
   ResourceUpdateInfo,
   Tag,
   Template,
+  TicketCheckData,
   Variable,
 } from '@foxpage/foxpage-types';
 
@@ -87,10 +90,14 @@ export class FoxpageDataService {
    * @param {{ packageIds: string[] }} packageIds
    * @return {Promise<FPPackage[]>}
    */
-  public async fetchAppPackages(appId: string, { packageIds }: { packageIds?: string[] }): Promise<FPPackage[]> {
+  public async fetchAppPackages(
+    appId: string,
+    { packageIds, opt }: { packageIds?: string[]; opt?: Pick<PackageFreshOption, 'strategy'> },
+  ): Promise<FPPackage[]> {
     return ((await this.request('post', '/components/live-versions', {
       applicationId: appId,
       componentIds: packageIds,
+      loadOnIgnite: opt?.strategy === 'loadOnIgnite' ? true : undefined,
       type: ['component', 'library'],
     })) || []) as FPPackage[];
   }
@@ -104,11 +111,12 @@ export class FoxpageDataService {
    */
   public async fetchAppPackagesByNamedVersions(
     appId: string,
-    { nameVersions }: { nameVersions: PackageNamedVersion[] },
+    { nameVersions, isCanary }: { nameVersions: PackageNamedVersion[]; isCanary?: boolean },
   ) {
     return ((await this.request('post', '/components/version-infos', {
       applicationId: appId,
       nameVersions,
+      isCanary,
       type: ['component', 'library'],
     })) || []) as FPPackageResponse[];
   }
@@ -134,6 +142,17 @@ export class FoxpageDataService {
   public async fetchAppTemplates(appId: string, { templateIds }: { templateIds?: string[] }): Promise<Template[]> {
     return ((await this.request('post', '/templates/lives', { applicationId: appId, ids: templateIds })) ||
       []) as Template[];
+  }
+
+  /**
+   * fetch application blocks
+   *
+   * @param {string} appId
+   * @param {{ blockIds: string[] }} { template content ids }
+   * @return {Promise<Block[]>}
+   */
+  public async fetchAppBlocks(appId: string, { blockIds }: { blockIds?: string[] }): Promise<Block[]> {
+    return ((await this.request('post', '/blocks/lives', { applicationId: appId, ids: blockIds })) || []) as Block[];
   }
 
   /**
@@ -256,6 +275,18 @@ export class FoxpageDataService {
   }
 
   /**
+   * fetch content & relations info
+   *
+   * @param {string} appId
+   * @param {{ contentIds: string[] }} { contentIds }
+   * @return {*}
+   */
+  public async fetchBlockRelationInfos(appId: string, { contentIds }: { contentIds: string[] }) {
+    return ((await this.request('post', '/blocks/live-infos', { applicationId: appId, ids: contentIds })) ||
+      []) as ContentRelationInfo[];
+  }
+
+  /**
    * fetch content & relation info in draft status
    *
    * @param {string} appId
@@ -268,6 +299,18 @@ export class FoxpageDataService {
   }
 
   /**
+   * fetch block content & relation info in draft status
+   *
+   * @param {string} appId
+   * @param {{ contentIds: string[] }} { contentIds }
+   * @return {*}
+   */
+  public async fetchDraftBlockRelationInfos(appId: string, { contentIds }: { contentIds: string[] }) {
+    return ((await this.request('post', '/blocks/draft-infos', { applicationId: appId, ids: contentIds })) ||
+      []) as ContentRelationInfo[];
+  }
+
+  /**
    * fetch files
    *
    * @param {string} appId
@@ -276,6 +319,16 @@ export class FoxpageDataService {
    */
   public async fetchFiles(appId: string, { fileIds }: { fileIds: string[] }) {
     return ((await this.request('post', '/files', { applicationId: appId, ids: fileIds })) || []) as FPFile[];
+  }
+
+  /**
+   * ticket check
+   * @param appId
+   * @param ticket
+   * @returns boolean
+   */
+  public async ticketCheck(ticket: string, data: TicketCheckData) {
+    return (await this.request('post', '/contents/encrypt-validate', { token: ticket, data })) as { status: boolean };
   }
 }
 

@@ -2,12 +2,13 @@ import _ from 'lodash';
 
 import {
   AppConfig,
+  Block,
   Context,
   ContextOrigin,
+  ContextPage,
   ContextResource,
   FPFile,
   Logger,
-  Page,
   RecordPerformanceKey,
   RelationInfo,
   RenderAppInfo,
@@ -39,7 +40,7 @@ export abstract class ContextInstance implements Context {
   readonly appSlug: string;
   readonly appConfigs?: AppConfig;
 
-  private innerPage?: Page;
+  private innerPage?: ContextPage;
 
   file?: FPFile = undefined;
   url = '';
@@ -71,9 +72,9 @@ export abstract class ContextInstance implements Context {
    * update relation info
    * @param relationInfo relation info
    */
-  public updateOrigin<K extends keyof Pick<ContextOrigin, 'templates' | 'functions' | 'conditions' | 'mocks'>>(
-    relationInfo: RelationInfo,
-  ) {
+  public updateOrigin<
+    K extends keyof Pick<ContextOrigin, 'templates' | 'functions' | 'conditions' | 'mocks' | 'blocks'>,
+  >(relationInfo: RelationInfo) {
     const { sysVariables = [], variables = [], ...rest } = relationInfo;
     // 'templates' | 'functions' | 'conditions' | 'mocks'
     Object.keys(rest).forEach(key => {
@@ -99,12 +100,12 @@ export abstract class ContextInstance implements Context {
   }
 
   /**
-   * update origin page
+   * update origin content
    *
-   * @param {Page} page
+   * @param {ContextPage} content
    */
-  public updateOriginPage(page: Page) {
-    this.updateOriginByKey('page', page);
+  public updateOriginPage(content: ContextPage) {
+    this.updateOriginByKey('page', content);
   }
 
   /**
@@ -123,12 +124,12 @@ export abstract class ContextInstance implements Context {
   }
 
   /**
-   * update page info
+   * update content info
    *
-   * @param {Page} page
+   * @param {ContextPage} content
    */
-  public updatePage(page: Page) {
-    this.innerPage = page;
+  public updatePage(content: ContextPage) {
+    this.innerPage = content;
   }
 
   /**
@@ -160,7 +161,11 @@ export abstract class ContextInstance implements Context {
   }
 
   public get page() {
-    return this.innerPage || ({} as Page);
+    return this.innerPage || ({} as ContextPage);
+  }
+
+  public get blocks() {
+    return this.getValues<ContextResource[ContentType.BLOCK], Block>(this.resource.blocks);
   }
 
   public get templates() {
@@ -183,6 +188,7 @@ export abstract class ContextInstance implements Context {
     variables['__functions'] = contentProxy(this.functions);
     variables['__conditions'] = contentProxy(this.conditions);
     variables['__templates'] = contentProxy(this.templates);
+    variables['__blocks'] = contentProxy(this.blocks);
     variables['__context'] = contentProxy({
       ...sysVariables,
     });
@@ -247,6 +253,7 @@ export const createPerformanceLogger =
       };
     } else {
       const label = value || key;
+      // @ts-ignore
       logger.timeStart(label);
       return (msg?: string) => {
         // @ts-ignore

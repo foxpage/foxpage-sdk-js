@@ -1,7 +1,7 @@
 import { ApplicationImpl } from '@foxpage/foxpage-manager';
 import { Application, ContentRelationInfo, Page } from '@foxpage/foxpage-types';
+import { FoxpageRequestOptions } from '@foxpage/foxpage-types';
 
-import { FoxpageRequestOptions } from '@/api';
 import { appTask, contextTask, pageTask, parseTask, renderTask, routerTask } from '@/task/main';
 
 const contextOpt = {

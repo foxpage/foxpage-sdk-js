@@ -9,6 +9,8 @@ import { ContentDetailInstance } from '../common';
  * @class Mock
  */
 export class MockInstance extends ContentDetailInstance<MockItem> implements Mock {
+  readonly type = 'mock';
+
   constructor(data: Mock) {
     super(data);
   }

@@ -12,6 +12,7 @@ import { ContentDetailInstance } from '../content';
  */
 export const createSysVariable = (name: string, props: Record<string, any> = {}) => {
   const variable: Variable = {
+    type: 'variable',
     id: 'builtin_variable_' + shortId(),
     schemas: [{ name: `__context:${name}`, type: 'data.sys', props }],
     // relation: {},
@@ -29,7 +30,7 @@ export const getSysVariables = (contentInfo: Record<string, ContentDetail[]>) =>
 
   Object.keys(contentInfo).forEach(key => {
     contentInfo[key].forEach(content => {
-      const instance = new ContentDetailInstance(content);
+      const instance = new ContentDetailInstance({ ...content, type: 'variable' });
       if (instance.sysVariables?.length) {
         variables = _.union(variables, instance.sysVariables);
       }

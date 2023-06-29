@@ -1,0 +1,90 @@
+{
+  "id": "cont_YQvJCoVUjdx1VhG",
+  "relation": {
+    "__templates:cont_zHRvhdLJBFxyJch:schemas": {
+      "id": "cont_zHRvhdLJBFxyJch",
+      "type": "template"
+    },
+    "__blocks:cont_yYp8KTMkc716Hdi:schemas": {
+      "id": "cont_yYp8KTMkc716Hdi",
+      "type": "block"
+    },
+    "_C_F": {
+      "id": "cont_6jSHEBYs7ENaLHo",
+      "type": "variable"
+    }
+  },
+  "schemas": [
+    {
+      "id": "stru_bW5OktDzpI26jc8",
+      "name": "page",
+      "label": "page",
+      "props": {},
+      "version": "",
+      "type": "dsl.template",
+      "extension": {
+        "sort": 100,
+        "parentId": ""
+      },
+      "directive": {
+        "tpl": "{{__templates:cont_zHRvhdLJBFxyJch:schemas}}"
+      },
+      "children": [
+        {
+          "id": "stru_Q2zMPT93zU9RLSL",
+          "name": "@fox-design/react-image",
+          "label": "Image",
+          "props": {
+          },
+          "version": "",
+          "type": "react.component",
+          "extension": {
+            "sort": 200,
+            "parentId": "stru_bW5OktDzpI26jc8"
+          }
+        },
+        {
+          "id": "stru_oCn1XlY2KKv1INq",
+          "name": "@fox-design/react-block",
+          "label": "Block test1",
+          "props": {},
+          "version": "",
+          "type": "dsl.template",
+          "extension": {
+            "sort": 300,
+            "parentId": "stru_bW5OktDzpI26jc8"
+          },
+          "directive": {
+            "tpl": "{{__blocks:cont_yYp8KTMkc716Hdi:schemas}}"
+          }
+        },
+        {
+          "id": "stru_ColisLovyJEDe7z",
+          "name": "@fox-design/react-text",
+          "label": "Text",
+          "props": {
+            "text": "123123123·····{{_C_F}}"
+          },
+          "version": "",
+          "type": "react.component",
+          "extension": {
+            "sort": 400,
+            "parentId": "stru_bW5OktDzpI26jc8"
+          }
+        }
+      ]
+    }
+  ],
+  "version": "0.0.1",
+  "relations": {},
+  "dslVersion": "1.0",
+  "name": "base-page_copy_copy",
+  "versionNumber": 1,
+  "fileId": "file_94tEr1ViMoEFruH",
+  "mock": {},
+  "extension": {
+    "mockId": "cont_eybqnuEadWL9HHf"
+  },
+  "_lastModified": 1681548013481,
+  "type": "page"
+}

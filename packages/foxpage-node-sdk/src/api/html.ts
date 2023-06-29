@@ -1,11 +1,11 @@
 import { getApplication, PageInstance } from '@foxpage/foxpage-manager';
 import { tag } from '@foxpage/foxpage-shared';
-import { Application, Page } from '@foxpage/foxpage-types';
+import { Application, FoxpageRequestOptions, Page, ParsedDSL } from '@foxpage/foxpage-types';
 
-import { FoxpageRequestOptions } from '../api';
-import { updateContextWithPage } from '../context';
-import { NotFoundAppError, NotFoundDSLError, ParseDSLError } from '../errors';
-import { contextTask, pageTask, parseTask, renderTask } from '../task';
+import { isProd } from '../common';
+import { updateContext } from '../context';
+import { AccessDeniedError, NotFoundAppError, NotFoundDSLError, ParseDSLError } from '../errors';
+import { accessControlTask, contextTask, pageTask, parseTask, renderTask } from '../task';
 
 /**
  * render to html by pageId
@@ -14,6 +14,17 @@ import { contextTask, pageTask, parseTask, renderTask } from '../task';
  * @returns html string
  */
 export const renderToHtmlByPageId = async (pageId: string, appId: string, opt: FoxpageRequestOptions) => {
+  const result = await renderByPageId(pageId, appId, opt);
+  return result.html;
+};
+
+/**
+ * render by pageId
+ * @param pageId page id
+ * @param appId application id
+ * @returns html string
+ */
+export const renderByPageId = async (pageId: string, appId: string, opt: FoxpageRequestOptions) => {
   const app = getApplication(appId);
   if (!app) {
     throw new NotFoundAppError(appId);
@@ -22,6 +33,15 @@ export const renderToHtmlByPageId = async (pageId: string, appId: string, opt: F
   // init renderContext task
   const ctx = opt.ctx ? opt.ctx : await contextTask(app, opt);
 
+  // is not prod access
+  // access control verified
+  if (!isProd(ctx)) {
+    const verified = await accessControlTask(app, opt.request, { contentId: pageId });
+    if (!verified) {
+      throw new AccessDeniedError(opt.request.URL?.pathname);
+    }
+  }
+
   // get page
   const page = await pageTask(pageId, app, ctx);
   if (!page) {
@@ -29,14 +49,14 @@ export const renderToHtmlByPageId = async (pageId: string, appId: string, opt: F
   }
 
   // parse page
-  const { page: parsedPage, ctx: context } = await parseTask(page, ctx);
-  if (!parsedPage.schemas) {
-    throw new ParseDSLError(new Error('parsedPage.schemas is empty'), ctx.origin);
+  const { content, ctx: context } = await parseTask(page, ctx);
+  if (!content.schemas) {
+    throw new ParseDSLError(new Error('parsed.schemas is empty'), ctx.origin);
   }
 
   // render task
-  const html = (await renderTask(parsedPage, context)) || null;
-  return html;
+  const html = (await renderTask(content as ParsedDSL, context)) || null;
+  return { html, dsl: context.origin.page, vars: context.variables, contextValue: context };
 };
 
 /**
@@ -47,24 +67,43 @@ export const renderToHtmlByPageId = async (pageId: string, appId: string, opt: F
  */
 export async function renderToHtmlByPage(
   page: Page,
-  app: Application,
-  opt: FoxpageRequestOptions,
-): Promise<string | null> {
-  const pageInstance = new PageInstance(page);
+  app: Application | string,
+  opt: FoxpageRequestOptions & { ignoreParse?: boolean },
+) {
+  let appInstance: Application | undefined;
+  if (typeof app === 'string') {
+    appInstance = getApplication(app);
+    if (!appInstance) {
+      throw new NotFoundAppError(app);
+    }
+  } else {
+    appInstance = app;
+  }
 
   // init renderContext task
-  const ctx = opt.ctx ? opt.ctx : await contextTask(app, opt);
-  await updateContextWithPage(ctx, { app, page: pageInstance });
+  const ctx = opt.ctx ? opt.ctx : await contextTask(appInstance, opt);
+
+  // is not prod access
+  // access control verified
+  if (!isProd(ctx)) {
+    const verified = await accessControlTask(appInstance, opt.request, { contentId: page.id });
+    if (!verified) {
+      throw new AccessDeniedError(opt.request.URL?.pathname);
+    }
+  }
+
+  const pageInstance = new PageInstance(page);
+  await updateContext(ctx, { app: appInstance, content: pageInstance });
 
   // parse page
-  const { page: parsedPage, ctx: context } = await parseTask(pageInstance, ctx);
-  if (!parsedPage.schemas) {
-    throw new ParseDSLError(new Error('parsedPage.schemas is empty'), ctx.origin);
+  const { content, ctx: context } = await parseTask(pageInstance, ctx);
+  if (!content.schemas) {
+    throw new ParseDSLError(new Error('parsed.schemas is empty'), ctx.origin);
   }
 
   // render task
-  const html = (await renderTask(parsedPage, context)) || null;
-  return html;
+  const html = (await renderTask(content as ParsedDSL, context)) || null;
+  return { html, dsl: context.origin.page, vars: context.variables, contextValue: context };
 }
 
 /**
@@ -89,6 +128,15 @@ export const renderToHtmlByFileIdAndLocale = async (
   // init renderContext task
   const ctx = opt.ctx ? opt.ctx : await contextTask(app, opt);
 
+  // is not prod access
+  // access control verified
+  if (!isProd(ctx)) {
+    const verified = await accessControlTask(app, opt.request, { fileId });
+    if (!verified) {
+      throw new AccessDeniedError(opt.request.URL?.pathname);
+    }
+  }
+
   // get file
   const tags = locale ? tag.generateTagByQuerystring(`locale=${locale}`) : [];
   const content = await app.tagManager.matchTag(tags, {
@@ -106,12 +154,12 @@ export const renderToHtmlByFileIdAndLocale = async (
   }
 
   // parse page
-  const { page: parsedPage, ctx: context } = await parseTask(page, ctx);
-  if (!parsedPage.schemas) {
-    throw new ParseDSLError(new Error('parsedPage.schemas is empty'), ctx.origin);
+  const { content: parsedContent, ctx: context } = await parseTask(page, ctx);
+  if (!parsedContent.schemas) {
+    throw new ParseDSLError(new Error('parsed.schemas is empty'), ctx.origin);
   }
 
   // render task
-  const html = (await renderTask(parsedPage, context)) || null;
+  const html = (await renderTask(parsedContent as ParsedDSL, context)) || null;
   return { html, dsl: context.origin.page, vars: context.variables, contextValue: context };
 };

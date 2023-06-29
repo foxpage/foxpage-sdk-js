@@ -3,7 +3,7 @@ import { ContentDetailInstance, relationsMerge } from '@foxpage/foxpage-shared';
 import { Application, ContentDetail, ManagerOption, RelationInfo } from '@foxpage/foxpage-types';
 
 import { config } from '../common';
-import { pm2 } from '../pm2';
+import { getPm2 } from '../pm2';
 
 /**
  * get relations
@@ -35,20 +35,24 @@ export const getRelationsBatch = async (contents: ContentDetail[] = [], app: App
  * init foxpage node source manager
  */
 export async function initSourceManager() {
+  const pm2 = getPm2();
+  const { isPm2 = false, isMaster = false, id: pmId = 0 } = pm2 || {};
   await initManager({
     apps: config.get('apps'),
     dataService: config.get('dataService'),
     plugins: config.get('plugins') || [],
     commonPluginDir: config.get('commonPluginDir') || '',
     settings: {
-      openSourceUpdate: (pm2.isPm2 && pm2.isMaster) || !pm2.isPm2,
+      openSourceUpdate: (isPm2 && isMaster) || !isPm2,
       sourceUpdateHook: (data: unknown) => {
-        pm2.broadcast(data);
+        if (typeof pm2?.broadcast === 'function') {
+          pm2.broadcast(data);
+        }
       },
     },
     procInfo: {
-      isMaster: pm2.isMaster,
-      procId: pm2.id,
+      isMaster: isMaster,
+      procId: pmId,
     },
     loggerConfig: config.get('logger'),
   } as ManagerOption);

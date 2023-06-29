@@ -1,8 +1,9 @@
 import { getApplication } from '@foxpage/foxpage-manager';
+import { FoxpageRequestOptions } from '@foxpage/foxpage-types';
 
-import { FoxpageRequestOptions } from '../api';
-import { NotFoundAppError, NotFoundDSLError } from '../errors';
-import { contextTask, pageTask, parseTask } from '../task';
+import { isProd } from '../common';
+import { AccessDeniedError, NotFoundAppError, NotFoundDSLError } from '../errors';
+import { accessControlTask, contextTask, pageTask, parseTask } from '../task';
 
 export const getDSL = async (pageId: string, appId: string, opt: FoxpageRequestOptions) => {
   const app = getApplication(appId);
@@ -13,6 +14,15 @@ export const getDSL = async (pageId: string, appId: string, opt: FoxpageRequestO
   // init renderContext task
   const ctx = opt.ctx ? opt.ctx : await contextTask(app, opt);
 
+  // is not prod access
+  // access control verified
+  if (!isProd(ctx)) {
+    const verified = await accessControlTask(app, opt.request, { contentId: pageId });
+    if (!verified) {
+      throw new AccessDeniedError(opt.request.URL?.pathname);
+    }
+  }
+
   // get page
   const page = await pageTask(pageId, app, ctx);
   if (!page) {
@@ -20,7 +30,7 @@ export const getDSL = async (pageId: string, appId: string, opt: FoxpageRequestO
   }
 
   // parse page
-  const { page: parsedPage } = await parseTask(page, ctx);
+  const { content } = await parseTask(page, ctx);
 
-  return parsedPage?.schemas;
+  return content?.schemas;
 };

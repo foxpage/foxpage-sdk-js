@@ -70,14 +70,15 @@ function main() {
   console.log(chalk.yellow('[BUILD StART]'));
   const modules = sortByDependency(getModules());
   modules.forEach(module => {
-    if (module !== '@foxpage/foxpage-types') {
+    if (module !== '@foxpage/foxpage-transformer') {
       console.log(chalk.green(` [START BUILD] ${module}`));
       const dir = module.replace('@foxpage/', '');
       const path = format({
         dir: ROOT,
         base: dir,
       });
-      execSync('yarn build', {
+      // execSync('yarn build', {
+      execSync('npm run build', {
         cwd: path,
         stdio: 'inherit',
       });

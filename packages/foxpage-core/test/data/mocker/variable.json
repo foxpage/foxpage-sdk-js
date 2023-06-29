@@ -1,0 +1,17 @@
+{
+  "id": "cont_92j16ONvNPTkmsD",
+  "schemas": [
+    {
+      "props": {
+        "type": "json",
+        "value": {
+          "a": "www"
+        }
+      },
+      "type": "data.static",
+      "name": "_tvar"
+    }
+  ],
+  "relation": {},
+  "version": "0.0.4"
+}

@@ -8,6 +8,7 @@ import {
   Application,
   ApplicationOption,
   AppScheduleDataType,
+  BlockManager,
   ConditionManager,
   ContentDetail,
   ContentInfo,
@@ -22,11 +23,13 @@ import {
   RelationInfo,
   Route,
   Router,
+  SecurityManager,
   TagManager,
   TemplateManager,
   VariableManager,
 } from '@foxpage/foxpage-types';
 
+import { BlockManagerImpl } from '../block';
 import { createLogger, FPEventEmitterInstance } from '../common';
 import { ConditionManagerImpl } from '../condition';
 import { foxpageDataService } from '../data-service';
@@ -37,6 +40,7 @@ import { PackageManagerImpl } from '../package';
 import { PageManagerImpl } from '../page';
 import { PluginManagerImpl } from '../plugin';
 import { RouterImpl } from '../router';
+import { SecurityManagerImpl } from '../security';
 import { TagManagerImpl } from '../tag';
 import { TemplateManagerImpl } from '../template';
 import { VariableManagerImpl } from '../variable';
@@ -46,7 +50,7 @@ import { Schedule, ScheduleOptions } from './schedule';
 
 type CollectionType = Pick<
   ContentDetail,
-  ContentType.FUNCTION | ContentType.TEMPLATE | ContentType.VARIABLE | ContentType.CONDITION
+  ContentType.FUNCTION | ContentType.TEMPLATE | ContentType.VARIABLE | ContentType.CONDITION | ContentType.BLOCK
 >;
 
 function createSourceUpdateSchedule(app: ApplicationImpl) {
@@ -167,11 +171,21 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
    */
   public readonly mockManager: MockManager;
   /**
+   * block manager
+   *
+   * @type {BlockManager}
+   */
+  public readonly blockManager: BlockManager;
+  /**
    * router
    *
    * @type {Router}
    */
   public readonly routeManager: Router;
+  /**
+   * ticket checker
+   */
+  public readonly securityManager: SecurityManager;
   /**
    * logger
    *
@@ -221,10 +235,11 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
     });
     this.mockManager = new MockManagerImpl(this);
     this.routeManager = new RouterImpl(this);
+    this.blockManager = new BlockManagerImpl(this);
+    this.securityManager = new SecurityManagerImpl(this);
 
     //logger
     this.logger = createLogger('Application');
-
     // listen push
     this.initEvents();
 
@@ -243,7 +258,7 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
    * fresh templates and packages
    */
   public async prepare() {
-    await this.packageManager.freshPackages();
+    await this.packageManager.freshPackages({ strategy: this.configs.package?.loadStrategy || 'all' });
     this.pluginManager.loadPlugins();
 
     const hooks = this.pluginManager.getHooks(Mode.DISTRIBUTION);
@@ -317,6 +332,7 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
       sysVariables: [],
       conditions: [],
       functions: [],
+      blocks: [],
     };
 
     return await this.getRelations(content, relations);
@@ -334,6 +350,7 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
       await getter(ContentType.VARIABLE, async value => this.variableManager.getVariables(value)),
       await getter(ContentType.CONDITION, async value => this.conditionManager.getConditions(value)),
       await getter(ContentType.FUNCTION, async value => this.functionManager.getFunctions(value)),
+      await getter(ContentType.BLOCK, async value => this.blockManager.getBlocks(value)),
     ]);
 
     const collections = {} as T;
@@ -344,6 +361,7 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
         filter(ContentType.VARIABLE);
         filter(ContentType.CONDITION);
         filter(ContentType.FUNCTION);
+        filter(ContentType.BLOCK);
       });
     });
 
@@ -351,7 +369,8 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
       collections.templates?.length ||
       collections.variables?.length ||
       collections.conditions?.length ||
-      collections.functions?.length
+      collections.functions?.length ||
+      collections.blocks?.length
     ) {
       await this.getRelations(collections, relations);
     }
@@ -438,6 +457,7 @@ export class ApplicationImpl extends FPEventEmitterInstance<AppEvents> implement
    */
   public destroy() {
     this.fileManager.destroy();
+    this.blockManager.destroy();
     this.conditionManager.destroy();
     this.functionManager.destroy();
     this.packageManager.destroy();

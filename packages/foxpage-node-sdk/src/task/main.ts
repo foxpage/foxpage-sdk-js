@@ -1,19 +1,24 @@
 import { merger, mocker, parser } from '@foxpage/foxpage-core';
-import { getApplicationByPath, PageInstance } from '@foxpage/foxpage-manager';
-import { createContentInstance, relationsMerge, tag, variable } from '@foxpage/foxpage-shared';
+import { BlockInstance, getApplicationByPath, PageInstance } from '@foxpage/foxpage-manager';
+import { contentInitData, createContentInstance, relationsMerge, tag, variable } from '@foxpage/foxpage-shared';
 import {
   Application,
+  Block,
   ContentDetail,
   Context,
+  ContextPage,
+  FoxpageDelegatedRequest,
+  FoxpageRequestOptions,
   Page,
   ParsedDSL,
   RelationInfo,
   RenderToHTMLOptions,
+  StructureNode,
+  TicketCheckData,
 } from '@foxpage/foxpage-types';
 
-import { FoxpageRequestOptions } from '../api';
-import { getFoxpagePreviewTime, initEnv } from '../common';
-import { createContext, updateContextWithPage } from '../context';
+import { getFoxpagePreviewTime, getPageId, getTicket, initEnv } from '../common';
+import { createContext, updateContext } from '../context';
 import { renderToHTML } from '../render/main';
 
 import { getRelations, getRelationsBatch } from './../manager/main';
@@ -48,6 +53,33 @@ export const contextTask = async (app: Application, opt: FoxpageRequestOptions) 
 
   ctx.performance.start = startTime;
   return ctx;
+};
+
+/**
+ * access control task
+ * @param app application
+ * @param request request
+ */
+export const accessControlTask = async (
+  app: Application,
+  ctx: FoxpageDelegatedRequest | Context,
+  opt: TicketCheckData = {},
+) => {
+  const { accessControl } = app.configs.security || {};
+  const { enable = true } = accessControl || {};
+  if (!enable) {
+    return true;
+  }
+
+  let result = false;
+  const ticket = getTicket(ctx as Context);
+  if (ticket) {
+    const _contentId = opt.contentId || getPageId(ctx as Context) || '';
+    const _fileId = opt.fileId || '';
+    result = await app.securityManager.ticketCheck(ticket, { contentId: _contentId, fileId: _fileId });
+  }
+
+  return result;
 };
 
 /**
@@ -110,14 +142,13 @@ export const routerTask = async (app: Application, ctx: Context) => {
  * @param contents content
  * @param ctx context
  */
-export const initRelationsTask = (contents: RelationInfo & { page: Page[] }, ctx: Context) => {
+export const initRelationsTask = (contents: contentInitData, ctx: Context) => {
   const contentInstances = createContentInstance({ ...contents });
   // update ctx
   ctx.updateOrigin({
     ...contentInstances,
     sysVariables: variable.getSysVariables(contentInstances as unknown as Record<string, ContentDetail[]>),
   });
-  ctx.updateOriginPage(contentInstances.page[0]);
   return contentInstances;
 };
 
@@ -160,7 +191,11 @@ export const pageTask = async (pageId: string, app: Application, ctx: Context) =
       const { content, relations, mock } = contents[0];
       page = content as Page;
       if (page) {
-        initRelationsTask({ ...relations, page: [page] }, ctx);
+        const contentInstances = initRelationsTask({ ...relations, pages: [page] }, ctx);
+        const pageInstance = contentInstances.pages ? contentInstances.pages[0] : null;
+        if (pageInstance) {
+          ctx.updateOriginPage(pageInstance);
+        }
         if (mock) {
           ctx.updateOriginByKey('mocks', [mock]);
         }
@@ -187,14 +222,17 @@ export const pageTask = async (pageId: string, app: Application, ctx: Context) =
       if (ctx.isPreviewMode) {
         ctx.updateOriginPage(page);
       } else {
-        await updateContextWithPage(ctx, { app, page });
+        await updateContext(ctx, { app, content: page });
       }
     }
   }
 
   // with mock
   if (ctx.isMock) {
-    page = await mockTask(page, app, ctx);
+    const mockedContent = await mockTask(page, app, ctx);
+    if (mockedContent) {
+      page = new PageInstance(mockedContent as Page);
+    }
   }
 
   if (page) {
@@ -211,26 +249,106 @@ export const pageTask = async (pageId: string, app: Application, ctx: Context) =
 
 export const fetchDSLTask = pageTask;
 
+export const blockTask = async (blockId: string, app: Application, ctx: Context) => {
+  let _blockId = blockId;
+  let block: Block | null = null;
+
+  const getDSLCost = ctx.performanceLogger('getDSLTime');
+
+  const { beforeDSLFetch, afterDSLFetch } = ctx.hooks || {};
+  if (typeof beforeDSLFetch === 'function') {
+    const result = await beforeDSLFetch(ctx);
+    if (result.contentId) {
+      _blockId = result.contentId;
+    }
+  }
+
+  // get block dsl with mode
+  if (ctx.isPreviewMode) {
+    const contents = await app.blockManager.getDraftBlocks([_blockId]);
+    if (contents) {
+      const { content, relations, mock } = contents[0];
+      block = content as Block;
+      if (block) {
+        const contentInstances = initRelationsTask({ ...relations, blocks: [block] }, ctx);
+        const blockInstance = contentInstances.blocks ? contentInstances.blocks[0] : null;
+        if (blockInstance) {
+          ctx.updateOriginPage(blockInstance);
+        }
+        if (mock) {
+          ctx.updateOriginByKey('mocks', [mock]);
+        }
+      }
+    }
+    // set preview time
+    ctx._foxpage_preview_time = getFoxpagePreviewTime(ctx);
+  } else {
+    block = (await app.blockManager.getBlock(_blockId)) || null;
+  }
+
+  // // with merge
+  // block = await mergeTask(block, app, ctx);
+
+  if (typeof afterDSLFetch === 'function') {
+    block = await afterDSLFetch(ctx, block);
+  }
+
+  // create instance by block content
+  // update context
+  if (block) {
+    block = new BlockInstance(block);
+    if (block) {
+      if (ctx.isPreviewMode) {
+        ctx.updateOriginPage(block);
+      } else {
+        await updateContext(ctx, { app, content: block });
+      }
+    }
+  }
+
+  // with mock
+  if (ctx.isMock) {
+    const mockedBlock = await mockTask(block, app, ctx);
+    if (mockedBlock) {
+      block = new BlockInstance(mockedBlock as Block);
+    }
+  }
+
+  if (block) {
+    ctx.updatePage(block);
+    // get file
+    if (block.fileId) {
+      await fileTask(block.fileId, app, ctx);
+    }
+  }
+
+  getDSLCost();
+  return block;
+};
+
+export const fetchBlockTask = blockTask;
+
 /**
- * page merge task
- * @param page base page
+ * content merge task
+ * only support page content
+ * @param content base content
  * @param app application
  * @param ctx Context
- * @returns merged page
+ * @returns merged content
  */
-export const mergeTask = async (page: Page | null, app: Application, ctx: Context) => {
-  if (!page) {
+export const mergeTask = async (content: ContentDetail<StructureNode> | null, app: Application, ctx: Context) => {
+  if (!content) {
     return null;
   }
 
-  const { extendId } = page.extension || {};
+  const { extendId } = content.extension || {};
   if (extendId) {
     const base = await app.pageManager.getPage(extendId);
     if (base) {
       ctx.updateOriginByKey('extendPage', base);
       const relations = await app.getContentRelationInfo(base);
       if (relations) {
-        // update base page relations
+        // update base content relations
         Object.keys(relations).forEach(key => {
           const keyStr = key as keyof RelationInfo;
           if (relations[keyStr]) {
@@ -239,26 +357,28 @@ export const mergeTask = async (page: Page | null, app: Application, ctx: Contex
           }
         });
       }
-      const merged = merger.merge(base, page, { strategy: merger.MergeStrategy.COMBINE_BY_EXTEND });
+      const merged = merger.merge(base, content, {
+        strategy: merger.MergeStrategy.COMBINE_BY_EXTEND,
+      });
       return merged;
     }
-    ctx.logger?.error(`The base page is invalid @${extendId}`);
+    ctx.logger?.error(`The base content is invalid @${extendId}`);
     return null;
   }
 
-  return page;
+  return content;
 };
 
 /**
  * pre mock task
- * @param page page content
+ * @param content content
  * @param ctx context
  */
-const preMockTask = (page: Page, ctx: Context) => {
-  const { mockId, extendId } = page.extension || {};
+const preMockTask = (content: ContentDetail, ctx: Context) => {
+  const { mockId, extendId } = content.extension || {};
   const mockIds: string[] = [];
 
-  // get page mock
+  // get content mock
   if (mockId) {
     const exist = ctx.getOrigin('mocks')?.findIndex(item => item.id === mockId);
     if ((!exist && exist !== 0) || exist === -1) {
@@ -266,7 +386,7 @@ const preMockTask = (page: Page, ctx: Context) => {
     }
   }
 
-  // get extend page mock
+  // get extend content mock
   if (extendId) {
     const extendPage = ctx.getOrigin('extendPage');
     if (extendId === extendPage?.id && !!extendPage.extension?.mockId) {
@@ -290,52 +410,47 @@ const preMockTask = (page: Page, ctx: Context) => {
 
 /**
  * mock task
- * @param page page content
+ * @param content content
  * @param app application
  * @param ctx context
- * @returns new page with mock
+ * @returns new content with mock
  */
-export const mockTask = async (page: Page | null, app: Application, ctx: Context) => {
-  if (!page) {
-    return null;
-  }
-
-  let mocks = ctx.getOrigin('mocks') || [];
-
-  const mockIds = preMockTask(page, ctx);
-  if (mockIds.length > 0) {
-    const list = await app.mockManager.getMocks(mockIds);
-    mocks = mocks.concat(list);
-  }
-  const { page: mockedPage, templates } = mocker.withMock(mocks, ctx);
-
-  if (mockedPage) {
-    // get new relations via page
-    const pageRelationInfo = await getRelations(mockedPage, app);
-    // get new relations via template
-    const templateRelationInfos = await getRelationsBatch(templates, app);
-    pageRelationInfo.templates = templates;
-    // final relations
-    const relationInfo = relationsMerge(templateRelationInfos, pageRelationInfo);
-    if (relationInfo) {
-      // // mock variables
-      // const variables = mocker.mockVariable(relationInfo.variables, mocks, ctx);
-      ctx.updateOrigin({ ...relationInfo, mocks });
+export const mockTask = async (content: ContentDetail | null, app: Application, ctx: Context) => {
+  if (content) {
+    let mocks = ctx.getOrigin('mocks') || [];
+    const mockIds = preMockTask(content, ctx);
+    if (mockIds.length > 0) {
+      const list = await app.mockManager.getMocks(mockIds);
+      mocks = mocks.concat(list);
     }
 
-    return new PageInstance(mockedPage);
-  }
+    const { content: mockedContent, templates } = mocker.withMock(mocks, ctx);
+    if (mockedContent) {
+      // get new relations via content
+      const pageRelationInfo = await getRelations(mockedContent, app);
+      // get new relations via template
+      const templateRelationInfos = await getRelationsBatch(templates, app);
+      pageRelationInfo.templates = templates;
+      // final relations
+      const relationInfo = relationsMerge(templateRelationInfos, pageRelationInfo);
+      if (relationInfo) {
+        // // mock variables
+        // const variables = mocker.mockVariable(relationInfo.variables, mocks, ctx);
+        ctx.updateOrigin({ ...relationInfo, mocks });
+      }
 
-  return page;
+      return mockedContent;
+    }
+  }
 };
 
 /**
- * parse page task
- * @param page page content
+ * parse content task
+ * @param content content
  * @param ctx Context
  * @returns ParsedDSL
  */
-export const parseTask = async (page: Page, ctx: Context) => {
+export const parseTask = async <T extends ContextPage>(content: T, ctx: Context) => {
   const { beforeDSLParse, afterDSLParse } = ctx.hooks || {};
   const parseCost = ctx.performanceLogger('parseTime');
 
@@ -343,7 +458,7 @@ export const parseTask = async (page: Page, ctx: Context) => {
     await beforeDSLParse(ctx);
   }
 
-  let parsed = await parser.parse(page, ctx);
+  let parsed = await parser.parse(content, ctx);
 
   if (typeof afterDSLParse === 'function') {
     parsed = (await afterDSLParse(ctx)) || parsed;
@@ -355,7 +470,7 @@ export const parseTask = async (page: Page, ctx: Context) => {
 
 /**
  * render task
- * @param parsed parsed page schemas
+ * @param parsed parsed content schemas
  * @param ctx render context
  * @returns html string
  */

@@ -1,14 +1,15 @@
 import { getManager } from '@foxpage/foxpage-manager';
 import { createLogger as _createLogger, Logger, LOGGER_LEVEL, LoggerClass } from '@foxpage/foxpage-shared';
 
-import { pm2 } from '../pm2';
+import { getPm2 } from '../pm2';
 
 let loggers: LoggerClass[] | undefined;
 
 export function createLogger(type: string, level?: LOGGER_LEVEL) {
+  const { isMaster, id: pmId } = getPm2() || {};
   return _createLogger(type, {
     level: (level || process.env.FOXPAGE_DEBUG || LOGGER_LEVEL.ERROR) as LOGGER_LEVEL,
-    procInfo: `${pm2.isMaster ? 'master' : 'slave'}:${pm2.id}`,
+    procInfo: `${isMaster ? 'master' : 'slave'}:${pmId}`,
     customizeLoggers: loggers,
   }) as Logger;
 }

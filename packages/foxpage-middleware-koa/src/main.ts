@@ -37,6 +37,7 @@ export const foxpageRequestHandler = (
       } else if (result?.html) {
         ctx.body = result?.html || 'render empty!';
         ctx.foxpageRendered = result;
+        ctx.contextValue = result.contextValue;
       } else {
         ctx.body = result;
       }

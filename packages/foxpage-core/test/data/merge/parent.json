@@ -1,0 +1,147 @@
+{
+  "dslVersion": "1.0",
+  "extension": {
+    "mockId": ""
+  },
+  "fileId": "file_w2IQvQt3EIxuykB",
+  "id": "cont_9BYdADYswkB8h3t",
+  "relation": {
+    "__templates:cont_3FW5FimASJ5QRlc:schemas": {
+      "id": "cont_3FW5FimASJ5QRlc",
+      "type": "template"
+    },
+    "localTime:timestamp": {
+      "id": "cont_BzeijzbcbI3pB8z",
+      "type": "variable"
+    }
+  },
+  "schemas": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "extension": {
+                    "parentId": "stru_LlqjBnwlLhsHmR4",
+                    "sort": 100
+                  },
+                  "id": "stru_pbvAhDK1Iiwmd93",
+                  "label": "TDK & Share Info",
+                  "name": "foxpage/cloud-component-trip-promo-head-pack",
+                  "props": {
+                    "responsive": true
+                  },
+                  "type": "react.component",
+                  "version": ""
+                },
+                {
+                  "extension": {
+                    "parentId": "stru_LlqjBnwlLhsHmR4",
+                    "sort": 200
+                  },
+                  "id": "stru_gG16YPQEURAiFjD",
+                  "label": "TDK & Share Info",
+                  "name": "foxpage/cloud-component-trip-promo-head-pack",
+                  "props": {
+                    "responsive": false
+                  },
+                  "type": "react.component",
+                  "version": ""
+                },
+                {
+                  "extension": {
+                    "parentId": "stru_LlqjBnwlLhsHmR4",
+                    "sort": 300
+                  },
+                  "id": "stru_awp2nf401ibzhkd",
+                  "label": "rich-text",
+                  "name": "foxpage/cloud-component-trip-promo-rich-text",
+                  "props": {
+                    "html": "<p>{{localTime:timestamp}}</p>\n<p><span style=\"color: rgb(15,41,77);background-color: rgb(255,255,255);font-size: 12px;font-family: Arial;\">1. 本條款適用於由Mox Bank Limited（「Mox」、「我們」）所提供的推廣優惠。參加本推廣優惠，即表示你同意本條款。</span></p>\n<p style=\"text-align:justify;\"><span style=\"color: rgb(15,41,77);background-color: rgb(255,255,255);font-size: 12px;font-family: Arial;\">2. 你必須一併閱讀本條款、Mox的</span><a href=\"https://mox.com/zh/legal-documents/privacy/#pics\" target=\"_self\"><span style=\"color: rgb(15,41,77);background-color: rgb(255,255,255);font-size: 12px;font-family: Arial;\">個人資料收集聲明</span></a><span style=\"color: rgb(15,41,77);background-color: rgb(255,255,255);font-size: 12px;font-family: Arial;\">、</span><a href=\"https://mox.com/zh/legal-documents/privacy/\" target=\"_self\"><span style=\"color: rgb(15,41,77);background-color: rgb(255,255,255);font-size: 12px;font-family: Arial;\">私隱政策</span></a><span style=\"color: rgb(15,41,77);background-color: rgb(255,255,255);font-size: 12px;font-family: Arial;\">、</span><a href=\"https://mox.com/zh/legal-documents/general-terms-and-conditions/\" target=\"_self\"><span style=\"color: rgb(15,41,77);background-color: rgb(255,255,255);font-size: 12px;font-family: Arial;\">一般條款及細則</span></a><span style=\"color: rgb(15,41,77);background-color: rgb(255,255,255);font-size: 12px;font-family: Arial;\">，以及我們可能向你提供的任何其他條款。除本條款外，任何該等條款亦一併適用，而你就使用任何我們的產品及服務仍須受該等其他條款的約束。</span></p>\n<p style=\"text-align:justify;\"><span style=\"color: rgb(15,41,77);background-color: rgb(255,255,255);font-size: 12px;font-family: Arial;\">3. 本條款與我們任何其他的條款如有任何不⼀致，概以本條款為準。</span></p>\n<p style=\"text-align:justify;\"><span style=\"color: rgb(15,41,77);background-color: rgb(255,255,255);font-size: 12px;font-family: Arial;\">4. 要參與本推廣優惠，你必須：</span></p>\n<p style=\"text-align:justify;\"><span style=\"color: rgb(15,41,77);background-color: rgb(255,255,255);font-size: 12px;font-family: Arial;\">(a) 於本條款第22條列表中顯示的期限（「推廣期」）內下載Mox應用程式並使⽤在本條款第22條列表中顯示的邀請碼（「邀請碼」）開立Mox⼾⼝及申請Mox Credit。邀請碼不區分大小寫，因此可以將其字母以大寫或小寫形式輸入到Mox應用程式內；</span></p>\n<p style=\"text-align:justify;\"><span style=\"color: rgb(15,41,77);background-color: rgb(255,255,255);font-size: 12px;font-family: Arial;\">(b) 以邀請碼申請開立Mox戶口起計的15天內完成Mox戶口及Mox Credit申請程序，即Mox戶口已開立並可被使用，而Mox Credit被批核；及</span></p>\n<p style=\"text-align:justify;\"><span style=\"color: rgb(15,41,77);background-color: rgb(255,255,255);font-size: 12px;font-family: Arial;\">(c) 滿足以下消費要求：</span></p>\n<p style=\"text-align:justify;\"><span style=\"color: rgb(15,41,77);background-color: rgb(255,255,255);font-size: 12px;font-family: Arial;\">(i) 於Mox Credit獲批核當日起計首個Mox Credit結單周期內（我們將以電郵方式通知你），以Mox Credit完成一項或以上的合資格交易（於本條款第5條詳述），而交易金額合共不少於本條款第22條列表中「Mox Credit消費要</span>&nbsp;</p>\n"
+                  },
+                  "type": "react.component",
+                  "version": ""
+                }
+              ],
+              "extension": {
+                "parentId": "stru_iIR0KSdwEZ3q52k",
+                "sort": 100
+              },
+              "id": "stru_LlqjBnwlLhsHmR4",
+              "label": "slot",
+              "name": "@fox-design/react-slot",
+              "props": {
+                "style": {
+                  "paddingBottom": 16
+                }
+              },
+              "type": "react.component",
+              "version": ""
+            }
+          ],
+          "extension": {
+            "parentId": "stru_TCsMZtI2hkntYsF",
+            "sort": 100
+          },
+          "id": "stru_iIR0KSdwEZ3q52k",
+          "label": "container",
+          "name": "@fox-design/react-container",
+          "props": {
+          },
+          "type": "react.component",
+          "version": ""
+        },
+        {
+          "directive": {
+          },
+          "extension": {
+            "parentId": "stru_TCsMZtI2hkntYsF",
+            "sort": 300
+          },
+          "id": "stru_XZBL3B8MpfDbkVU",
+          "label": "react-image",
+          "name": "@fox-design/react-image",
+          "props": {
+            "alt": "flight",
+            "link": {
+              "target": "_blank",
+              "url": "www.trip.com"
+            }
+          },
+          "type": "react.component",
+          "version": ""
+        },
+        {
+          "extension": {
+            "parentId": "stru_TCsMZtI2hkntYsF",
+            "sort": 400
+          },
+          "id": "stru_NdobaQMXxxyaH2m",
+          "label": "react-html",
+          "name": "@fox-design/react-html",
+          "props": {
+          },
+          "type": "react.component",
+          "version": ""
+        }
+      ],
+      "directive": {
+        "tpl": "{{__templates:cont_3FW5FimASJ5QRlc:schemas}}"
+      },
+      "extension": {
+        "parentId": ""
+      },
+      "id": "stru_TCsMZtI2hkntYsF",
+      "name": "page",
+      "props": {
+        "height": "100%",
+        "width": "100%"
+      },
+      "type": "page",
+      "version": ""
+    }
+  ],
+  "version": "0.0.1"
+}

@@ -8,6 +8,9 @@ import { AppConfig } from '@foxpage/foxpage-types';
 const defaultConfigs: AppConfig = {
   'schedule.enable': true,
   'schedule.interval': 1000 * 40,
+  package: {
+    loadStrategy: 'all',
+  },
 };
 
 /**

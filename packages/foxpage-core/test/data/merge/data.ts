@@ -140,6 +140,7 @@ const parent: Page = {
       id: 'cont_JR5Z8ieaW595KyY',
     },
   },
+  type: 'page',
 };
 
 const child: Page = {
@@ -204,6 +205,7 @@ const child: Page = {
     },
   ],
   relation: {},
+  type: 'page',
 };
 
 export const getData = () => {

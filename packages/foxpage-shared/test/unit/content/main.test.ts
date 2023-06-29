@@ -6,11 +6,11 @@ describe('content/main', () => {
   it('createContentInstance test', () => {
     const page = require('@@/data/page.json');
     const relations = {
-      page: [page],
-    } as RelationInfo & { page: Page[] };
+      pages: [page],
+    } as RelationInfo & { pages: Page[] };
     const contentInstances = createContentInstance({ ...relations });
     expect(contentInstances).toBeDefined();
-    expect(contentInstances.page).toBeDefined();
-    expect(contentInstances.page[0].id).toEqual(page.id);
+    expect(contentInstances.pages[0]).toBeDefined();
+    expect(contentInstances.pages[0].id).toEqual(page.id);
   });
 });

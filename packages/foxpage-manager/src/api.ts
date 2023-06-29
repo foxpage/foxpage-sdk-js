@@ -4,5 +4,6 @@ import { FoxpagePluginApi } from '@foxpage/foxpage-types';
 export const getApis = (): FoxpagePluginApi => {
   return {
     evalWithScope: parser.evalWithScope,
+    executeFun: parser.executeFun,
   };
 };

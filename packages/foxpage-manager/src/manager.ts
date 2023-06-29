@@ -9,9 +9,9 @@ import {
   Manager,
   ManagerAppMeta,
   ManagerOption,
+  PluginManager,
 } from '@foxpage/foxpage-types';
 
-import { PluginManager } from './../../foxpage-types/manager/plugin/index.d';
 import { createFoxpageDataService, foxpageDataService } from './data-service/service';
 import { getApis } from './api';
 import { ApplicationImpl } from './application';
@@ -226,7 +226,7 @@ export class ManagerImpl implements Manager {
         matches = matches.concat(this.appRouteSlugMap.get(item) || []);
       }
     });
-    matches
+    matches = matches
       .filter(item => !item.route.exact || (item.route.exact && item.route.path === pathname))
       .sort((pre, next) => (next.route.weight || 100) - (pre.route.weight || 100));
     const matched = matches[0];

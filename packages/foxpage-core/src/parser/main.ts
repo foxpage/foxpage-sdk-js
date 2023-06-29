@@ -1,6 +1,7 @@
 import { Messages } from '@foxpage/foxpage-shared';
-import { Context, Page, PageParser, TemplateParser } from '@foxpage/foxpage-types';
+import { Block, BlockParser, Context, ContextPage, Page, PageParser, TemplateParser } from '@foxpage/foxpage-types';
 
+import { BlockParserImpl } from './block';
 import { PageParserImpl } from './page';
 import { TemplateParserImpl } from './template';
 
@@ -18,53 +19,76 @@ export class MainParser {
    */
   templateParser?: TemplateParser;
   /**
+   * block parser
+   *
+   * @type {BlockParser}
+   */
+  blockParser?: BlockParser;
+  /**
+   * parse main content
+   */
+  private mainContent;
+  /**
    * messages
    */
   messages?: Messages = new Messages();
 
-  constructor({ page }: { page: Page }, ctx: Context) {
-    this.templateParser = new TemplateParserImpl();
-    this.pageParser = new PageParserImpl(page);
-    this.prepare(ctx);
+  constructor({ content }: { content: ContextPage }, ctx: Context) {
+    this.mainContent = content;
+    if (this.isPage()) {
+      this.templateParser = new TemplateParserImpl();
+      this.blockParser = new BlockParserImpl();
+      this.pageParser = new PageParserImpl(content as Page);
+      this.prepare(ctx);
+    } else if (this.isBlock()) {
+      this.blockParser = new BlockParserImpl();
+    }
   }
 
   prepare(ctx: Context) {
-    this.pageParser?.preParse(ctx);
-    this.templateParser?.preParse(ctx, {
-      containerGetter: templateId => this.pageParser?.getTemplateSchemas(templateId),
-    });
+    if (this.isPage()) {
+      this.pageParser?.preParse(ctx);
+      this.templateParser?.preParse(ctx, {
+        containerGetter: templateId => this.pageParser?.getTemplateSchemas(templateId),
+      });
+      this.blockParser?.preParse(ctx, {
+        containerGetter: blockId => this.pageParser?.getBlockSchemas(blockId),
+      });
+    }
   }
 
   async parse(ctx: Context) {
-    if (!this.pageParser) {
-      throw new Error('page parser instance is invalid.');
-    }
-    ctx.logger?.info('start parse page & template');
-    this.templateParser?.parse(ctx);
-
-    const parsedPageSchemas = this.pageParser.parse(ctx);
-    if (this.pageParser.messages.hasError) {
-      this.messages?.push(this.pageParser.messages.toString());
-      return;
+    let result: { parsed: ContextPage; messages: string[] } | undefined;
+    if (this.isPage()) {
+      this.templateParser?.parse(ctx);
+      this.blockParser?.parse(ctx);
+      result = this.pageParser?.parse(ctx);
     }
 
-    ctx.updatePage({
-      id: this.pageParser.page.id,
-      schemas: parsedPageSchemas,
-      relation: this.pageParser.page.relation,
-    });
-    ctx.logger?.info(`page@${ctx.page.id} parsed success.`);
-    const result = ctx.page.schemas;
+    if (this.isBlock()) {
+      result = this.blockParser?.parseOne(this.mainContent as Block, ctx);
+    }
 
-    // clear
+    if (result) {
+      ctx.updatePage(result.parsed);
+    }
+    // clear memory
     this.reset();
+    return result;
+  }
 
-    return { parsed: result, messages: this.messages };
+  private isPage() {
+    return this.mainContent.type === 'page';
+  }
+
+  private isBlock() {
+    return this.mainContent.type === 'block';
   }
 
   reset() {
     this.pageParser = undefined;
     this.templateParser = undefined;
+    this.blockParser = undefined;
     this.messages = undefined;
   }
 }

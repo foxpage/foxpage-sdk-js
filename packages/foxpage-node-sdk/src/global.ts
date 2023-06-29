@@ -1,4 +1,4 @@
-import { FoxpageRequestOptions } from './api';
+import { FoxpageRequestOptions } from '@foxpage/foxpage-types';
 
 declare module '@foxpage/foxpage-types' {
   type FoxpageNodeContext = FoxpageRequestOptions;

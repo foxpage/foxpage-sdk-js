@@ -1,17 +1,19 @@
-import { Context, Mock, Page, StructureNode, Template } from '@foxpage/foxpage-types';
+import { Block, Context, Mock, Page, StructureNode, Template } from '@foxpage/foxpage-types';
 
 import { getUsedMocks, mergeProps, preMock } from './utils';
 
-export interface MockOptions {}
+export interface MockOptions {
+  // options
+}
 
 /**
- * parse page with mock
- * @param page
+ * parse content with mock
+ * @param content
  * @param mock
  * @param extendMock
  * @returns
  */
-export const mockPage = (page: Page, mock: Mock | null, extendMock: Mock | null) => {
+export const mockContent = <T extends Page | Block>(content: T, mock: Mock | null, extendMock: Mock | null) => {
   const { idMockMap = {}, typeMockMap = {} } = mock ? preMock(mock) : {};
   const { idMockMap: extendIdMockMap = {}, typeMockMap: extendTypeMockMap = {} } = extendMock
     ? preMock(extendMock)
@@ -38,9 +40,9 @@ export const mockPage = (page: Page, mock: Mock | null, extendMock: Mock | null)
     });
   };
 
-  dfs(page.schemas);
+  dfs(content.schemas);
 
-  return page;
+  return content;
 };
 
 /**
@@ -73,6 +75,35 @@ export const mockTemplate = (template: Template, mock: Mock) => {
 };
 
 /**
+ * parse block with mock
+ * @param block
+ * @param mock
+ * @returns
+ */
+export const mockBlock = (block: Block, mock: Mock) => {
+  const { idMockMap = {}, typeMockMap = {} } = mock ? preMock(mock) : {};
+
+  const dfs = (list: StructureNode[] = []) => {
+    list.forEach(item => {
+      let mock = idMockMap[item.id]; // id
+      if (!mock) {
+        mock = typeMockMap[item.name]; // name
+      }
+      if (mock) {
+        item.props = mergeProps(item.props, mock.props);
+      }
+      if (item.children?.length) {
+        dfs(item.children);
+      }
+    });
+  };
+
+  dfs(block.schemas);
+
+  return block;
+};
+
+/**
  * with mock
  * merge mock data to contents
  * @param mocks
@@ -86,22 +117,31 @@ export const withMock = (mocks: Mock[], ctx: Context, _opt?: MockOptions) => {
     mockMap[item.id] = item;
   });
 
-  let page = ctx.getOrigin('page');
-  // deal with page (extend) mock
-  if (page) {
+  // deal with content (extend) mock
+  // page or block
+  let content = ctx.getOrigin('page');
+  if (content) {
     const { pageMock, extendMock } = getUsedMocks(mocks, ctx);
     if (pageMock || extendMock) {
-      page = mockPage(page, pageMock, extendMock);
+      content = mockContent(content as Page | Block, pageMock, extendMock);
     }
   }
 
   // deal with templates mock
   const templates = ctx.getOrigin('templates')?.map(item => {
     const { mockId = '' } = item.extension || {};
-    const templateMock = mockMap[mockId];
-    const template = templateMock ? mockTemplate(item, templateMock) : item;
-    return template;
+    const mock = mockMap[mockId];
+    const result = mock ? mockTemplate(item, mock) : item;
+    return result;
   });
 
-  return { page, templates };
+  // deal with blocks mock
+  const blocks = ctx.getOrigin('blocks')?.map(item => {
+    const { mockId = '' } = item.extension || {};
+    const mock = mockMap[mockId];
+    const result = mock ? mockBlock(item, mock) : item;
+    return result;
+  });
+
+  return { content, templates, blocks };
 };

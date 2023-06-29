@@ -15,6 +15,9 @@ describe('parser/page/parser', () => {
     const ctx = mockRenderContext();
     ctx.variables = {
       __conditions: { con_1b652910e89b: true, con_1b652910e891: false },
+      __blocks: {},
+      __functions: {},
+      __templates: {},
     };
     const result = parser.parse(ctx);
     expect(result).toBeDefined();

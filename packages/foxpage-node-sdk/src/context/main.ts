@@ -1,6 +1,4 @@
-import { Application, Context, Page } from '@foxpage/foxpage-types';
-
-import { FoxpageRequestOptions } from '../api';
+import { Application, Context, ContextPage, FoxpageRequestOptions } from '@foxpage/foxpage-types';
 
 import { RenderContextInstance } from './render';
 
@@ -12,16 +10,20 @@ import { RenderContextInstance } from './render';
  */
 export const createContext = async (app: Application, opt: FoxpageRequestOptions) => {
   const ctx = new RenderContextInstance(app) as unknown as Context;
-  const { isDebug, isMock, isPreview } = opt.mode || {};
+  const { isDebug, isMock, isPreview, isCanary } = opt.mode || {};
 
+  // request
   ctx.request = opt.request;
   ctx.response = opt.response;
   ctx.cookies = opt.cookies;
 
+  // mode
   ctx.isMock = isMock;
   ctx.isPreviewMode = isPreview;
   ctx.isDebugMode = isDebug;
+  ctx.isCanary = isCanary;
 
+  // url
   ctx.URL = opt.request.URL;
   ctx.url = ctx.URL.href || '';
   ctx.host = ctx.URL.host || '';
@@ -30,14 +32,14 @@ export const createContext = async (app: Application, opt: FoxpageRequestOptions
 };
 
 /**
- * update ctx with page info
+ * update ctx with content info
  * @param ctx context
- * @param page page content info
+ * @param content content info
  */
-export const updateContextWithPage = async (ctx: Context, opt: { page: Page; app: Application }) => {
-  const { app, page } = opt;
-  ctx.updateOriginPage(page);
-  const relations = await app.getContentRelationInfo(page);
+export const updateContext = async (ctx: Context, opt: { content: ContextPage; app: Application }) => {
+  const { app, content } = opt;
+  ctx.updateOriginPage(content);
+  const relations = await app.getContentRelationInfo(content);
   if (relations) {
     ctx.updateOrigin(relations);
   }

@@ -1,6 +1,6 @@
 {
   "docs": "https://github.com/lerna/lerna#lernajson",
-  "npmClient": "yarn",
+  "npmClient": "npm",
   "useWorkspaces": true,
   "packages": [
     "packages/*"

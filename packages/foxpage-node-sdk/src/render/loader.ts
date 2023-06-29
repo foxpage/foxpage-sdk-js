@@ -143,7 +143,9 @@ export class ComponentLoaderImpl implements ComponentLoader {
       this.logger.info('fetch missed packages from server:', namedVersions);
 
       // fetch from server
-      const fetches = await this.app?.packageManager.fetchPackagesByNamedVersions(namedVersions);
+      const fetches = await this.app?.packageManager.fetchPackagesByNamedVersions(namedVersions, {
+        isCanary: this.opt.isCanary,
+      });
 
       // get need install packages
       const packages: FPPackage[] = [];
@@ -154,7 +156,12 @@ export class ComponentLoaderImpl implements ComponentLoader {
       });
 
       // install
-      const installed = await this.app?.packageManager.install(packages, { cache: !this.opt.isPreviewMode });
+      // preview or canary will not cache the installed
+      const cacheState = !this.opt.isPreviewMode && !this.opt.isCanary;
+      const installed = await this.app?.packageManager.install(packages, {
+        cache: cacheState,
+        ignoreLocal: this.opt.isCanary,
+      });
       installed?.forEach(item => {
         loadedMap.set(this.generateKey(item.name, item.version), item);
       });
@@ -230,23 +237,36 @@ export class ComponentLoaderImpl implements ComponentLoader {
       if (this.isComponent(item) && !this.loadedMap.has(key)) {
         const messages = new Messages();
 
-        // get component from local
-        const pkg = await this.app?.packageManager.getLocalPackage(name, this.opt?.useStructureVersion ? version : '');
-        if (pkg && pkg.available) {
-          messages.push(`component@${item.id} -> package ${pkg.name} local version: ${pkg.version}`);
-
-          // collect the dependencies
-          pkg.dependencies?.forEach(dep => {
-            this.dependencies.push(this.generateKey(dep.name, dep.version));
-          });
-
-          this.loadedMap.set(id, this.componentFormatter(item, pkg, messages));
-          this.setResolveVersion(item, pkg.version);
-        } else {
-          this.logger.warn(`component@${item.id} -> package ${key} local not exist available version, try to download`);
-
+        // in canary
+        // will get all packages canary version from server
+        // no canary will return last live version
+        if (this.opt.isCanary) {
           this.missLoadMap.set(id, item);
           this.setResolveVersion(item, item.version || '');
+        } else {
+          // get component from local
+          const pkg = await this.app?.packageManager.getLocalPackage(
+            name,
+            this.opt?.useStructureVersion ? version : '',
+          );
+          if (pkg && pkg.available) {
+            messages.push(`component@${item.id} -> package ${pkg.name} local version: ${pkg.version}`);
+
+            // collect the dependencies
+            pkg.dependencies?.forEach(dep => {
+              this.dependencies.push(this.generateKey(dep.name, dep.version));
+            });
+
+            this.loadedMap.set(id, this.componentFormatter(item, pkg, messages));
+            this.setResolveVersion(item, pkg.version);
+          } else {
+            this.logger.warn(
+              `component@${item.id} -> package ${key} local not exist available version, try to download`,
+            );
+
+            this.missLoadMap.set(id, item);
+            this.setResolveVersion(item, item.version || '');
+          }
         }
       }
 

@@ -23,6 +23,11 @@ const defaultConfig = {
     host: '', //http://example.com
     path: '', // api path
   },
+  // pm2 config
+  pm2: {
+    enable: true,
+    name: '', // process name
+  },
   plugins: ['@foxpage/foxpage-plugin-function-parse', '@foxpage/foxpage-plugin-urlquery-parse'],
   commonPluginDir: '',
   logger: {

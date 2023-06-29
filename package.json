@@ -1,13 +1,13 @@
 {
   "name": "@foxpage/foxpage-sdk-js",
-  "version": "0.6.2",
+  "version": "1.0.0",
   "private": true,
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
     "build": "lerna run clean & node ./scripts/build.js",
-    "boot": "yarn & lerna bootstrap & npm run build",
+    "boot": "npm install & lerna bootstrap & npm run build",
     "commit": "git-cz",
     "start:sb": "start-storybook --port 49500 --ci",
     "release": "standard-version --commitAll",

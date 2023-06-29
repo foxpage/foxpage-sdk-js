@@ -1,0 +1,138 @@
+{
+  "dslVersion": "1.0",
+  "extension": {
+  },
+  "fileId": "",
+  "id": "cont_3FW5FimASJ5QRlc",
+  "relation": {
+  },
+  "schemas": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "extension": {
+                "parentId": "stru_gHQYGX5XcE985L9",
+                "sort": 100
+              },
+              "id": "stru_4f33BpN8aJxe1Om",
+              "label": "meta",
+              "name": "@fox-design/react-meta",
+              "props": {
+                "attrs": {
+                  "content": "width=device-width, initial-scale=1.0, maximum-scale=1.0",
+                  "name": "viewport"
+                }
+              },
+              "type": "react.component",
+              "version": ""
+            },
+            {
+              "extension": {
+                "parentId": "stru_gHQYGX5XcE985L9",
+                "sort": 200
+              },
+              "id": "stru_MHiEB48twOSZXVz",
+              "label": "react-style",
+              "name": "@fox-design/react-style",
+              "props": {
+                "code": "body{margin:0;font-family:BlinkMacSystemFont,-apple-system,Roboto,Helvetica,Arial,sans-serif;}"
+              },
+              "type": "react.component",
+              "version": ""
+            }
+          ],
+          "extension": {
+            "parentId": "stru_4me5eZpYWDjP6xY",
+            "sort": 100
+          },
+          "id": "stru_gHQYGX5XcE985L9",
+          "label": "react-head",
+          "name": "@fox-design/react-head",
+          "props": {
+          },
+          "type": "react.component",
+          "version": ""
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "directive": {
+                        "tpl": "{{$this:children}}"
+                      },
+                      "extension": {
+                        "parentId": "stru_JmlutXIAxpV4Jxh",
+                        "sort": 100
+                      },
+                      "id": "stru_GbAG4T8zgVAnOxA",
+                      "label": "slot",
+                      "name": "@fox-design/react-slot",
+                      "props": {
+                      },
+                      "type": "react.component",
+                      "version": ""
+                    }
+                  ],
+                  "extension": {
+                    "parentId": "stru_d3w7pcX8kczXVJH",
+                    "sort": 100
+                  },
+                  "id": "stru_JmlutXIAxpV4Jxh",
+                  "label": "@fox-design/react-container",
+                  "name": "@fox-design/react-container",
+                  "props": {
+                  },
+                  "type": "react.component",
+                  "version": ""
+                }
+              ],
+              "extension": {
+                "parentId": "stru_XFgVAujgs4o9YRY",
+                "sort": 200
+              },
+              "id": "stru_d3w7pcX8kczXVJH",
+              "label": "csr-entry",
+              "name": "foxpage/cloud-flight-seo-csr-entry",
+              "props": {
+                "entryLink": {
+                },
+                "resource": {
+                }
+              },
+              "type": "react.component",
+              "version": ""
+            }
+          ],
+          "extension": {
+            "parentId": "stru_4me5eZpYWDjP6xY",
+            "sort": 200
+          },
+          "id": "stru_XFgVAujgs4o9YRY",
+          "label": "body",
+          "name": "@fox-design/react-body",
+          "props": {
+          },
+          "type": "react.component",
+          "version": ""
+        }
+      ],
+      "extension": {
+        "parentId": "",
+        "sort": 100
+      },
+      "id": "stru_4me5eZpYWDjP6xY",
+      "label": "react-html",
+      "name": "@fox-design/react-html",
+      "props": {
+      },
+      "type": "react.component",
+      "version": ""
+    }
+  ],
+  "version": "0.0.1"
+}

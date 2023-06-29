@@ -1,12 +1,15 @@
 import { getApplications } from '@foxpage/foxpage-manager';
 
-import { pm2 } from './pm2';
+import { config } from '../common';
+
+import { createPm2, getPm2 } from './pm2';
 
 /**
  * init pm2
  */
-export function initPm2(): null | undefined {
-  if (!pm2.isPm2) {
+export function withPm2(): null | undefined {
+  const pm2 = getPm2();
+  if (!pm2?.isPm2) {
     return null;
   }
 
@@ -22,4 +25,12 @@ export function initPm2(): null | undefined {
       });
     });
   }
+}
+
+/**
+ * create pm2
+ */
+export async function initPm2() {
+  const pm2Config = config.get('pm2');
+  await createPm2(pm2Config);
 }

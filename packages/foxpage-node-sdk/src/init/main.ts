@@ -4,7 +4,7 @@ import { config } from '../common';
 import { initLogger, loggerCreate } from '../logger';
 import { initSourceManager } from '../manager';
 import { initResourceParser } from '../parser';
-import { initPm2 } from '../pm2';
+import { initPm2, withPm2 } from '../pm2';
 
 import { success } from './lifecycle';
 
@@ -39,11 +39,14 @@ async function SDKIgnition() {
   // init configs
   await tryRun(config.init);
 
+  // init pm2
+  await tryRun(initPm2);
+
   // init manager
   await tryRun(initSourceManager);
 
-  // init pm2
-  await tryRun(initPm2);
+  // with pm2
+  await tryRun(withPm2);
 
   // init parser
   await tryRun(initResourceParser);

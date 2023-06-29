@@ -9,6 +9,8 @@ import { ContentDetailInstance } from './../common';
  * @class Condition
  */
 export class ConditionInstance extends ContentDetailInstance<ConditionItem> implements Condition {
+  readonly type = 'condition';
+
   constructor(data: Condition) {
     super(data);
   }

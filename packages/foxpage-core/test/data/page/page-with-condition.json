@@ -34,7 +34,36 @@
           "directive": {
             "if": [
               "{{__conditions:con_1b652910e89b}}",
-              "{{__conditions:con_1b652910e891}}"
+              "{{__conditions:con_1b652910e891}}",
+              {
+                "type": 1,
+                "children": [
+                  {
+                    "type": "condition.expression",
+                    "props": {
+                      "key": "{{__context:localTime:ISOString}}",
+                      "operation": "gt_eq",
+                      "value": "2023-05-19T20:12:20-05:00"
+                    }
+                  },
+                  {
+                    "type": "condition.expression",
+                    "props": {
+                      "key": "{{__context:localTime:ISOString}}",
+                      "operation": "lt_eq",
+                      "value": "2023-05-19T23:00:00-05:00"
+                    }
+                  },
+                  {
+                    "type": "condition.expression",
+                    "props": {
+                      "key": "1",
+                      "operation": "eq",
+                      "value": "1"
+                    }
+                  }
+                ]
+              }
             ]
           }
         }

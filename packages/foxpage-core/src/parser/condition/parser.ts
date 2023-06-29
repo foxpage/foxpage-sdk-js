@@ -37,8 +37,8 @@ export class ConditionParserImpl implements ConditionParser {
     });
   }
 
-  private parseOne(condition: Condition, ctx: Context) {
-    const parsed: Partial<ParsedContent<Condition>> = {
+  public parseOne(condition: Condition, ctx: Context) {
+    const parsed: Partial<ParsedContent<Condition, boolean>> = {
       parseStatus: true,
       parseMessages: [],
     };

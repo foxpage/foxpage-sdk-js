@@ -1,6 +1,7 @@
 export enum FoxpageStatus {
   OK = 200,
 
+  ACCESS_DENIED = 401,
   // not find
   NOT_MATCH_ROUTER = 404,
   NOT_FIND_DSL = 404,

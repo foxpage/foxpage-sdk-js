@@ -1,6 +1,8 @@
-import { Context, Page } from '@foxpage/foxpage-types';
+import { ContextInstance, createContentInstance } from '@foxpage/foxpage-shared';
+import { Context, Page, RenderAppInfo } from '@foxpage/foxpage-types';
 
-import { initParser, parse } from '@/parser/service';
+import * as merger from '@/merger';
+import { initParser, parse, parseStructure } from '@/parser/service';
 
 import { mockRenderContextWithContent } from '@@/helper/render-context';
 
@@ -46,5 +48,37 @@ describe('parser/service', () => {
     await parse(page, ctx);
     // expect(opt.parsed.parseStatus).toBeTruthy();
     expect(opt.parsed.parsed).toBeDefined();
+  });
+
+  it('Parse: Only structure', async () => {
+    const parent = require('@@/data/merge/parent');
+    const child = require('@@/data/merge/child');
+    const template = require('@@/data/merge/template');
+    const mergeContent = merger.merge(parent || {}, child || {}, {
+      strategy: merger.MergeStrategy.COMBINE_BY_EXTEND,
+    });
+
+    class RenderContextInstance extends ContextInstance implements Context {
+      constructor(info: RenderAppInfo) {
+        super(info);
+      }
+    }
+
+    const ctx: Context = new RenderContextInstance({} as RenderAppInfo);
+    const contentInstances = createContentInstance({
+      templates: [{ ...template, type: 'template' }],
+      blocks: [],
+      pages: [{ ...mergeContent, type: 'page' }],
+    });
+    ctx.updateOrigin({
+      ...contentInstances,
+    });
+    if (contentInstances.pages) {
+      ctx.updateOriginPage(contentInstances.pages[0]);
+    }
+    // parse
+    const parsed = await parseStructure(contentInstances.pages[0], ctx);
+    expect(mergeContent).toBeDefined();
+    expect(parsed).toBeDefined();
   });
 });

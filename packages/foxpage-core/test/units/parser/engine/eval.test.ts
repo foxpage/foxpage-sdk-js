@@ -1,43 +1,41 @@
-import { random } from 'faker';
-
-import { evalWithScope } from '@/parser/sandbox/main';
+import { getPath, getValue } from '@/parser/sandbox/main';
 
 describe('parser/sandbox/main', () => {
-  it('Not allow visit out scope variables', () => {
-    const words = random.words();
-    const val = evalWithScope({ foo: { bar: words } }, 'foo.bar');
-    expect(val).toBe(words);
-    try {
-      evalWithScope({}, 'foo.bar');
-    } catch (error) {
-      expect(error).toBeInstanceOf(ReferenceError);
-    }
+  it('getPath', () => {
+    const result = getPath("AA.DD['BB:CC']['DD.D']");
+    expect(result).toBeDefined();
+    expect(result.length).toBe(4);
+    expect(JSON.stringify(result)).toContain(JSON.stringify(['AA', 'DD', 'BB:CC', 'DD.D']));
   });
 
-  it('Eval use key not in scope, throw error', () => {
-    expect.assertions(1);
-    const scope = {};
-    try {
-      evalWithScope(scope, 'logger');
-    } catch (error) {
-      expect(error).toBeInstanceOf(Error);
-    }
+  it('getPath:one', () => {
+    const result = getPath('AA');
+    expect(result).toBeDefined();
+    expect(result.length).toBe(1);
+    expect(JSON.stringify(result)).toContain(JSON.stringify(['AA']));
   });
 
-  it('Allow visit global variable', () => {
-    const scope = {};
-    const res = evalWithScope(scope, 'Array.isArray([])');
-    expect(res).toBeTruthy();
+  it('getPath with end', () => {
+    const result = getPath('AA:BB');
+    expect(result).toBeDefined();
+    expect(result.length).toBe(2);
+    expect(JSON.stringify(result)).toContain(JSON.stringify(['AA', 'BB']));
   });
 
-  it('Allow function', () => {
-    const resultStr = 'hello eval';
-    const fn = `
-      function test(){
-        return '${resultStr}';
-      }
-    `;
-    const res = evalWithScope({}, fn) as () => void;
-    expect(res()).toBe(resultStr);
+  it('getValue', () => {
+    const scope = {
+      AA: {
+        'BB:CC': {
+          DD: 'hello world',
+          EE: 'ee',
+        },
+      },
+      E: {
+        value: 'EE',
+      },
+    };
+    const result = getValue(scope, "AA['BB:CC'][E:value]");
+    expect(result).toBeDefined();
+    expect(result).toBe(scope.AA['BB:CC'].EE);
   });
 });

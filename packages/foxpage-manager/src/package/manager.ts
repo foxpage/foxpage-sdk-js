@@ -5,6 +5,8 @@ import {
   FPPackage,
   FPPackageResponse,
   Package,
+  PackageFetchOption,
+  PackageFreshOption,
   PackageManager,
   PackageNamedVersion,
   ResourceUpdateInfo,
@@ -221,13 +223,13 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
   /**
    * fetch packages, instance packages and install packages then add to local
    * note: return contains package dependencies contents
-   * @param {{ nameVersions?: PackageNamedVersion[]; packageIds?: string[] }} [params]
+   * @param {PackageFreshOption} [params]
    * @return {*}
    */
-  public async freshPackages(params?: { namedVersions?: PackageNamedVersion[]; packageIds?: string[] }) {
+  public async freshPackages(params?: PackageFreshOption) {
     const packages = params?.namedVersions
       ? this.resolvePackage(await this.fetchPackagesByNamedVersions(params.namedVersions))
-      : await this.fetchPackages(params?.packageIds);
+      : await this.fetchPackages(params?.packageIds, { strategy: params?.strategy });
 
     return await this.install(packages, { cache: true });
   }
@@ -236,10 +238,10 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
    * install packages
    *
    * @param {FPPackage[]} packages
-   * @param {{ cache: boolean }} [opt] {cache: will add package instance to manager}
+   * @param {{ cache: boolean; ignoreLocal:boolean }} [opt] {cache: will add package instance to manager}
    * @return {*}
    */
-  public async install(packages: FPPackage[], opt?: { cache: boolean }) {
+  public async install(packages: FPPackage[], opt?: { cache: boolean; ignoreLocal?: boolean }) {
     const installs = await this.initInstalls(packages, opt);
 
     const tasks = installs.map(async item => {
@@ -257,18 +259,22 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
    * @param {string[]} [packageIds]
    * @return {*}
    */
-  public async fetchPackages(packageIds?: string[]) {
-    return await foxpageDataService.fetchAppPackages(this.appId, { packageIds });
+  public async fetchPackages(packageIds?: string[], opt?: Pick<PackageFreshOption, 'strategy'>) {
+    return await foxpageDataService.fetchAppPackages(this.appId, { packageIds, opt });
   }
 
   /**
    * fetch packages with name and version from server
    *
    * @param {PackageNamedVersion[]} nameVersions
+   * @param {PackageFreshOption} opt {isCanary,...}
    * @return {Promise<FPPackageResponse[]>}
    */
-  public async fetchPackagesByNamedVersions(nameVersions: PackageNamedVersion[]) {
-    return await foxpageDataService.fetchAppPackagesByNamedVersions(this.appId, { nameVersions });
+  public async fetchPackagesByNamedVersions(nameVersions: PackageNamedVersion[], opt?: PackageFetchOption) {
+    return await foxpageDataService.fetchAppPackagesByNamedVersions(this.appId, {
+      nameVersions,
+      isCanary: opt?.isCanary,
+    });
   }
 
   /**
@@ -324,22 +330,23 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
    *
    * @private
    * @param {FPPackage[]} packages
-   * @param {{ cache: boolean }} [opt]
+   * @param {{ cache: boolean, ignoreLocal:boolean }} [opt]
    * @return {*}
    */
-  private async initInstalls(packages: FPPackage[], opt?: { cache: boolean }) {
+  private async initInstalls(packages: FPPackage[], opt?: { cache: boolean; ignoreLocal?: boolean }) {
     const installMap = new Map<string, PackageInstance>();
+    const { cache = false, ignoreLocal = false } = opt || {};
 
     const create = async (list: FPPackage[], { initDependencies } = { initDependencies: false }) => {
       for (const pkg of list) {
         const { name, version, components } = pkg;
         const key = this.generateKey(name, version);
-        const localPkg = await this.getLocalPackage(name, version);
+        const localPkg = !ignoreLocal ? await this.getLocalPackage(name, version) : null;
 
         // will install it
         if ((!localPkg || !localPkg.available) && !installMap.has(key)) {
           let newPkg: PackageInstance | null;
-          if (opt?.cache) {
+          if (cache) {
             newPkg = await this.addPackage(pkg);
           } else {
             newPkg = new PackageInstance(pkg, this.appId);
@@ -348,7 +355,7 @@ export class PackageManagerImpl extends ManagerBaseImpl<Package> implements Pack
             installMap.set(key, newPkg);
           }
         } else {
-          if (opt?.cache) {
+          if (cache) {
             this.updatePackageLiveVersion(pkg);
           }
         }

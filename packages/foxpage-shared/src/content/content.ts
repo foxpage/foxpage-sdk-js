@@ -1,4 +1,4 @@
-import { ContentDetail, Extension, Relation } from '@foxpage/foxpage-types';
+import { ContentDetail, ContentVersionType, Extension, Relation } from '@foxpage/foxpage-types';
 
 import { ContentType } from './types';
 
@@ -11,6 +11,7 @@ import { ContentType } from './types';
  * @template T
  */
 export class ContentDetailInstance<T = any> implements ContentDetail<T> {
+  type: ContentVersionType;
   /**
    * content id
    *
@@ -61,6 +62,7 @@ export class ContentDetailInstance<T = any> implements ContentDetail<T> {
     this.versionNumber = data.versionNumber;
     this.name = data.name;
     this.fileId = data.fileId;
+    this.type = data.type;
 
     this.initRelationMap(this.relation, this.relationMap);
   }
@@ -87,6 +89,10 @@ export class ContentDetailInstance<T = any> implements ContentDetail<T> {
 
   public get mocks() {
     return this.relationMap.get(ContentType.MOCK);
+  }
+
+  public get blocks() {
+    return this.relationMap.get(ContentType.BLOCK);
   }
 
   private initRelationMap(relation: Relation = {}, relationMap: Map<string, string[]>) {

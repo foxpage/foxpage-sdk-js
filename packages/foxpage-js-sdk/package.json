@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-js-sdk",
-  "version": "0.5.9",
+  "version": "1.0.0",
   "description": "foxpage js sdk",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -24,13 +24,13 @@
     "access": "public"
   },
   "dependencies": {
-    "@foxpage/foxpage-browser-loader": "^0.3.4",
-    "@foxpage/foxpage-core": "^0.5.3",
-    "@foxpage/foxpage-plugin-function-parse": "^0.4.2",
-    "@foxpage/foxpage-shared": "^0.5.3",
+    "@foxpage/foxpage-browser-loader": "^1.0.0",
+    "@foxpage/foxpage-core": "^1.0.0",
+    "@foxpage/foxpage-plugin-function-parse": "^1.0.0",
+    "@foxpage/foxpage-shared": "^1.0.0",
     "axios": "^0.27.2"
   },
   "devDependencies": {
-    "@foxpage/foxpage-types": "^0.5.2"
+    "@foxpage/foxpage-types": "^1.0.0"
   }
 }

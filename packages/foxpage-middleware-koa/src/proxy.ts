@@ -1,3 +1,4 @@
+//@ts-ignore
 import { createProxyMiddleware, Options } from 'http-proxy-middleware';
 import { Middleware } from 'koa';
 import kc from 'koa-connect';

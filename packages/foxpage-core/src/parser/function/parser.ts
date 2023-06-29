@@ -1,7 +1,7 @@
 import { ContentType } from '@foxpage/foxpage-shared';
-import { Context, FPFunctionItemProps } from '@foxpage/foxpage-types';
+import { Context } from '@foxpage/foxpage-types';
 
-import { executeObject } from '../sandbox';
+import { getVars } from '../sandbox/string';
 
 export class FunctionParser {
   /**
@@ -30,10 +30,13 @@ export class FunctionParser {
         const content = item.schemas[0];
         const messages: string[] = [];
         try {
-          const resolvedProps: FPFunctionItemProps = executeObject(content.props, ctx.variables, messages);
+          const resolved = getVars(content.props.code, ctx.variables, messages);
           ctx.updateResource(ContentType.FUNCTION, item.id, {
             content: item,
-            parsed: resolvedProps.code,
+            parsed: {
+              code: content.props.code,
+              variables: resolved,
+            },
             parseStatus: true,
             parseMessages: messages,
           });

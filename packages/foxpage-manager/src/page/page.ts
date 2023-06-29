@@ -9,6 +9,8 @@ import { ContentDetailInstance } from '../common';
  * @class Page
  */
 export class PageInstance extends ContentDetailInstance<StructureNode> implements Page {
+  readonly type = 'page';
+
   constructor(data: Page) {
     super(data);
   }

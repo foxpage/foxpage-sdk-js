@@ -23,6 +23,13 @@ export class PageParserImpl implements PageParser {
    */
   templateSchemasMap: Map<string, StructureNode> = new Map<string, StructureNode>();
 
+  /**
+   * block containers
+   *
+   * @type {Map<string, StructureNode>}
+   */
+  blockSchemasMap: Map<string, StructureNode> = new Map<string, StructureNode>();
+
   messages: Messages;
 
   constructor(page: Page) {
@@ -36,53 +43,27 @@ export class PageParserImpl implements PageParser {
    */
   public preParse(ctx: Context) {
     // init this.templateSchemasMap
-    this.getTplContainers(this.page.schemas, ctx);
+    this.getTplRefers(this.page.schemas, ctx);
   }
 
   /**
    * do parse
    *
    * @param {Context} ctx
-   * @param {StructureNode[]} [list=this.page.schemas]
-   * @return {StructureNode[]}  {StructureNode[]}
    */
-  public parse(ctx: Context, list: StructureNode[] = this.page.schemas): StructureNode[] {
-    let newList = [] as StructureNode[];
-    list.forEach(item => {
-      const { props, directive, children } = item;
-      const directiveInstance = directive ? new DirectiveParser(directive) : null;
-      // default will show
-      item.show = true;
-      if (directiveInstance?.hasIf()) {
-        item.show = !!directiveInstance.parseIf(ctx, this.messages);
-      }
+  public parse(ctx: Context) {
+    const { id, schemas, relation } = this.page;
 
-      // if contains tpl directive, will use template content cover this node
-      if (directiveInstance?.hasTpl()) {
-        // replace page node from matched tpl schemas
-        const tplSchemas = directiveInstance.parseTpl(ctx, this.messages) as StructureNode[] | undefined;
-        if (tplSchemas) {
-          newList = newList.concat(this.parse(ctx, _.cloneDeep(tplSchemas)));
-        } else {
-          const msg = `${directive?.tpl} not matched template`;
-          this.messages.push(new Error(msg));
-          newList.push(item);
-        }
-      } else {
-        // props parse
-        if (props) {
-          const resolvedProps = executeObject(props, ctx.variables, this.messages) as StructureNode['props'];
-          item.props = resolvedProps;
-        }
-
-        if (children && children.length > 0) {
-          item.children = this.parse(ctx, children);
-        }
-
-        newList.push(item);
-      }
-    });
-    return newList;
+    const parser = this.pageParser(ctx);
+    const { parsed, messages } = parser(schemas);
+    ctx.logger?.info(`page@${id} parsed`);
+    const result = {
+      type: 'page',
+      id,
+      schemas: parsed,
+      relation,
+    } as Page;
+    return { parsed: result, messages };
   }
 
   /**
@@ -95,26 +76,101 @@ export class PageParserImpl implements PageParser {
     return this.templateSchemasMap.get(templateId);
   }
 
-  private getTplContainers(structures: StructureNode[] = [], ctx: Context) {
+  /**
+   * get block container by blockId
+   *
+   * @param {string} blockId
+   * @return {StructureNode|undefined}
+   */
+  public getBlockSchemas(blockId: string): StructureNode | undefined {
+    return this.blockSchemasMap.get(blockId);
+  }
+
+  private pageParser(ctx: Context) {
+    const messages = new Messages();
+    const parseFn = (list: StructureNode[]) => {
+      let parseList = [] as StructureNode[];
+      list.forEach(item => {
+        const { props, directive, children } = item;
+        const { tpl = '' } = directive || {};
+        const directiveInstance = directive ? new DirectiveParser(directive) : null;
+        // default will show
+        item.show = true;
+        if (directiveInstance?.hasIf()) {
+          item.show = !!directiveInstance.parseIf(ctx, messages);
+        }
+
+        // if contains tpl directive, will use template content cover this node
+        if (directiveInstance?.hasTpl()) {
+          // replace page node from matched tpl schemas
+          const tplSchemas = directiveInstance.parseTpl(ctx, messages) as StructureNode[] | undefined;
+          if (tplSchemas) {
+            const tplParsedSchemas = parseFn(_.cloneDeep(tplSchemas)).parsed;
+            if (this.isTemplateTpl(tpl)) {
+              parseList = parseList.concat(tplParsedSchemas);
+            } else {
+              const blockRoot = tplParsedSchemas[0];
+              if (blockRoot) {
+                const { props, children = [] } = blockRoot;
+                parseList.push(Object.assign({}, item, { props, children: children }));
+              }
+            }
+          } else {
+            const msg = `${tpl} not matched tpl`;
+            messages.push(new Error(msg));
+            ctx.logger?.warn(msg);
+            parseList.push(item);
+          }
+        } else {
+          // props parse
+          if (props) {
+            const resolvedProps = executeObject(props, ctx.variables, messages) as StructureNode['props'];
+            item.props = resolvedProps;
+          }
+
+          if (children && children.length > 0) {
+            const { parsed: childrenParsed } = parseFn(children);
+            parseList.push(Object.assign({}, item, { children: childrenParsed }));
+          } else {
+            parseList.push(item);
+          }
+        }
+      });
+      return { parsed: parseList, messages: messages.formate() };
+    };
+    return parseFn;
+  }
+
+  private getTplRefers(structures: StructureNode[] = [], ctx: Context) {
     structures.forEach(item => {
       const tplVar = item.directive?.tpl;
 
       if (tplVar && typeof tplVar === 'string') {
         if (tplVar.startsWith('{{') && tplVar.indexOf('}}') === tplVar.length - 2) {
           const expression = tplVar.substring(2, tplVar.length - 2);
-          ctx.logger?.info(`${expression} to match template id`);
-          const templateId = this.page.relation ? this.page.relation[expression]?.id : '';
-
-          if (templateId) {
-            this.templateSchemasMap.set(templateId, item);
-            ctx.logger?.info(`${expression} matched template id@${templateId} succeed`);
+          ctx.logger?.info(`${expression} to match tpl id`);
+          const id = this.page.relation ? this.page.relation[expression]?.id : '';
+          if (id) {
+            if (this.isTemplateTpl(expression)) {
+              this.templateSchemasMap.set(id, item);
+            } else {
+              this.blockSchemasMap.set(id, item);
+            }
+            ctx.logger?.info(`${expression} matched tpl id@${id} succeed`);
+          } else {
+            ctx.logger?.warn(`${expression} matched tpl id@${id} failed: empty`);
           }
         }
       }
 
       if (item.children && item.children.length > 0) {
-        this.getTplContainers(item.children, ctx);
+        this.getTplRefers(item.children, ctx);
       }
     });
+  }
+
+  private isTemplateTpl(str: string) {
+    // template: __templates, block: __blocks
+    return str.indexOf('__templates') > -1;
   }
 }

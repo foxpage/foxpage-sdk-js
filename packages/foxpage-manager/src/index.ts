@@ -9,6 +9,7 @@ export * from './tag';
 export * from './template';
 export * from './variable';
 export * from './router';
+export * from './block';
 
 export * from './manager';
 export * from './service';

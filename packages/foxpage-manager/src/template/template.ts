@@ -9,6 +9,8 @@ import { ContentDetailInstance } from '../common';
  * @class Template
  */
 export class TemplateInstance extends ContentDetailInstance<StructureNode> implements Template {
+  readonly type = 'template';
+
   constructor(data: Template) {
     super(data);
   }

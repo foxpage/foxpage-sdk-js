@@ -1,5 +1,5 @@
 import { ContentType } from '@foxpage/foxpage-shared';
-import { ConditionParser, Context, Page, Parser, ParserOption, VariableParser } from '@foxpage/foxpage-types';
+import { ConditionParser, Context, ContextPage, Parser, ParserOption, VariableParser } from '@foxpage/foxpage-types';
 
 import { withVariableMock } from '../mocker';
 
@@ -46,11 +46,11 @@ export class ParserImpl implements Parser {
 
   /**
    * pre parse
-   * first step: preParse page
+   * first step: preParse content
    * second step: preParse template
    */
-  public preParse(page: Page, ctx: Context, opt: { sessionId: string }) {
-    this.mainParsers[opt.sessionId] = new MainParser({ page }, ctx);
+  public preParse(content: ContextPage, ctx: Context, opt: { sessionId: string }) {
+    this.mainParsers[opt.sessionId] = new MainParser({ content }, ctx);
     this.variableParser?.preParse();
   }
 
@@ -58,7 +58,7 @@ export class ParserImpl implements Parser {
    * parse
    * first: variable(functions)
    * second: condition
-   * last: page
+   * last: content
    */
   public async parse(sessionId: string, ctx: Context) {
     if (!this.mainParsers[sessionId]) {
@@ -80,9 +80,9 @@ export class ParserImpl implements Parser {
       withVariableMock(ctx.getOrigin(ContentType.VARIABLE), ctx);
     }
 
-    // page
+    // content(page\template\block)
     const structureCost = ctx.performanceLogger('structureTime');
-    const result = this.mainParsers[sessionId]?.parse(ctx);
+    const result = await this.mainParsers[sessionId]?.parse(ctx);
     structureCost();
 
     return result;

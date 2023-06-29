@@ -1,5 +1,6 @@
 export { FoxpageStatus } from './enum';
 export * from './main';
+export * from './AccessDeniedError';
 export * from './NotFoundDSLError';
 export * from './NotMatchRouterError';
 export * from './ParseDSLError';

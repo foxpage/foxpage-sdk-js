@@ -9,6 +9,8 @@ import { ContentDetailInstance } from '../common';
  * @class Variable
  */
 export class VariableInstance extends ContentDetailInstance<VariableItem> implements Variable {
+  readonly type = 'variable';
+
   constructor(data: Variable) {
     super(data);
   }

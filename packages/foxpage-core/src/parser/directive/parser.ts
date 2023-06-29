@@ -1,6 +1,7 @@
 import { Messages } from '@foxpage/foxpage-shared';
-import { Context, Directive } from '@foxpage/foxpage-types';
+import { Condition, ConditionParser, Context, Directive } from '@foxpage/foxpage-types';
 
+import { ConditionParserImpl } from '../condition';
 import { executeString } from '../sandbox';
 
 /**
@@ -11,9 +12,11 @@ import { executeString } from '../sandbox';
  */
 export class DirectiveParser {
   private directives: Directive;
+  private conditionParser: ConditionParser;
 
   constructor(data: Directive) {
     this.directives = data;
+    this.conditionParser = new ConditionParserImpl();
   }
 
   public hasIf() {
@@ -26,7 +29,14 @@ export class DirectiveParser {
 
   public parseIf(ctx: Context, messages: Messages) {
     try {
-      const result = this.directives.if?.map(item => this.parseItem('if', item || '', ctx, messages));
+      const result = this.directives.if?.map(item => {
+        if (typeof item === 'string') {
+          return this.parseItem('if', item || '', ctx, messages);
+        }
+        // node condition
+        const result = this.conditionParser.parseOne({ schemas: [item] } as unknown as Condition, ctx);
+        return result.parsed;
+      });
       return result?.every(Boolean);
     } catch (e) {
       ctx.logger?.error(`directive.if parse failed`, messages);

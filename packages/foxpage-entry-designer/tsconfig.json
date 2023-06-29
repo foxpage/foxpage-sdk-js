@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "rootDirs": [],
+    "sourceMap": false,
+    "rootDir": "../..",
+    "baseUrl": ".",
+    "paths": {},
+    "lib": ["DOM"]
+  },
+  "include": ["src/*", "src/**/*", "typings/*", "typings/**/*", "test/*", "test/**/*", "stories/*", "stories/**/*"]
+}

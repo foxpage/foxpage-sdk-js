@@ -16,13 +16,15 @@ export const withMock = (page: Page, mocks: Mock[], opt: MockOption) => {
   // init ctx
   const ctx: Context = createRenderContext(opt.appInfo);
   const { extendPage, ...rest } = opt.relationInfo;
-  const contentInstances = createContentInstance({ ...rest, page: [page] });
+  const contentInstances = createContentInstance({ ...rest, pages: [page] });
   ctx.updateOrigin({
     ...contentInstances,
     sysVariables: variable.getSysVariables(contentInstances as unknown as Record<string, ContentDetail[]>),
   });
-  const pageInstance = contentInstances.page[0];
-  ctx.updateOriginPage(pageInstance);
+  const pageInstance = contentInstances.pages ? contentInstances.pages[0] : null;
+  if (pageInstance) {
+    ctx.updateOriginPage(pageInstance);
+  }
   ctx.updateOriginByKey('extendPage', extendPage);
 
   const result = mocker.withMock(mocks, ctx);

@@ -1,6 +1,6 @@
 {
   "name": "@foxpage/foxpage-debug-portal",
-  "version": "0.2.6",
+  "version": "1.0.0",
   "description": "foxpage debug portal on live",
   "keywords": [
     "foxpage",
@@ -42,7 +42,7 @@
     "@babel/preset-env": "^7.7.5",
     "@babel/preset-react": "^7.7.4",
     "@babel/preset-typescript": "^7.7.4",
-    "@foxpage/foxpage-types": "^0.5.0",
+    "@foxpage/foxpage-types": "^1.0.0",
     "@types/react": "^16.9.1",
     "@types/react-dom": "^16.8.5",
     "babel-loader": "^8.0.6",
@@ -50,7 +50,6 @@
     "cross-env": "^5.1.1",
     "css-loader": "^3.2.0",
     "less": "^3.10.3",
-    "less-loader": "^5.0.0",
     "rimraf": "^3.0.0",
     "style-loader": "^1.0.0",
     "styled-components": "^5.3.3",
@@ -63,13 +62,14 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
-    "@foxpage/foxpage-browser-loader": "^0.3.4",
-    "@foxpage/foxpage-types": "^0.5.0",
+    "@foxpage/foxpage-browser-loader": "^1.0.0",
+    "@foxpage/foxpage-types": "^1.0.0",
     "@types/styled-components": "^5.1.26",
     "antd": "^4.1.0",
     "core-js": "^3.6.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-json-view": "^1.21.3"
+    "react-json-view": "^1.21.3",
+    "less-loader": "^5.0.0"
   }
 }

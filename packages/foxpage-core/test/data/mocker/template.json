@@ -1,0 +1,115 @@
+{
+  "relation": {},
+  "id": "cont_zHRvhdLJBFxyJch",
+  "schemas": [
+    {
+      "id": "stru_hSgm4zd7fTHh4QI",
+      "name": "@fox-design/react-html",
+      "label": "Html",
+      "props": {},
+      "version": "",
+      "type": "react.component",
+      "extension": {
+        "sort": 100,
+        "parentId": ""
+      },
+      "children": [
+        {
+          "id": "stru_dqbLLdWDvF75A88",
+          "name": "@fox-design/react-head",
+          "label": "Head",
+          "props": {},
+          "version": "",
+          "type": "react.component",
+          "extension": {
+            "sort": 100,
+            "parentId": "stru_hSgm4zd7fTHh4QI"
+          },
+          "children": [
+            {
+              "id": "stru_hBfNi4KYwQQ1gPc",
+              "name": "@fox-design/react-style",
+              "label": "react-style",
+              "props": {},
+              "version": "",
+              "type": "react.component",
+              "extension": {
+                "sort": 100,
+                "parentId": "stru_dqbLLdWDvF75A88"
+              }
+            }
+          ]
+        },
+        {
+          "id": "stru_rqJ26CXnuwNlcfD",
+          "name": "@fox-design/react-body",
+          "label": "Body",
+          "props": {},
+          "version": "",
+          "type": "react.component",
+          "extension": {
+            "sort": 200,
+            "parentId": "stru_hSgm4zd7fTHh4QI"
+          },
+          "children": [
+            {
+              "id": "stru_4vQpHkXzgJFRTD9",
+              "name": "foxpage/cloud-flight-seo-csr-entry",
+              "label": "csr-entry",
+              "props": {},
+              "version": "",
+              "type": "react.component",
+              "extension": {
+                "sort": 200,
+                "parentId": "stru_rqJ26CXnuwNlcfD"
+              },
+              "children": [
+                {
+                  "id": "stru_QBgWoc2SKPjX38L",
+                  "name": "@fox-design/react-container",
+                  "label": "@fox-design/react-container",
+                  "props": {},
+                  "version": "",
+                  "type": "react.component",
+                  "extension": {
+                    "sort": 100,
+                    "parentId": "stru_4vQpHkXzgJFRTD9"
+                  },
+                  "children": [
+                    {
+                      "id": "stru_wWexliNtyEPbHNr",
+                      "name": "@fox-design/react-slot",
+                      "label": "Slot",
+                      "props": {},
+                      "version": "",
+                      "type": "react.component",
+                      "extension": {
+                        "sort": 100,
+                        "parentId": "stru_QBgWoc2SKPjX38L"
+                      },
+                      "directive": {
+                        "tpl": "{{$this:children}}"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "version": "0.0.3",
+  "relations": {},
+  "dslVersion": "1.0",
+  "name": "test-1",
+  "versionNumber": 3,
+  "fileId": "file_RfJlSJkaIjskrzm",
+  "mock": {},
+  "extension": {
+    "mockId": ""
+  },
+  "_lastModified": 1681547989646,
+  "type": "template"
+}

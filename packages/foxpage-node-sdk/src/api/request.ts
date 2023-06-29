@@ -1,9 +1,8 @@
-import { Content, Route } from '@foxpage/foxpage-types';
+import { Content, FoxpageRequestOptions, ParsedDSL, Route } from '@foxpage/foxpage-types';
 
-import { NotFoundAppError, NotFoundDSLError, NotMatchRouterError, ParseDSLError } from '../errors';
-import { appTask, contextTask, pageTask, parseTask, renderTask, routerTask } from '../task';
-
-import { FoxpageRequestOptions } from './interface';
+import { isProd } from '../common';
+import { AccessDeniedError, NotFoundAppError, NotFoundDSLError, NotMatchRouterError, ParseDSLError } from '../errors';
+import { accessControlTask, appTask, contextTask, pageTask, parseTask, renderTask, routerTask } from '../task';
 
 /**
  * request handler
@@ -42,9 +41,23 @@ export const routerHandler = () => async (opt: FoxpageRequestOptions) => {
   const pageId = (content as Content).id;
   // check page route
   if (!pageId) {
+    // is system routes
+    const verified = await accessControlTask(app, ctx);
+    if (!verified) {
+      throw new AccessDeniedError(ctx.URL?.pathname);
+    }
     // dispatch
     const result = await (content as Route).action(ctx);
     return result;
+  }
+
+  // is not prod access
+  // access control verified
+  if (!isProd(ctx)) {
+    const verified = await accessControlTask(app, ctx, { contentId: pageId });
+    if (!verified) {
+      throw new AccessDeniedError(ctx.URL?.pathname);
+    }
   }
 
   // get page
@@ -54,12 +67,12 @@ export const routerHandler = () => async (opt: FoxpageRequestOptions) => {
   }
 
   // parse page
-  const { page: parsedPage, ctx: context } = await parseTask(page, ctx);
-  if (!parsedPage.schemas) {
-    throw new ParseDSLError(new Error('parsedPage.schemas is empty'), ctx.origin);
+  const { content: parsedContent, ctx: context } = await parseTask(page, ctx);
+  if (!parsedContent.schemas) {
+    throw new ParseDSLError(new Error('parsed.schemas is empty'), ctx.origin);
   }
 
   // render task
-  const html = await renderTask(parsedPage, context);
-  return { html, contextValue: context };
+  const html = await renderTask(parsedContent as ParsedDSL, context);
+  return { html, dsl: context.origin.page, vars: context.variables, contextValue: context };
 };

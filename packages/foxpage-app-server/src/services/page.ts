@@ -11,7 +11,7 @@ export enum RenderStatus {
 export interface RenderRes {
   code: RenderStatus;
   msg: string;
-  html?: string;
+  html: string | null;
 }
 
 const logger = createLogger('App server');
@@ -28,8 +28,9 @@ class PageService {
     const result: RenderRes = {
       code: RenderStatus.SUCCEED,
       msg: 'render succeed.',
+      html: null,
     };
-    let html: string | undefined;
+    let html: string | null = null;
     try {
       html =
         (await renderToHtmlByPageId(pageId, appId, {
